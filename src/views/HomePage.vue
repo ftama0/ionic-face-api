@@ -14,14 +14,15 @@
       </ion-header>
 
       <div id="container">
-        <strong>Ready to create an app?</strong>
+        <strong>Ready to create an app? Ferry Pratama </strong>
+        <ion-icon icon="heart"></ion-icon>
         <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 </script>
 
