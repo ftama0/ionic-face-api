@@ -2,11 +2,17 @@
     <ion-page>
         <ion-header :translucent="true" class="ion-no-border">
             <ion-toolbar class="ion-text-center ion-padding-top ion-margin-top">
-                <img src="@/assets/images/logo_Hasnur.png" class="ion-margin-top" alt="App Icon" width="140"
-                    height="120" />
-                <ion-title>
-                    <h3 class="ion-padding-top">Approval System</h3>
-                </ion-title>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="12">
+                            <img src="@/assets/images/logo_Hasnur.png" class="ion-margin-top" alt="App Icon" width="140"
+                                height="120" />
+                        </ion-col>
+                        <ion-col size="12">
+                            <h3 class="ion-padding-top">Approval System</h3>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
@@ -46,19 +52,14 @@
                 </ion-title>
             </ion-toolbar>
         </ion-footer>
-
-        <!-- <ion-toast position="bottom" :duration="5000"></ion-toast> -->
-        <!-- <ion-toast :is-open="isOpen" message="This toast will disappear after 5 seconds" :duration="5000"></ion-toast> -->
-
-        <ion-toast :is-open="isOpen" :message="toastMessage" :duration="toastDuration" :position="toastPosition"
-            @didDismiss="setOpen(false)"></ion-toast>
     </ion-page>
 </template>
 
 <script>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, getCurrentInstance } from 'vue';
 import { logIn, personOutline, keyOutline } from 'ionicons/icons';
 import { useLoginStore } from '@/store/loginStore';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'Login',
@@ -74,34 +75,19 @@ export default {
             keyOutline,
         };
         const isLoading = ref(false);
-        const store = useLoginStore(); // Menggunakan useLoginStore untuk mendapatkan store
-        //  toast 
-        const toastMessage = ref(''); // Toast message
-        const toastDuration = ref(5000); // Toast duration in milliseconds
-        const toastPosition = ref('top'); // Toast position on screen
-        const isOpen = ref(false); // Reactive variable to control toast visibility
-        const setOpen = (state) => {
-            isOpen.value = state;
-        };
-
-        const showToast = (message, duration = 5000, position = 'top') => {
-            toastMessage.value = message;
-            toastDuration.value = duration;
-            toastPosition.value = position;
-            setOpen(true);
-        };
-
+        const loginStore = useLoginStore(); // Menggunakan useLoginStore untuk mendapatkan store
+        const { proxy } = getCurrentInstance()
+        const router = useRouter();
         // api 
         const submitForm = async () => {
             try {
                 isLoading.value = true;
                 console.log('masuk', vdata.value)
-                const result = await store.login(vdata.value.username, vdata.value.password);
-                // console.log('Login result:', result);
-                // Redirect atau tindakan lain setelah berhasil login
+                const result = await loginStore.login(vdata.value.username, vdata.value.password);
+                router.push({ name: 'Home' });
             } catch (error) {
                 console.error('Login failed:', error);
-                showToast('Username or password is wrong');
+                proxy.$toast('Username or password is wrong', 'danger');
             }
             finally {
                 isLoading.value = false;
@@ -111,12 +97,13 @@ export default {
 
         onMounted(() => {
             if (localStorage.getItem('user-login')) {
-                store.autoLogin(localStorage.getItem('user-login')).then(() => {
-                    showToast('Welcome Back');
-                    // Redirect or perform other actions after successful auto login
+                loginStore.autoLogin(localStorage.getItem('user-login')).then(() => {
+                    proxy.$toast('Welcome Back', 'primary');
+                    // Redirect
+                    router.push({ name: 'Home' });
                 }).catch((error) => {
                     console.error('Auto login error:', error);
-                    showToast(error.message || 'Silahkan login terlebih dahulu');
+                    proxy.$toast(error.message || 'Silahkan login terlebih dahulu', 'warning');
                 });
             }
         });
@@ -126,10 +113,6 @@ export default {
             icons,
             submitForm,
             isLoading,
-            toastDuration,
-            toastPosition,
-            isOpen,
-            toastMessage
         };
     },
 };

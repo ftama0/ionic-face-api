@@ -19,8 +19,18 @@ export const loginService = {
 
   async checkIdMobile(user) {
     try {
-        
       const response = await apiService.get(`/check_id_mobile?user=${user}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};
+
+export const prService = {
+  async totalPR(user) {
+    try {
+      const response = await apiService.get(`/getDataTotalPR?user=${user}`);
       return response.data;
     } catch (error) {
       throw error;

@@ -1,7 +1,7 @@
 // store/loginStore.js
 
 import { defineStore } from 'pinia';
-import { loginService, prService } from '@/services/apiService'; // Import  dari services
+import { loginService } from '@/services/apiService'; // Import loginService dari services
 import { getDeviceInfo, isMobilePlatform } from '@/plugins/device';
 
 export const useLoginStore = defineStore({
@@ -17,7 +17,7 @@ actions: {
             const formData = new FormData();
             formData.append('username', username);
             formData.append('password', password);
-            // Panggil services untuk melakukan login
+            // Panggil loginService untuk melakukan login
             const resSignIn = await loginService.signInMobile(formData);
             localStorage.setItem('user-login', JSON.stringify(resSignIn));
             this.user = resSignIn;
