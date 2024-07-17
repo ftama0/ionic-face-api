@@ -2,7 +2,15 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 
-import { IonicVue } from '@ionic/vue';
+import { IonicVue, IonPage, IonHeader,IonContent, IonFooter, IonTitle, IonToolbar, IonButton, IonInput, IonLabel,
+  IonList, IonItem, IonIcon, IonCol, IonRow, IonGrid, IonCard, IonInputPasswordToggle, IonAlert, IonLoading, 
+  IonToast, IonCardContent, IonBadge, IonMenu, IonButtons, IonMenuButton, IonMenuToggle, IonFab, IonFabButton, IonSearchbar, 
+  IonText,
+  IonCardTitle,
+  IonCardHeader,
+  IonTabs,
+  IonTabBar,
+  IonTabButton} from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -36,22 +44,25 @@ import './theme/variables.css';
 
 // custom by ferry
 import { addIcons } from 'ionicons';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonInput, IonFooter, IonLabel, IonList, IonItem, IonIcon, IonCol, IonRow, IonGrid, IonCard, IonInputPasswordToggle, IonAlert, IonLoading, IonToast, IonCardContent, IonBadge, IonMenu, IonButtons, IonMenuButton } from '@ionic/vue';
-import { heart, logIn, personOutline, keyOutline, basketOutline, cartOutline  } from 'ionicons/icons';
 import 'remixicon/fonts/remixicon.css';
 import './assets/css/main.css';
 import axios from 'axios';
 import { createPinia } from 'pinia';
+// plugins 
 import ToastPlugin from '@/plugins/toast'; 
-
-addIcons({heart,logIn,personOutline, keyOutline , basketOutline, cartOutline});
+import ionicons from './plugins/ionicons';
+// compoennts
+import ToastComponent from '@/components/ToastComponent.vue'
+import MenuComponent from '@/components/MenuComponent.vue';
+import HeaderComponent from '@/components/HeaderComponent.vue';
+import FooterComponent from '@/components/FooterComponent.vue';
 // create/run
 const pinia = createPinia();
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(pinia)
-  .use(ToastPlugin);
+  .use(ionicons);
 
 // component global 
 app.component('ion-content', IonContent);
@@ -79,16 +90,31 @@ app.component('ion-badge', IonBadge);
 app.component('ion-menu', IonMenu);
 app.component('ion-buttons', IonButtons);
 app.component('ion-menu-button', IonMenuButton);
-// url 
-// set base url 
-// axios.defaults.baseURL = 'https://ebl-cms.hasnurgroup.com/index.php/'; 
-// Menyimpan axios ke dalam aplikasi Vue
-// app.config.globalProperties.$axios = axios;
+app.component('ion-menu-toggle', IonMenuToggle);
+app.component('ion-fab', IonFab);
+app.component('ion-fab-button', IonFabButton);
+app.component('ion-searchbar', IonSearchbar);
+app.component('ion-text', IonText);
+app.component('ion-card-title', IonCardTitle);
+app.component('ion-card-header', IonCardHeader);
+app.component('ion-tabs', IonTabs);
+app.component('ion-tab-bar', IonTabBar);
+app.component('ion-tab-button', IonTabButton);
+// custom component
+app.component('MenuComponent', MenuComponent);
+app.component('HeaderComponent', HeaderComponent);
+app.component('FooterComponent', FooterComponent);
+// toast 
+// Buat instance toastApp dan mount ke body
+const toastApp = createApp(ToastComponent);
+const toastDiv = document.createElement('div');
+document.body.appendChild(toastDiv);
+const toastInstance = toastApp.mount(toastDiv);
 
-// capasitor/device 
-
-
+// Tambahkan toastInstance.showToast ke global properties
+app.config.globalProperties.$toast = toastInstance.showToast;
 // run 
+
 router.isReady().then(() => {
   app.mount('#app');
 });

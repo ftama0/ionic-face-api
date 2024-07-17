@@ -15,7 +15,7 @@
                 </ion-grid>
             </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content class="ion-padding" scroll-y="false">
             <form @submit.prevent="submitForm">
                 <ion-card class="ion-margin-top">
                     <ion-list>
@@ -55,67 +55,55 @@
     </ion-page>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, computed, watch, getCurrentInstance } from 'vue';
 import { logIn, personOutline, keyOutline } from 'ionicons/icons';
 import { useLoginStore } from '@/store/loginStore';
 import { useRouter } from 'vue-router';
 
-export default {
-    name: 'Login',
-    components: {},
-    setup() {
-        const vdata = ref({
-            username: '',
-            password: ''
-        });
-        const icons = {
-            logIn,
-            personOutline,
-            keyOutline,
-        };
-        const isLoading = ref(false);
-        const loginStore = useLoginStore(); // Menggunakan useLoginStore untuk mendapatkan store
-        const { proxy } = getCurrentInstance()
-        const router = useRouter();
-        // api 
-        const submitForm = async () => {
-            try {
-                isLoading.value = true;
-                console.log('masuk', vdata.value)
-                const result = await loginStore.login(vdata.value.username, vdata.value.password);
-                router.push({ name: 'Home' });
-            } catch (error) {
-                console.error('Login failed:', error);
-                proxy.$toast('Username or password is wrong', 'danger');
-            }
-            finally {
-                isLoading.value = false;
-            }
-        };
-
-
-        onMounted(() => {
-            if (localStorage.getItem('user-login')) {
-                loginStore.autoLogin(localStorage.getItem('user-login')).then(() => {
-                    proxy.$toast('Welcome Back', 'primary');
-                    // Redirect
-                    router.push({ name: 'Home' });
-                }).catch((error) => {
-                    console.error('Auto login error:', error);
-                    proxy.$toast(error.message || 'Silahkan login terlebih dahulu', 'warning');
-                });
-            }
-        });
-
-        return {
-            vdata,
-            icons,
-            submitForm,
-            isLoading,
-        };
-    },
+const vdata = ref({
+    username: '',
+    password: ''
+});
+const icons = {
+    logIn,
+    personOutline,
+    keyOutline,
 };
+const isLoading = ref(false);
+const loginStore = useLoginStore(); // Menggunakan useLoginStore untuk mendapatkan store
+const { proxy } = getCurrentInstance()
+const router = useRouter();
+// api 
+const submitForm = async () => {
+    try {
+        isLoading.value = true;
+        console.log('masuk', vdata.value)
+        const result = await loginStore.login(vdata.value.username, vdata.value.password);
+        router.push({ name: 'Home' });
+    } catch (error) {
+        console.error('Login failed:', error);
+        proxy.$toast('Username or password is wrong', 'danger');
+    }
+    finally {
+        isLoading.value = false;
+    }
+};
+
+
+onMounted(async () => {
+    if (localStorage.getItem('user-login')) {
+        await loginStore.autoLogin(localStorage.getItem('user-login')).then(() => {
+            proxy.$toast('Welcome Back', 'primary');
+            // Redirect
+            router.push({ name: 'Home' });
+        }).catch((error) => {
+            console.error('Auto login error:', error);
+            proxy.$toast(error.message || 'Silahkan login terlebih dahulu', 'warning');
+        });
+    }
+});
+
 </script>
 
 <style>

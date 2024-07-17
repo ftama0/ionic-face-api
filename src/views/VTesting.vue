@@ -20,20 +20,11 @@
     </ion-page>
 </template>
 
-<script>
+<script setup>
 import { IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-    components: {
-        IonButtons,
-        IonContent,
-        IonHeader,
-        IonMenu,
-        IonMenuButton,
-        IonPage,
-        IonTitle,
-        IonToolbar,
-    },
-});
+// or using : 
+// v-bind="$attrs"
+defineOptions({
+    inheritAttrs: false
+})
 </script>

@@ -1,22 +1,18 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import HomePage from '../views/HomePage.vue'
 import NewItem from '@/views/NewItem.vue';
-import Login from '@/views/Login.vue';
-import Testing from '@/views/Testing.vue';
-import InfoDevice from '@/views/InfoDevice.vue';
-import Home from '@/views/Home.vue';
-
 const routes = [
-  {
-    path: '/',
-    redirect: '/Login'
-  },
   // {
   //   path: '/home',
   //   name: 'Home',
   //   component: HomePage
   //   //  component: () => import('@/views/HomePage.vue'),
   // },
+  {
+    path: '/',
+    redirect: '/Login'
+  },
+
   {
     path: '/new',
     name: 'NewItem',
@@ -25,22 +21,32 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: () => import('@/views/VLogin.vue'),
+    
   },
   {
     path: '/info-device',
     name: 'InfoDevice',
-    component: InfoDevice,
+    component: () => import('@/views/InfoDevice.vue'),
+    
   },
   {
     path: '/testing',
     name: 'testing',
-    component: Testing,
+    component: () => import('@/views/VTesting.vue'),
+    
   },
-    {
+  {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: () => import('@/views/VHome.vue'),
+    
+  },
+  {
+    path: '/purchaseRequestList',
+    name: 'PurchaseRequestList',
+    component: () => import('@/views/PurchaseRequest/VPurchaseRequestList.vue'),
+    
   },
 ]
 

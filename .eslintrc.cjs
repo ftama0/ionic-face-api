@@ -15,7 +15,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'vue/no-deprecated-slot-attribute': 'off',
   },
-  chainWebpack: (config) => {
-    config.plugins.delete('prefetch');
-  },
+  // chainWebpack: (config) => {
+  //   config.plugins.delete('prefetch');
+  // },
 }
