@@ -8,14 +8,33 @@ export const purchaseRequestStore = defineStore({
 id: 'purchaseRequest', // ID store
 
 state: () => ({
-        jumlahPR:  null,
+        totalPr:  null,
+        daftarPr:  [],
+        daftarEss: [],
     }),
 actions: {
-    async jumlahPR(username) {
+    async fetchTotalPr(username) {
         try {
-            const res = await prService.totalPR(username);
-            this.jumlahPR = res;
-            return this.jumlahPR;
+            const res = await prService.fetchTotalPr(username);
+            this.totalPr = res;
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
+        }
+    },
+    async fetchListPr(username) {
+        try {
+            const res = await prService.fetchListPr(username);
+            this.daftarPr = res;
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
+        }
+    },  
+    async fetchUserEss(page, perPage, search = '') {
+        try {
+            const res = await prService.fetchUserEss(page, perPage, search);
+            this.daftarEss = [...this.daftarEss, ...res.dataku];
         } catch (error) {
             console.error('Login error:', error);
             throw error;

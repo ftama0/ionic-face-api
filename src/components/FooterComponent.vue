@@ -1,22 +1,43 @@
 <template>
+
     <ion-fab slot="fixed" vertical="bottom" horizontal="center">
         <ion-fab-button router-link="/home">
             <ion-icon :icon="icons.homeOutline"></ion-icon>
         </ion-fab-button>
     </ion-fab>
     <ion-footer>
-        <ion-toolbar class="toolbar-custom">
-            <!-- <ion-button slot="start" shape="round">
-                <ion-icon :icon="icons.homeOutline"></ion-icon>
-            </ion-button>
-            <ion-button slot="center" shape="round">
-                <ion-icon :icon="icons.personOutline"></ion-icon>
-            </ion-button>
-            <ion-button slot="end" shape="round">
-                <ion-icon :icon="icons.homeOutline"></ion-icon>
-            </ion-button> -->
-        </ion-toolbar>
+        <ion-toolbar class="toolbar-custom"></ion-toolbar>
     </ion-footer>
+    <!-- opsi pakai tabs  : -->
+    <!-- <ion-tabs>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="center">
+            <ion-fab-button router-link="/home">
+                <ion-icon :icon="icons.homeOutline"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+        <ion-router-outlet></ion-router-outlet>
+        <ion-tab-bar slot="bottom">
+            <ion-tab-button tab="home" href="/home">
+                <ion-icon :icon="icons.informationCircleOutline" />
+                <ion-label>Info</ion-label>
+            </ion-tab-button>
+
+            <ion-tab-button tab="home" href="/home">
+                <ion-icon :icon="icons.settingsOutline" />
+                <ion-label>Setting</ion-label>
+            </ion-tab-button>
+
+            <ion-tab-button tab="home" href="/home">
+                <ion-icon :icon="icons.bagHandleOutline" />
+                <ion-label>Library</ion-label>
+            </ion-tab-button>
+
+            <ion-tab-button tab="home" href="/home">
+                <ion-icon :icon="icons.bagHandleOutline" />
+                <ion-label>Search</ion-label>
+            </ion-tab-button>
+        </ion-tab-bar>
+    </ion-tabs> -->
 </template>
 
 

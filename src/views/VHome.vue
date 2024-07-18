@@ -35,34 +35,43 @@
                             <ion-card-content router-link="/purchaseRequestList">
                                 <ion-icon class="custom-icon" :icon="icons.bagHandleOutline"></ion-icon>
                                 <span class="button-text">Purchase Request List</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPO }}</ion-badge>
+                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
                     <ion-col size="6" class="ion-col">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseRequestList">
+                            <ion-card-content>
                                 <ion-icon class="custom-icon" :icon="icons.bagCheckOutline"></ion-icon>
                                 <span class="button-text">Purchase Order List</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPO }}</ion-badge>
+                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
                     <ion-col size="6" class="ion-col">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseRequestList">
+                            <ion-card-content>
                                 <ion-icon class="custom-icon" :icon="icons.cartOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Request</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPO }}</ion-badge>
+                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
                     <ion-col size="6" class="ion-col">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseRequestList">
+                            <ion-card-content>
                                 <ion-icon class="custom-icon" :icon="icons.basketOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Order</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPO }}</ion-badge>
+                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-col>
+                    <ion-col size="6" class="ion-col">
+                        <ion-card class="ion-card">
+                            <ion-card-content router-link="/userManagement">
+                                <ion-icon class="custom-icon" :icon="icons.peopleOutline"></ion-icon>
+                                <span class="button-text">User Management</span>
+                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
@@ -75,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, getCurrentInstance } from 'vue';
+import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
@@ -87,7 +96,6 @@ const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
 const router = useRouter();
 const vdata = ref({});
-const totalPO = ref(null);
 const mainContentId = 'home-content';
 // api 
 const submitForm = async () => {
@@ -108,12 +116,10 @@ const handlePurchaseOrder = async () => {
         isLoading.value = false;
     }
 };
-const getPR = async () => {
+const fetchTotalPr = async () => {
     try {
         isLoading.value = true;
-        const res = await prStore.jumlahPR(vdata.value.username);
-        totalPO.value = res;
-        console.log(res);
+        await prStore.fetchTotalPr(vdata.value.username);
     } catch (error) {
     }
     finally {
@@ -131,14 +137,16 @@ const initialize = async () => {
         router.push({ name: 'Login' });
     }
 };
-
+// computed 
+const totalPR = computed(() => prStore.totalPr);
 onMounted(async () => {
     await initialize();
-    // await getPR();
-    proxy.$toast('Hello dare', 'danger');
+    // await fetchTotalPr();
+    // proxy.$toast('Hello dare', 'danger');
 
 });
 </script>
+
 <style scoped>
 .custom-button {
     display: flex;
@@ -183,11 +191,19 @@ onMounted(async () => {
 }
 
 .ion-col {
+    display: flex;
+    flex: 1 1 auto;
     padding: 0;
     margin-top: 0;
 }
 
 .ion-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 100px;
+    max-height: 200px;
+    width: 100%;
     border-radius: 15px;
 }
 

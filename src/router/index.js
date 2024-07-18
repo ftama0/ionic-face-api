@@ -48,6 +48,16 @@ const routes = [
     component: () => import('@/views/PurchaseRequest/VPurchaseRequestList.vue'),
     
   },
+  {
+    path: '/purchaseRequestListDetail',
+    name: 'PurchaseRequestListDetail',
+    component: () => import('@/views/PurchaseRequest/VPurchaseRequestListDetail.vue'),
+  },
+  {
+    path: '/userManagement',
+    name: 'UserManagement',
+    component: () => import('@/views/VUserManagement.vue'),
+  },
 ]
 
 const router = createRouter({

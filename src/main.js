@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-
 import { IonicVue, IonPage, IonHeader,IonContent, IonFooter, IonTitle, IonToolbar, IonButton, IonInput, IonLabel,
   IonList, IonItem, IonIcon, IonCol, IonRow, IonGrid, IonCard, IonInputPasswordToggle, IonAlert, IonLoading, 
   IonToast, IonCardContent, IonBadge, IonMenu, IonButtons, IonMenuButton, IonMenuToggle, IonFab, IonFabButton, IonSearchbar, 
@@ -10,7 +9,14 @@ import { IonicVue, IonPage, IonHeader,IonContent, IonFooter, IonTitle, IonToolba
   IonCardHeader,
   IonTabs,
   IonTabBar,
-  IonTabButton} from '@ionic/vue';
+  IonTabButton,
+  IonRouterOutlet,
+  IonRefresher,
+  IonRefresherContent,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonActionSheet,
+  IonAvatar} from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -43,10 +49,11 @@ import '@ionic/vue/css/palettes/dark.system.css';
 import './theme/variables.css';
 
 // custom by ferry
-import { addIcons } from 'ionicons';
-import 'remixicon/fonts/remixicon.css';
+// import { addIcons } from 'ionicons';
+// import 'remixicon/fonts/remixicon.css';
+// import axios from 'axios';
 import './assets/css/main.css';
-import axios from 'axios';
+import './assets/css/main.scss';
 import { createPinia } from 'pinia';
 // plugins 
 import ToastPlugin from '@/plugins/toast'; 
@@ -100,6 +107,13 @@ app.component('ion-card-header', IonCardHeader);
 app.component('ion-tabs', IonTabs);
 app.component('ion-tab-bar', IonTabBar);
 app.component('ion-tab-button', IonTabButton);
+app.component('ion-router-outlet', IonRouterOutlet);
+app.component('ion-refresher', IonRefresher);
+app.component('ion-refresher-content', IonRefresherContent);
+app.component('ion-action-sheet', IonActionSheet);
+app.component('ion-infinite-scroll', IonInfiniteScroll);
+app.component('ion-infinite-scroll-content', IonInfiniteScrollContent);
+app.component('ion-avatar', IonAvatar);
 // custom component
 app.component('MenuComponent', MenuComponent);
 app.component('HeaderComponent', HeaderComponent);

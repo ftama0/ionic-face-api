@@ -1,30 +1,26 @@
 <template>
-    <ion-menu content-id="main-content">
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Menu Content</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">This is the menu content.</ion-content>
-    </ion-menu>
-    <ion-page id="main-content">
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons slot="start">
-                    <ion-menu-button></ion-menu-button>
-                </ion-buttons>
-                <ion-title>Menu</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding"> Tap the button in the toolbar to open the menu. </ion-content>
-    </ion-page>
+    <ion-content>
+        <ion-list>
+            <ion-item v-for="(item, index) in items" :key="index">
+                <ion-avatar slot="start">
+                    <img :src="'https://picsum.photos/80/80?random=' + index" alt="avatar" />
+                </ion-avatar>
+                <ion-label>{{ item }}</ion-label>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll>
+            <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
+            </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+    </ion-content>
 </template>
 
 <script setup>
-import { IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-// or using : 
-// v-bind="$attrs"
-defineOptions({
-    inheritAttrs: false
-})
+import { reactive } from 'vue';
+
+const items = reactive([]);
+
+for (let i = 1; i < 51; i++) {
+    items.push(`Item ${i}`);
+}
 </script>
