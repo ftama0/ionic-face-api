@@ -3,6 +3,8 @@
 import { defineStore } from 'pinia';
 import { loginService, prService } from '@/services/apiService'; // Import  dari services
 import { getDeviceInfo, isMobilePlatform } from '@/plugins/device';
+import { storage, initStorage } from '@/store/storage';
+await initStorage(); 
 
 export const useLoginStore = defineStore({
 id: 'login', // ID store
@@ -18,10 +20,9 @@ actions: {
             formData.append('username', username);
             formData.append('password', password);
             // Panggil services untuk melakukan login
-            const resSignIn = await loginService.signInMobile(formData);
-            localStorage.setItem('user-login', JSON.stringify(resSignIn));
-            this.user = resSignIn;
-            return resSignIn; // Mengembalikan data dari respons jika perlu
+            const res = await loginService.signInMobile(formData);
+            await storage.set('user-login', JSON.stringify(res));
+            this.user = res ;
         } catch (error) {
             console.error('Login error:', error);
             throw error;
@@ -46,12 +47,12 @@ actions: {
 
                 if (mobileId === idMobile) {
                   // Melakukan login jika ID mobile sesuai
-                const resSignIn = await loginService.signInMobile(formData);
-                localStorage.setItem('user-login', JSON.stringify(resSignIn));
-                this.commit('setUser', resSignIn);
+                const res = await loginService.signInMobile(formData);
+                await storage.set('user-login', JSON.stringify(res));
+                this.commit('setUser', res);
                 return true;
                 } else {
-                    localStorage.clear();
+                    await storage.clear();
                     throw new Error('Mobile ID mismatch. Please Login Again');
                 }
             } else {
@@ -63,13 +64,13 @@ actions: {
             throw error;
         }
     },
-    logout() {
-        localStorage.removeItem('user-login');
-        localStorage.removeItem('user');
+    async logout() {
+        await storage.remove('user-login');
+        await storage.remove('user');
         this.user = null; 
     }, 
-    loadUser() {
-        const user = localStorage.getItem('user-login');
+    async loadUser() {
+        const user = await storage.get('user-login');
         if (user) {
             let data = JSON.parse(user);
             this.user = data.profilku;

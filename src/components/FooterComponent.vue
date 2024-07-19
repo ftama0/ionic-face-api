@@ -5,7 +5,7 @@
             <ion-icon :icon="icons.homeOutline"></ion-icon>
         </ion-fab-button>
     </ion-fab>
-    <ion-footer>
+    <ion-footer class="ion-no-border">
         <ion-toolbar class="toolbar-custom"></ion-toolbar>
     </ion-footer>
     <!-- opsi pakai tabs  : -->

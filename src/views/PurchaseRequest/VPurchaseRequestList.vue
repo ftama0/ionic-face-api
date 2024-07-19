@@ -83,7 +83,6 @@ const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
 const router = useRouter();
-const user = ref({});
 const page = ref(1);
 const perPage = ref(5);
 const search = ref('');
@@ -138,9 +137,9 @@ const handleRefresh = (event) => {
     }, 2000);
 };
 const initialize = async () => {
-    if (loginStore.loadUser()) {
-        user.value = loginStore.user;
-    } else {
+    const res = await loginStore.loadUser()
+    // console.log(res);
+    if (!res) {
         router.push({ name: 'Login' });
     }
 };
@@ -158,6 +157,7 @@ const fetchListPr = async () => {
 };
 // computed 
 const vdata = computed(() => prStore.daftarPr);
+const user = computed(() => loginStore.user);
 // function 
 const loadMore = async (event) => {
     await fetchListPr();
@@ -174,7 +174,6 @@ const formatCurrency = (price) => {
 // mount 
 onMounted(async () => {
     isLoading.value = true;
-
     await initialize();
     await fetchListPr();
 });

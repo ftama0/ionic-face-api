@@ -39,24 +39,24 @@
                 </ion-menu-toggle>
             </ion-list>
         </ion-content>
-        <ion-footer class="ion-padding" scroll-y="false">
-            <ion-list lines="none">
-                <ion-item @click="logout">
-                    <ion-grid class="ion-text-center">
-                        <ion-row>
-                            <ion-col>
-                                <ion-button color="danger" size="medium">
-                                    Logout
-                                    <ion-icon slot="end" :icon="icons.logOutOutline"></ion-icon>
-                                </ion-button>
-                            </ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </ion-item>
-                <ion-item class="ion-text-center">
-                    <ion-label>Version 1.0.0</ion-label>
-                </ion-item>
-            </ion-list>
+        <ion-footer class="ion-no-border" scroll-y="false">
+            <ion-toolbar>
+                <ion-grid class="ion-text-center">
+                    <ion-row>
+                        <ion-col>
+                            <ion-button color="danger" size="medium" @click="logout">
+                                Logout
+                                <ion-icon slot="end" :icon="icons.logOutOutline"></ion-icon>
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-label>Version 1.0.0</ion-label>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-toolbar>
         </ion-footer>
     </ion-menu>
 </template>

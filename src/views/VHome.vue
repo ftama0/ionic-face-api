@@ -8,29 +8,25 @@
                     <ion-col size="12">
                         <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
                             <ion-card-content class="ion-text-center">
-                                <ion-grid>
-                                    <ion-row>
-                                        <ion-col size="12">
-                                            <img src="@/assets/images/logo_Hasnur.png" alt="App Icon" width="120"
-                                                height="100" />
-                                        </ion-col>
-                                        <ion-col size="12">
-                                            <h2>Welcome</h2>
-                                            <h3>{{ vdata.fullname }}</h3>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-grid>
+                                <ion-row class="center-content ">
+                                    <ion-col size="6" class="ion-no-padding">
+                                        <img src="@/assets/images/logo_Hasnur.png" alt="App Icon" width="80"
+                                            height="auto" />
+                                    </ion-col>
+                                    <ion-col size="6" class="ion-no-padding">
+                                        <h6>Welcome</h6>
+                                        <h2 style="font-weight: bold;">{{ user.fullname }}</h2>
+                                    </ion-col>
+                                </ion-row>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
                 </ion-row>
-            </ion-grid>
-            <ion-grid>
                 <ion-row>
-                    <ion-col size="12">
+                    <ion-col size="12" class="ion-no-padding">
                         <ion-text class="main-menu-title">Main Menu</ion-text>
                     </ion-col>
-                    <ion-col size="6" class="ion-col">
+                    <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
                             <ion-card-content router-link="/purchaseRequestList">
                                 <ion-icon class="custom-icon" :icon="icons.bagHandleOutline"></ion-icon>
@@ -39,7 +35,7 @@
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col">
+                    <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
                             <ion-card-content>
                                 <ion-icon class="custom-icon" :icon="icons.bagCheckOutline"></ion-icon>
@@ -48,7 +44,7 @@
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col">
+                    <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
                             <ion-card-content>
                                 <ion-icon class="custom-icon" :icon="icons.cartOutline"></ion-icon>
@@ -57,7 +53,7 @@
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col">
+                    <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
                             <ion-card-content>
                                 <ion-icon class="custom-icon" :icon="icons.basketOutline"></ion-icon>
@@ -66,7 +62,7 @@
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col">
+                    <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
                             <ion-card-content router-link="/userManagement">
                                 <ion-icon class="custom-icon" :icon="icons.peopleOutline"></ion-icon>
@@ -95,7 +91,6 @@ const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
 const router = useRouter();
-const vdata = ref({});
 const mainContentId = 'home-content';
 // api 
 const submitForm = async () => {
@@ -119,7 +114,7 @@ const handlePurchaseOrder = async () => {
 const fetchTotalPr = async () => {
     try {
         isLoading.value = true;
-        await prStore.fetchTotalPr(vdata.value.username);
+        await prStore.fetchTotalPr(user.value.username);
     } catch (error) {
     }
     finally {
@@ -131,14 +126,15 @@ const logout = () => {
     router.push({ name: 'Login' });
 };
 const initialize = async () => {
-    if (loginStore.loadUser()) {
-        vdata.value = loginStore.user;
-    } else {
+    const res = await loginStore.loadUser()
+    // console.log(res);
+    if (!res) {
         router.push({ name: 'Login' });
     }
 };
 // computed 
 const totalPR = computed(() => prStore.totalPr);
+const user = computed(() => loginStore.user);
 onMounted(async () => {
     await initialize();
     // await fetchTotalPr();
@@ -205,6 +201,14 @@ onMounted(async () => {
     max-height: 200px;
     width: 100%;
     border-radius: 15px;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /* Ensure the column takes up the full height of the row */
 }
 
 .main-menu-title {

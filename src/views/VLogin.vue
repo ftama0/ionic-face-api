@@ -17,33 +17,34 @@
         </ion-header>
         <ion-content class="ion-padding" scroll-y="false">
             <form @submit.prevent="submitForm">
-                <ion-card class="ion-margin-top">
-                    <ion-list>
-                        <ion-item class="ion-padding-top">
-                            <ion-icon :icon="icons.personOutline"></ion-icon>
-                            <ion-input label="" type="text" placeholder="Enter Username"
-                                v-model="vdata.username"></ion-input>
-                        </ion-item>
-                        <ion-item class="ion-padding-top">
-                            <ion-icon :icon="icons.keyOutline"></ion-icon>
-                            <ion-input label="" type="password" placeholder="Enter Password" v-model="vdata.password">
+                <ion-grid fixed>
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-input label-placement="stacked" label="Username" placeholder="Enter Username"
+                                type="text" fill="outline" v-model="vdata.username">
+                                <ion-icon slot="start" :icon="icons.personOutline" aria-hidden="true"></ion-icon>
+                            </ion-input>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-input label-placement="stacked" label="Password" placeholder="Enter Password"
+                                type="password" fill="outline" v-model="vdata.password">
+                                <ion-icon slot="start" :icon="icons.keyOutline" aria-hidden="true"></ion-icon>
                                 <ion-input-password-toggle slot="end"></ion-input-password-toggle>
                             </ion-input>
-                        </ion-item>
-                    </ion-list>
-                    <ion-row class="ion-justify-content-end ion-padding-top ">
-                        <ion-col size="auto">
-                            <ion-button type="submit" id="login-button" size="medium">
-                                Login
-                                <ion-icon slot="end" :icon="icons.logIn"></ion-icon>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ion-button expand="full" type="submit" id="login-button" size="medium">
+                                <span>Login</span>
+                                <ion-icon slot="end" :icon="icons.logInOutline"></ion-icon>
                             </ion-button>
                             <ion-loading v-if="isLoading" message="Loading ..." spinner="circles"></ion-loading>
                         </ion-col>
+
                     </ion-row>
-                </ion-card>
+                </ion-grid>
             </form>
         </ion-content>
-        <ion-footer class="ion-no-border ion-padding-bottom">
+        <ion-footer class="ion-no-border" keyboard-attach>
             <ion-toolbar>
                 <ion-title class="ion-text-center">
                     <h6>Copyright © 2024</h6>
@@ -57,7 +58,6 @@
 
 <script setup>
 import { ref, onMounted, computed, watch, getCurrentInstance } from 'vue';
-import { logIn, personOutline, keyOutline } from 'ionicons/icons';
 import { useLoginStore } from '@/store/loginStore';
 import { useRouter } from 'vue-router';
 
@@ -65,14 +65,10 @@ const vdata = ref({
     username: '',
     password: ''
 });
-const icons = {
-    logIn,
-    personOutline,
-    keyOutline,
-};
 const isLoading = ref(false);
 const loginStore = useLoginStore(); // Menggunakan useLoginStore untuk mendapatkan store
 const { proxy } = getCurrentInstance()
+const icons = ref(proxy.$icons);
 const router = useRouter();
 // api 
 const submitForm = async () => {
@@ -106,6 +102,4 @@ onMounted(async () => {
 
 </script>
 
-<style>
-/* Add your custom styles here */
-</style>
+<style scoped></style>

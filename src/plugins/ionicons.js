@@ -1,7 +1,7 @@
 // src/plugins/ionicons.js
 import { addIcons } from 'ionicons';
 import {
-  heart, logIn, personOutline, keyOutline, basketOutline,basketSharp, cartOutline,
+  heart, logInOutline, personOutline, keyOutline, basketOutline,basketSharp, cartOutline,
   homeOutline, logOutOutline, personCircleOutline, cashOutline, bagOutline,
   bagHandleOutline,bagHandleSharp, bagCheckOutline, settingsOutline, 
   informationCircleOutline, ellipsisHorizontal,ellipsisHorizontalCircle, 
@@ -9,7 +9,7 @@ import {
 } from 'ionicons/icons';
 
 const icons = {
-  heart, logIn, personOutline, keyOutline, basketOutline,basketSharp, cartOutline,
+  heart, logInOutline, personOutline, keyOutline, basketOutline,basketSharp, cartOutline,
   homeOutline, logOutOutline, personCircleOutline, cashOutline, bagOutline,
   bagHandleOutline,bagHandleSharp, bagCheckOutline, settingsOutline, 
   informationCircleOutline, ellipsisHorizontal,ellipsisHorizontalCircle, 
