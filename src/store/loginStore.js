@@ -4,7 +4,6 @@ import { defineStore } from 'pinia';
 import { loginService, prService } from '@/services/apiService'; // Import  dari services
 import { getDeviceInfo, isMobilePlatform } from '@/plugins/device';
 import { storage, initStorage } from '@/store/storage';
-await initStorage(); 
 
 export const useLoginStore = defineStore({
 id: 'login', // ID store
@@ -15,6 +14,7 @@ state: () => ({
     }),
 actions: {
     async login(username, password) {
+        await initStorage(); 
         try {
             const formData = new FormData();
             formData.append('username', username);
@@ -29,6 +29,7 @@ actions: {
         }
     },
     async autoLogin(data) {
+        await initStorage(); 
         try {
             const isMobile = await isMobilePlatform();
             // Proceed only if the platform is not web
@@ -65,11 +66,13 @@ actions: {
         }
     },
     async logout() {
+        await initStorage(); 
         await storage.remove('user-login');
         await storage.remove('user');
-        this.user = null; 
+        this.$reset();
     }, 
     async loadUser() {
+        await initStorage(); 
         const user = await storage.get('user-login');
         if (user) {
             let data = JSON.parse(user);

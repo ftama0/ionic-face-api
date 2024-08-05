@@ -16,7 +16,15 @@ import { IonicVue, IonPage, IonHeader,IonContent, IonFooter, IonTitle, IonToolba
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonActionSheet,
-  IonAvatar} from '@ionic/vue';
+  IonAvatar,
+  IonBackButton,
+  IonFabList,
+  IonChip,
+  IonSelect,
+  IonSelectOption,
+  IonToggle,
+  IonProgressBar,
+  IonPopover} from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -114,6 +122,14 @@ app.component('ion-action-sheet', IonActionSheet);
 app.component('ion-infinite-scroll', IonInfiniteScroll);
 app.component('ion-infinite-scroll-content', IonInfiniteScrollContent);
 app.component('ion-avatar', IonAvatar);
+app.component('ion-back-button', IonBackButton);
+app.component('ion-fab-list', IonFabList);
+app.component('ion-chip', IonChip);
+app.component('ion-select', IonSelect);
+app.component('ion-select-option', IonSelectOption);
+app.component('ion-toggle', IonToggle);
+app.component('ion-progress-bar', IonProgressBar);
+app.component('ion-popover', IonPopover);
 // custom component
 app.component('MenuComponent', MenuComponent);
 app.component('HeaderComponent', HeaderComponent);

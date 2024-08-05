@@ -3,7 +3,6 @@
     <ion-page id="pr-content" v-bind="$attrs">
         <HeaderComponent :title="'Purchase Request List'" />
         <ion-content class="ion-padding">
-
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
@@ -32,16 +31,17 @@
                                                 {{ formatCurrency(item.SUM_Total_Price) }}</ion-label>
                                         </ion-col>
                                         <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="warning" class="action-button"
-                                                @click="openActionSheet(item.BANFN)">
+                                            <ion-button size="default" shape="round" color="warning"
+                                                class="action-button" @click="openActionSheet(item.BANFN)">
                                                 <ion-icon aria-hidden="true" slot="start"
                                                     :icon="icons.openOutline"></ion-icon>
                                                 Action
                                             </ion-button>
                                         </ion-col>
                                         <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="dark" class="detail-button"
-                                                router-link="/purchaseRequestListDetail">
+                                            <ion-button size="default" shape="round" color="dark" class="detail-button"
+                                                @click="fetchDetailPr(item)">
+                                                <!-- router-link="/purchaseRequestListDetail"> -->
                                                 <ion-icon aria-hidden="true" slot="start"
                                                     :icon="icons.readerOutline"></ion-icon>
                                                 Detail
@@ -91,6 +91,63 @@ const mainContentId = 'pr-content';
 const isOpen = ref(false);
 const selectedId = ref('');
 const actionSheetButtons = ref([]);
+
+const fetchDetailPr = async (item) => {
+    try {
+        isLoading.value = true;
+        await prStore.fetchDetailPr(item.BANFN);
+        await prStore.saveParentPr(item);
+        router.push({ name: 'PurchaseRequestListDetail' });
+    } catch (error) {
+        console.error('Login failed:', error);
+        proxy.$toast('Username or password is wrong', 'danger');
+    }
+    finally {
+        isLoading.value = false;
+    }
+};
+
+// api 
+const handleRefresh = (event) => {
+    setTimeout(() => {
+        event.target.complete();
+    }, 2000);
+};
+const initialize = async () => {
+    const res = await loginStore.loadUser()
+    // console.log(res);
+    if (!res) {
+        router.replace({ name: 'Login' });
+    }
+};
+const fetchListPr = async () => {
+    try {
+        isLoading.value = true;
+        await prStore.fetchListPr(user.value.username);
+        page.value++;
+    } catch (error) {
+        console.error('Error fetching list PR:', error);
+    }
+    finally {
+        isLoading.value = false;
+    }
+};
+// computed 
+const vdata = computed(() => prStore.daftarPr);
+const user = computed(() => loginStore.user);
+// another merthod 
+const loadMore = async (event) => {
+    await fetchListPr();
+    event.target.complete();
+};
+const handleSearch = debounce(() => {
+    page.value = 1;
+    prStore.daftarPr = [];
+    fetchListPr();
+}, 1000); // Set the debounce delay to 300ms or adjust as needed
+const formatCurrency = (price) => {
+    return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+};
 // Method to open Action Sheet with specific item
 const openActionSheet = (id) => {
     console.log(id)
@@ -119,57 +176,43 @@ const openActionSheet = (id) => {
     setOpen(true);
 };
 // Method to handle action button click in Action Sheet
-const handleAction = (action) => {
+const handleAction = async (action) => {
+    isLoading.value = true;
     console.log(`Action ${action} for Id: ${selectedId.value}`);
-    // Handle your action here (e.g., send to backend, update state, etc.)
-    // Reset values
-    setOpen(false);
-};
 
+    let response;
+
+    switch (action) {
+        case 'Approve':
+            response = await prStore.ApprovePr(user.value.username, selectedId.value);
+            if (response) {
+                console.log(response)
+                proxy.$toast(response.message, response.status);
+                // proxy.$toast('Approve Done', 'success');
+            }
+            break;
+        case 'Reject':
+            response = await prStore.RejectPr(user.value.username, selectedId.value);
+            if (response) {
+                proxy.$toast('Reject Done', 'success');
+            }
+            break;
+        default:
+            console.warn(`Unknown action: ${action}`);
+            proxy.$toast('Failed, contact admin', 'danger');
+
+    }
+
+    if (response) {
+        setOpen(false);
+        isLoading.value = false;
+    } else {
+        console.error(`Failed to ${action.toLowerCase()} PR for Id: ${selectedId.value}`);
+    }
+};
 // Method to set the open state of the Action Sheet
 const setOpen = (state) => {
     isOpen.value = state;
-};
-// api 
-const handleRefresh = (event) => {
-    setTimeout(() => {
-        event.target.complete();
-    }, 2000);
-};
-const initialize = async () => {
-    const res = await loginStore.loadUser()
-    // console.log(res);
-    if (!res) {
-        router.push({ name: 'Login' });
-    }
-};
-const fetchListPr = async () => {
-    try {
-        isLoading.value = true;
-        await prStore.fetchListPr(user.value.username);
-        page.value++;
-    } catch (error) {
-        console.error('Error fetching list PR:', error);
-    }
-    finally {
-        isLoading.value = false;
-    }
-};
-// computed 
-const vdata = computed(() => prStore.daftarPr);
-const user = computed(() => loginStore.user);
-// function 
-const loadMore = async (event) => {
-    await fetchListPr();
-    event.target.complete();
-};
-const handleSearch = debounce(() => {
-    page.value = 1;
-    prStore.daftarPr = [];
-    fetchListPr();
-}, 600); // Set the debounce delay to 300ms or adjust as needed
-const formatCurrency = (price) => {
-    return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
 };
 // mount 
 onMounted(async () => {
@@ -180,10 +223,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.approve-button {
-    --color: green;
-    --color-activated: darkgreen;
-}
 
 .ion-card-title {
     font-size: 18px;
@@ -202,7 +241,14 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
 }
-
+ion-fab-button {
+    --background: #b7f399;
+    --background-activated: #87d361;
+    --background-hover: #a3e681;
+    --border-radius: 15px;
+    --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --color: black;
+}
 /* ion-action-sheet.my-custom-class {
     --background: #EBF4F6;
     --backdrop-opacity: 0.6;

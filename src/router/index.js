@@ -37,6 +37,12 @@ const routes = [
     
   },
   {
+    path: '/testingEss',
+    name: 'testingEss',
+    component: () => import('@/views/VtestingEss.vue'),
+    
+  },
+  {
     path: '/home',
     name: 'Home',
     component: () => import('@/views/VHome.vue'),
@@ -45,13 +51,38 @@ const routes = [
   {
     path: '/purchaseRequestList',
     name: 'PurchaseRequestList',
-    component: () => import('@/views/PurchaseRequest/VPurchaseRequestList.vue'),
+    component: () => import('@/views/purchaseRequest/VPurchaseRequestList.vue'),
     
   },
   {
     path: '/purchaseRequestListDetail',
     name: 'PurchaseRequestListDetail',
-    component: () => import('@/views/PurchaseRequest/VPurchaseRequestListDetail.vue'),
+    component: () => import('@/views/purchaseRequest/VPurchaseRequestListDetail.vue'),
+  },
+  {
+    path: '/userManagement',
+    name: 'UserManagement',
+    component: () => import('@/views/VUserManagement.vue'),
+  },
+  {
+    path: '/userAccount',
+    name: 'UserAccount',
+    component: () => import('@/views/userAccount/VUserAccount.vue'),
+  },
+  {
+    path: '/userAccountDetail',
+    name: 'UserAccountDetail',
+    component: () => import('@/views/userAccount/VUserAccountDetail.vue'),
+  },
+  {
+    path: '/userReleasePr',
+    name: 'UserReleasePr',
+    component: () => import('@/views/userReleasePr/VUserReleasePr.vue'),
+  },
+  {
+    path: '/userReleasePrDetail',
+    name: 'UserReleasePrDetail',
+    component: () => import('@/views/userReleasePr/VUserReleasePrDetail.vue'),
   },
   {
     path: '/userManagement',

@@ -1,5 +1,5 @@
 <template>
-    <ion-page>
+    <ion-page v-bind="$attrs">
         <ion-header :translucent="true" class="ion-no-border">
             <ion-toolbar class="ion-text-center ion-padding-top ion-margin-top">
                 <ion-grid>
@@ -15,25 +15,25 @@
                 </ion-grid>
             </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding" scroll-y="false">
+        <ion-content class="ion-padding" scroll-y="true">
             <form @submit.prevent="submitForm">
                 <ion-grid fixed>
                     <ion-row>
-                        <ion-col size="12">
+                        <ion-col size="12" class="ion-margin-top">
                             <ion-input label-placement="stacked" label="Username" placeholder="Enter Username"
-                                type="text" fill="outline" v-model="vdata.username">
+                                type="text" fill="outline" v-model="vdata.username" required>
                                 <ion-icon slot="start" :icon="icons.personOutline" aria-hidden="true"></ion-icon>
                             </ion-input>
                         </ion-col>
-                        <ion-col size="12">
+                        <ion-col size="12" class="ion-margin-top">
                             <ion-input label-placement="stacked" label="Password" placeholder="Enter Password"
-                                type="password" fill="outline" v-model="vdata.password">
+                                type="password" fill="outline" v-model="vdata.password" required>
                                 <ion-icon slot="start" :icon="icons.keyOutline" aria-hidden="true"></ion-icon>
                                 <ion-input-password-toggle slot="end"></ion-input-password-toggle>
                             </ion-input>
                         </ion-col>
-                        <ion-col size="12">
-                            <ion-button expand="full" type="submit" id="login-button" size="medium">
+                        <ion-col size="12" class="ion-margin-top">
+                            <ion-button expand="full" type="submit" id="login-button" size="default" shape="round">
                                 <span>Login</span>
                                 <ion-icon slot="end" :icon="icons.logInOutline"></ion-icon>
                             </ion-button>
@@ -60,6 +60,7 @@
 import { ref, onMounted, computed, watch, getCurrentInstance } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { useRouter } from 'vue-router';
+import { Keyboard } from '@capacitor/keyboard';
 
 const vdata = ref({
     username: '',
@@ -75,7 +76,7 @@ const submitForm = async () => {
     try {
         isLoading.value = true;
         console.log('masuk', vdata.value)
-        const result = await loginStore.login(vdata.value.username, vdata.value.password);
+        await loginStore.login(vdata.value.username, vdata.value.password);
         router.push({ name: 'Home' });
     } catch (error) {
         console.error('Login failed:', error);
@@ -85,11 +86,10 @@ const submitForm = async () => {
         isLoading.value = false;
     }
 };
-
-
-onMounted(async () => {
-    if (localStorage.getItem('user-login')) {
-        await loginStore.autoLogin(localStorage.getItem('user-login')).then(() => {
+const initialize = async () => {
+    await loginStore.loadUser()
+    if (user.value) {
+        await loginStore.autoLogin(user.value).then(() => {
             proxy.$toast('Welcome Back', 'primary');
             // Redirect
             router.push({ name: 'Home' });
@@ -98,8 +98,39 @@ onMounted(async () => {
             proxy.$toast(error.message || 'Silahkan login terlebih dahulu', 'warning');
         });
     }
+};
+const user = computed(() => loginStore.user);
+
+loginStore
+onMounted(async () => {
+    await initialize();
+
+    // Keyboard.addListener('keyboardWillShow', (info) => {
+    //     document.querySelector('ion-footer').style.marginBottom = `${info.keyboardHeight}px`;
+    // });
+
+    // Keyboard.addListener('keyboardWillHide', () => {
+    //     document.querySelector('ion-footer').style.marginBottom = '0px';
+    // });
+    Keyboard.addListener('keyboardWillShow', () => {
+        document.querySelector('ion-footer').classList.add('hidden-footer');
+    });
+
+    Keyboard.addListener('keyboardWillHide', () => {
+        document.querySelector('ion-footer').classList.remove('hidden-footer');
+    });
 });
 
 </script>
 
-<style scoped></style>
+<style scoped>
+ion-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.hidden-footer {
+    display: none;
+}
+</style>

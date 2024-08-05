@@ -6,7 +6,7 @@
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
+                        <ion-card ref="userCard" class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
                             <ion-card-content class="ion-text-center">
                                 <ion-row class="center-content ">
                                     <ion-col size="6" class="ion-no-padding">
@@ -15,7 +15,7 @@
                                     </ion-col>
                                     <ion-col size="6" class="ion-no-padding">
                                         <h6>Welcome</h6>
-                                        <h2 style="font-weight: bold;">{{ user.fullname }}</h2>
+                                        <h2 v-if="user" style="font-weight: bold;">{{ user.fullname }}</h2>
                                     </ion-col>
                                 </ion-row>
                             </ion-card-content>
@@ -64,15 +64,32 @@
                     </ion-col>
                     <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/userManagement">
+                            <ion-card-content router-link="/userAccount">
                                 <ion-icon class="custom-icon" :icon="icons.peopleOutline"></ion-icon>
-                                <span class="button-text">User Management</span>
+                                <span class="button-text">User Account</span>
+                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-col>
+                    <ion-col size="6" class="ion-col ion-no-padding">
+                        <ion-card class="ion-card">
+                            <ion-card-content router-link="/userReleasePr">
+                                <ion-icon class="custom-icon" :icon="icons.idCardOutline"></ion-icon>
+                                <span class="button-text">User Release Code PR</span>
+                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-col>
+                    <ion-col size="6" class="ion-col ion-no-padding">
+                        <ion-card class="ion-card">
+                            <ion-card-content router-link="/userManagement">
+                                <ion-icon class="custom-icon" :icon="icons.idCardOutline"></ion-icon>
+                                <span class="button-text">User Release Code PO</span>
                                 <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
                 </ion-row>
-
             </ion-grid>
         </ion-content>
         <FooterComponent />
@@ -81,6 +98,7 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
+import { createGesture } from '@ionic/vue';
 import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
@@ -92,6 +110,7 @@ const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
 const router = useRouter();
 const mainContentId = 'home-content';
+const userCard = ref(null);
 // api 
 const submitForm = async () => {
 };
@@ -123,27 +142,63 @@ const fetchTotalPr = async () => {
 };
 const logout = () => {
     loginStore.logout();
-    router.push({ name: 'Login' });
+    router.replace({ name: 'Login' });
 };
 const initialize = async () => {
     const res = await loginStore.loadUser()
-    // console.log(res);
-    if (!res) {
-        router.push({ name: 'Login' });
+    if (!user.value) {
+        router.replace({ name: 'Login' });
     }
 };
 // computed 
 const totalPR = computed(() => prStore.totalPr);
 const user = computed(() => loginStore.user);
+
+// Methods
+const onMove = (detail) => {
+    const { deltaX } = detail;
+    if (deltaX > 0) {
+        userCard.value.$el.style.transform = `translateX(${deltaX}px)`;
+    }
+};
+
+const onEnd = (detail) => {
+    const { deltaX } = detail;
+    if (deltaX > 100) {
+        userCard.value.$el.style.transition = 'transform 0.3s ease-out';
+        userCard.value.$el.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            userCard.value.$el.style.display = 'none';
+        }, 300);
+    } else {
+        userCard.value.$el.style.transition = 'transform 0.3s ease-out';
+        userCard.value.$el.style.transform = 'translateX(0)';
+    }
+};
 onMounted(async () => {
     await initialize();
     // await fetchTotalPr();
     // proxy.$toast('Hello dare', 'danger');
+    if (userCard.value) {
+        console.log('userCard', userCard.value)
+        const gesture = createGesture({
+            el: userCard.value.$el,
+            gestureName: 'swipe-to-dismiss',
+            onMove: (detail) => onMove(detail),
+            onEnd: (detail) => onEnd(detail),
+        });
 
+        gesture.enable();
+    }
 });
 </script>
 
 <style scoped>
+ion-card {
+    position: relative;
+    transition: transform 0.3s ease-out;
+}
+
 .custom-button {
     display: flex;
     flex-direction: column;

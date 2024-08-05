@@ -49,6 +49,30 @@ export const prService = {
       throw error;
     }
   },
+  async fetchDetailPr(id) {
+    try {
+      const res = await apiService.get(`/getDetailPR?BANFN=${id}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async ApprovePr(username, id) {
+    try {
+      const res = await apiService.post(`/ApprovePR?BANFN=${id}&user=${username}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async RejectPr(username, id) {
+    try {
+      const res = await apiService.post(`/RejectPR?BANFN=${id}&user=${username}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
   async fetchUserEss(page = 1, perPage = 5, search = '') {
     try {
         const res = await apiEss.get(`/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`);

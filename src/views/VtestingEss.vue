@@ -10,53 +10,6 @@
                         <ion-searchbar v-model="search" placeholder="Search PR Number"
                             @ionInput="handleSearch"></ion-searchbar>
                     </ion-col>
-                    <!-- <ion-col size="12">
-                        <div v-for="(item, index) in dataPR" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
-                                <ion-card-header color="secondary">
-                                    <ion-text class="ion-card-title">{{ item.BANFN }}</ion-text>
-                                </ion-card-header>
-                                <ion-card-content>
-                                    <ion-row class="ion-padding-top">
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label">{{ item.HEADER }}</ion-label>
-                                        </ion-col>
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label">{{ item.total_item }} Item</ion-label>
-                                        </ion-col>
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label">{{ item.BADAT }}</ion-label>
-                                        </ion-col>
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label ion-card-title">Rp.
-                                                {{ item.SUM_Total_Price }}</ion-label>
-                                        </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="warning" class="action-button"
-                                                id="open-action-sheet">
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.openOutline"></ion-icon>
-                                                Action
-                                            </ion-button>
-                                        </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="dark" class="detail-button">
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.readerOutline"></ion-icon>
-                                                Detail
-                                            </ion-button>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-card-content>
-                            </ion-card>
-                            <ion-action-sheet trigger="open-action-sheet" header="Actions"
-                                :buttons="actionSheetButtons"></ion-action-sheet>
-                        </div>
-                        <ion-infinite-scroll>
-                            <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
-                            </ion-infinite-scroll-content>
-                        </ion-infinite-scroll>
-                    </ion-col> -->
                     <ion-col size="12">
                         <div v-for="(item, index) in dataESS" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
@@ -207,6 +160,11 @@ const dataPR = computed(() => prStore.daftarPr);
 const dataESS = computed(() => prStore.daftarEss);
 // function 
 const loadMore = async (event) => {
+    if (dataESS.value.length >= dataESS.totalData) {
+        event.target.disabled = true;
+        event.target.complete();
+        return;
+    }
     await fetchListPr();
     event.target.complete();
 };

@@ -43,7 +43,7 @@
 
 <style scoped>
 .toolbar-custom {
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.0.1);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
     border-top-left-radius: 40px;
     border-top-right-radius: 40px;
     margin-top: 10px;

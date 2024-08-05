@@ -6,6 +6,8 @@ import {
   bagHandleOutline,bagHandleSharp, bagCheckOutline, settingsOutline, 
   informationCircleOutline, ellipsisHorizontal,ellipsisHorizontalCircle, 
   openOutline, readerOutline, checkmarkOutline,closeOutline,peopleOutline,
+  filterOutline, personAddOutline,createOutline, trashOutline,
+  idCardOutline, ellipsisHorizontalCircleOutline, addOutline,  
 } from 'ionicons/icons';
 
 const icons = {
@@ -14,6 +16,8 @@ const icons = {
   bagHandleOutline,bagHandleSharp, bagCheckOutline, settingsOutline, 
   informationCircleOutline, ellipsisHorizontal,ellipsisHorizontalCircle, 
   openOutline, readerOutline, checkmarkOutline,closeOutline,peopleOutline,
+  filterOutline, personAddOutline,createOutline, trashOutline,
+  idCardOutline, ellipsisHorizontalCircleOutline, addOutline,  
 };
 
 export default {

@@ -12,7 +12,7 @@
 
 <style scoped>
 .toolbar-custom {
-    box-shadow: 0 -4px 16px rgba(0, 0, 1, 0.2);
+    box-shadow: 0 -4px 16px rgba(0, 0, 1, 0.1);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     background-color: var(--ion-background-color);
