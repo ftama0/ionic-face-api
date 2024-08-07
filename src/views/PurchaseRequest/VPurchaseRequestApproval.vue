@@ -1,52 +1,46 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
-    <ion-page id="userAccount-content" v-bind="$attrs">
-        <HeaderComponent :title="'User Account'" />
+    <ion-page id="pr-content" v-bind="$attrs">
+        <HeaderComponent :title="'Purchase Request List'" />
         <ion-content class="ion-padding">
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-searchbar v-model="search" placeholder="Search User"
+                        <ion-searchbar v-model="search" placeholder="Search PR Number"
                             @ionInput="handleSearch"></ion-searchbar>
                     </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col size="12" class="ion-padding">
-                        <ion-select aria-label="status" label="Status select" label-placement="floating"
-                            placeholder="Status" fill="outline">
-                            <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="active">Active</ion-select-option>
-                            <ion-select-option value="nonActive">Non Active</ion-select-option>
-                        </ion-select>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
                     <ion-col size="12">
                         <div v-for="(item, index) in vdata" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
-                                <ion-card-header>
-                                    <ion-row class="ion-align-items-center">
-                                        <ion-col size="6" class="ion-text-center">
-                                            <ion-text class="ion-card-title">{{ item.BANFN }}</ion-text>
-                                        </ion-col>
-                                        <ion-col size="6" class="ion-text-center">
-                                            <ion-chip>Active</ion-chip>
-                                        </ion-col>
-                                    </ion-row>
+                                <ion-card-header color="secondary">
+                                    <ion-text class="ion-card-title">{{ item.BANFN }}</ion-text>
                                 </ion-card-header>
                                 <ion-card-content>
-                                    <ion-row>
+                                    <ion-row class="ion-padding-top">
+                                        <ion-col size="12">
+                                            <ion-label class="ion-card-label">{{ item.HEADER }}</ion-label>
+                                        </ion-col>
+                                        <ion-col size="12">
+                                            <ion-label class="ion-card-label">{{ item.total_item }} Item</ion-label>
+                                        </ion-col>
+                                        <ion-col size="12">
+                                            <ion-label class="ion-card-label">{{ item.BADAT }}</ion-label>
+                                        </ion-col>
+                                        <ion-col size="12">
+                                            <ion-label class="ion-card-label ion-card-title">Rp.
+                                                {{ formatCurrency(item.SUM_Total_Price) }}</ion-label>
+                                        </ion-col>
                                         <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="warning" class="action-button"
-                                                @click="openActionSheet(item.BANFN)">
+                                            <ion-button size="default" shape="round" color="warning"
+                                                class="action-button" @click="openActionSheet(item.BANFN)">
                                                 <ion-icon aria-hidden="true" slot="start"
                                                     :icon="icons.openOutline"></ion-icon>
                                                 Action
                                             </ion-button>
                                         </ion-col>
                                         <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="dark" class="detail-button"
-                                                @click="fetchDetailUserAccount(item)">
+                                            <ion-button size="default" shape="round" color="dark" class="detail-button"
+                                                @click="fetchDetailPr(item)">
                                                 <!-- router-link="/purchaseRequestListDetail"> -->
                                                 <ion-icon aria-hidden="true" slot="start"
                                                     :icon="icons.readerOutline"></ion-icon>
@@ -64,11 +58,6 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-            <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-                <ion-fab-button @click="handleAction('Add')">
-                    <ion-icon :icon="icons.personAddOutline"></ion-icon>
-                </ion-fab-button>
-            </ion-fab>
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
@@ -84,36 +73,31 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
-import { userManagementStore } from '@/store/userManagementStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
-import Modal from './VUserAccountModal.vue'
-import { modalController } from '@ionic/vue';
-
 // data
 const { proxy } = getCurrentInstance()
 const isLoading = ref(false);
 const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
-const userStore = userManagementStore();
 const router = useRouter();
 const page = ref(1);
 const perPage = ref(5);
 const search = ref('');
-const mainContentId = 'userAccount-content';
+const mainContentId = 'pr-content';
 /// State to manage Action Sheet
 const isOpen = ref(false);
 const selectedId = ref('');
 const actionSheetButtons = ref([]);
 
-const fetchDetailUserAccount = async (item) => {
+const fetchDetailPr = async (item) => {
     try {
         isLoading.value = true;
-        // await userStore.fetchDetailUserAccount(item.BANFN);
-        // await userStore.saveParentPr(item);
-        router.push({ name: 'UserAccountDetail' });
+        await prStore.fetchDetailPr(item.BANFN);
+        await prStore.saveParentPr(item);
+        router.push({ name: 'PurchaseRequestListDetail' });
     } catch (error) {
         console.error('Login failed:', error);
         proxy.$toast('Username or password is wrong', 'danger');
@@ -170,17 +154,17 @@ const openActionSheet = (id) => {
     selectedId.value = id;
     actionSheetButtons.value = [
         {
-            text: 'Edit',
-            handler: () => handleAction('Edit'),
+            text: 'Approve',
+            handler: () => handleAction('Approve'),
             cssClass: 'approve-button',
-            icon: icons.value.createOutline,
+            icon: icons.value.checkmarkOutline,
         },
         {
-            text: 'Delete',
+            text: 'Reject',
             role: 'destructive',
             handler: () => handleAction('Reject'),
             cssClass: 'reject-button',
-            icon: icons.value.trashOutline,
+            icon: icons.value.closeOutline,
         },
         {
             text: 'Cancel',
@@ -197,16 +181,18 @@ const handleAction = async (action) => {
     console.log(`Action ${action} for Id: ${selectedId.value}`);
 
     let response;
+
     switch (action) {
-        case 'Add':
-            await openModal(action);
+        case 'Approve':
+            response = await prStore.approvePr(user.value.username, selectedId.value);
+            if (response) {
+                console.log(response)
+                proxy.$toast(response.message, response.status);
+                // proxy.$toast('Approve Done', 'success');
+            }
             break;
-        case 'Edit':
-            await openModal(action);
-            response = await prStore.ApprovePr(user.value.username, selectedId.value);
-            break;
-        case 'Delete':
-            response = await prStore.RejectPr(user.value.username, selectedId.value);
+        case 'Reject':
+            response = await prStore.rejectPr(user.value.username, selectedId.value);
             if (response) {
                 proxy.$toast('Reject Done', 'success');
             }
@@ -227,27 +213,6 @@ const handleAction = async (action) => {
 // Method to set the open state of the Action Sheet
 const setOpen = (state) => {
     isOpen.value = state;
-};
-const openModal = async (action) => {
-    const modal = await modalController.create({
-        component: Modal,
-        componentProps: {
-            // Kirim parameter ke modal
-            typeModal: action,
-            anotherParam: 123,
-        },
-    });
-    
-
-    modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
-
-    if (role === 'confirm') {
-        // message.value = `Hello, ${data}!`;
-        console.log(data);
-        proxy.$toast('Add User Account Successfully', 'success');
-    }
 };
 // mount 
 onMounted(async () => {
@@ -276,17 +241,22 @@ onMounted(async () => {
     align-items: center;
 }
 
-ion-chip {
-    --background: green;
-    --color: white;
-}
-
 ion-fab-button {
-    --background: #FFB22C;
-    --background-activated: #FFDE4D;
-    --background-hover: #FFDE4D;
+    --background: #b7f399;
+    --background-activated: #87d361;
+    --background-hover: #a3e681;
     --border-radius: 15px;
     --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
     --color: black;
 }
+
+/* ion-action-sheet.my-custom-class {
+    --background: #EBF4F6;
+    --backdrop-opacity: 0.6;
+    --button-background-selected: #EBF4F6;
+    --button-color: #000000;
+    --button-color-activated: green;
+    --color: gray;
+    --ion-color-danger: #ff0000;
+} */
 </style>

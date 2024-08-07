@@ -57,7 +57,18 @@ const routes = [
   {
     path: '/purchaseRequestListDetail',
     name: 'PurchaseRequestListDetail',
-    component: () => import('@/views/purchaseRequest/VPurchaseRequestListDetail.vue'),
+    component: () => import('@/views/purchaseRequest/VPurchaseRequestDetail.vue'),
+  },
+  {
+    path: '/purchaseOrderList',
+    name: 'PurchaseOrderList',
+    component: () => import('@/views/purchaseOrder/VPurchaseOrderList.vue'),
+    
+  },
+  {
+    path: '/purchaseOrderListDetail',
+    name: 'PurchaseOrderListDetail',
+    component: () => import('@/views/purchaseOrder/VPurchaseOrderDetail.vue'),
   },
   {
     path: '/userManagement',
@@ -78,6 +89,11 @@ const routes = [
     path: '/userReleasePr',
     name: 'UserReleasePr',
     component: () => import('@/views/userReleasePr/VUserReleasePr.vue'),
+  },
+  {
+    path: '/userReleasePo',
+    name: 'UserReleasePo',
+    component: () => import('@/views/userReleasePo/VUserReleasePo.vue'),
   },
   {
     path: '/userReleasePrDetail',

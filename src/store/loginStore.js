@@ -2,7 +2,7 @@
 
 import { defineStore } from 'pinia';
 import { loginService, prService } from '@/services/apiService'; // Import  dari services
-import { getDeviceInfo, isMobilePlatform } from '@/plugins/device';
+import { getDeviceInfo, isMobilePlatform } from '@/plugins/devicePlugin';
 import { storage, initStorage } from '@/store/storage';
 
 export const useLoginStore = defineStore({

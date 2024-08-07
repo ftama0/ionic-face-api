@@ -2,7 +2,7 @@
 
 import { defineStore } from 'pinia';
 import { prService } from '@/services/apiService'; // Import loginService dari services
-import { getDeviceInfo, isMobilePlatform } from '@/plugins/device';
+import { getDeviceInfo, isMobilePlatform } from '@/plugins/devicePlugin';
 // import { useLoginStore } from './loginStore';
 
 export const purchaseRequestStore = defineStore({
@@ -14,6 +14,7 @@ state: () => ({
         detailPr:  [],
         parentPr:  [],
         daftarEss: [],
+        listRc: [],
     }),
 actions: {
     async fetchTotalPr(username) {
@@ -51,9 +52,9 @@ actions: {
             throw error;
         }
     },  
-    async ApprovePr(username, id) {
+    async approvePr(username, id) {
         try {
-            const res = await prService.ApprovePr(username, id);
+            const res = await prService.approvePr(username, id);
             await this.fetchListPr(username);
             return res;
         } catch (error) {
@@ -61,11 +62,21 @@ actions: {
             throw error;
         }
     },  
-    async RejectPr(username, id) {
+    async rejectPr(username, id) {
         try {
-            const res = await prService.RejectPr(username, id);
+            const res = await prService.rejectPr(username, id);
             await this.fetchListPr(username);
             return res;
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
+        }
+    },
+    async fetchReleaseCode() {
+        try {
+            const res = await prService.fetchReleaseCode();
+            this.listRc = res.filter(code => code.FRGGR === 'OH');
+            console.log(this.listRc);
         } catch (error) {
             console.error('Login error:', error);
             throw error;

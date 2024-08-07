@@ -37,7 +37,7 @@
                     </ion-col>
                     <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
-                            <ion-card-content>
+                            <ion-card-content router-link="/purchaseRequestList">
                                 <ion-icon class="custom-icon" :icon="icons.bagCheckOutline"></ion-icon>
                                 <span class="button-text">Purchase Order List</span>
                                 <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
@@ -82,7 +82,7 @@
                     </ion-col>
                     <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/userManagement">
+                            <ion-card-content router-link="/userReleasePO">
                                 <ion-icon class="custom-icon" :icon="icons.idCardOutline"></ion-icon>
                                 <span class="button-text">User Release Code PO</span>
                                 <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>

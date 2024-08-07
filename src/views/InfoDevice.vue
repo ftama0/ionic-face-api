@@ -33,7 +33,7 @@
 
 <script>
 import { ref, onMounted, computed, watch } from 'vue';
-import { getDeviceInfo, isMobilePlatform } from '@/plugins/device';
+import { getDeviceInfo, isMobilePlatform } from '@/plugins/devicePlugin';
 export default {
     name: 'Login',
     components: {},

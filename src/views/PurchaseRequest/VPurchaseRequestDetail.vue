@@ -5,69 +5,109 @@
                 <ion-buttons slot="start">
                     <ion-back-button></ion-back-button>
                 </ion-buttons>
-                <ion-title>Account Detail</ion-title>
+                <ion-title>Detail</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
             <ion-list>
                 <ion-item>
                     <ion-label>
-                        <h6>Username</h6>
-                        <p>aaaaa</p>
+                        <h6>PR Number</h6>
+                        <p>{{ parent.BANFN }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Full name</h6>
-                        <p>aaaaa</p>
+                        <h6>Header Note</h6>
+                        <p>{{ parent.HEADER }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Email</h6>
-                        <p>aaaaa</p>
+                        <h6>PR Type</h6>
+                        <p>{{ parent.BSART }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Role</h6>
-                        <p>aaaaa</p>
+                        <h6>PR Creator</h6>
+                        <p>{{ parent.AFNAM }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Create At</h6>
+                        <h6>Release Strategy</h6>
                         <p>Paragraph</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Update At</h6>
-                        <p>Paragraph</p>
-                    </ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-label>
-                        <h6>Last Login</h6>
-                        <p>Paragraph</p>
-                    </ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-label>
-                        <h6>Status</h6>
+                        <h6>Plant</h6>
                         <p>Paragraph</p>
                     </ion-label>
                 </ion-item>
             </ion-list>
-            <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+            <ion-list v-if="child && child.length">
+                <ion-item v-for="(item, index) in child" :key="index">
+                    <ion-label>
+                        <p>Item No.{{ index + 1 }}</p>
+                        <p>{{ item.TXZ01 }}</p>
+                        <ion-row>
+                            <ion-col size="2">
+                                <p>Qty</p>
+                            </ion-col>
+                            <ion-col size="1">
+                                <p>:</p>
+                            </ion-col>
+                            <ion-col size="8">
+                                <p>{{ item.MENGE }}</p>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="2">
+                                <p>Price</p>
+                            </ion-col>
+                            <ion-col size="1">
+                                <p>:</p>
+                            </ion-col>
+                            <ion-col size="8">
+                                <p>{{ item.PREIS }}</p>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="2">
+                                <p>Total</p>
+                            </ion-col>
+                            <ion-col size="1">
+                                <p>:</p>
+                            </ion-col>
+                            <ion-col size="8">
+                                <p>{{ item.PREIS }}</p>
+                            </ion-col>
+                        </ion-row>
+                    </ion-label>
+                </ion-item>
+            </ion-list>
+            <ion-fab slot="fixed" vertical="bottom" horizontal="end">
                 <ion-fab-button @click="openActionSheet(parent.BANFN)">
                     <ion-icon :icon="icons.openOutline"></ion-icon>
                 </ion-fab-button>
-            </ion-fab> -->
+                <!-- <ion-fab-list side="top">
+                    <ion-fab-button>
+                        <ion-icon :icon="icons.peopleOutline"></ion-icon>
+                    </ion-fab-button>
+                    <ion-fab-button>
+                        <ion-icon :icon="icons.peopleOutline"></ion-icon>
+                    </ion-fab-button>
+                    <ion-fab-button>
+                        <ion-icon :icon="icons.peopleOutline"></ion-icon>
+                    </ion-fab-button>
+                </ion-fab-list> -->
+            </ion-fab>
         </ion-content>
-        <!-- <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
+        <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
-        </ion-action-sheet> -->
+        </ion-action-sheet>
     </ion-page>
 </template>
 

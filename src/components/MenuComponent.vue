@@ -38,9 +38,34 @@
                             <ion-label class="ion-padding">Approval Purchase Order</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
+                    <ion-item lines="none" button @click="toggleDropdown">
+                        <ion-icon aria-hidden="true" slot="start" :icon="icons.basketOutline"></ion-icon>
+                        <ion-label class="ion-padding">User Management</ion-label>
+                        <ion-icon slot="end" :icon="dropdownIcon"></ion-icon>
+                    </ion-item>
+                    <ion-list v-if="isDropdownOpen" class="ion-padding-start">
+                        <ion-menu-toggle>
+                            <ion-item router-link="/userAccount">
+                                <ion-icon aria-hidden="true" slot="start" :icon="icons.basketOutline"></ion-icon>
+                                <ion-label class="ion-padding">User Account</ion-label>
+                            </ion-item>
+                        </ion-menu-toggle>
+                        <ion-menu-toggle>
+                            <ion-item router-link="/userReleasePR">
+                                <ion-icon aria-hidden="true" slot="start" :icon="icons.basketOutline"></ion-icon>
+                                <ion-label class="ion-padding">User Release PR</ion-label>
+                            </ion-item>
+                        </ion-menu-toggle>
+                        <ion-menu-toggle>
+                            <ion-item router-link="/userReleasePO">
+                                <ion-icon aria-hidden="true" slot="start" :icon="icons.basketOutline"></ion-icon>
+                                <ion-label class="ion-padding">User Release PO</ion-label>
+                            </ion-item>
+                        </ion-menu-toggle>
+                    </ion-list>
                 </ion-list>
             </ion-content>
-            <ion-footer class="ion-no-border" scroll-y="false">
+            <ion-footer scroll-y="false">
                 <ion-toolbar>
                     <ion-grid class="ion-text-center">
                         <ion-row>
@@ -53,7 +78,9 @@
                         </ion-row>
                         <ion-row>
                             <ion-col size="12">
-                                <ion-label>Version 1.0</ion-label>
+                                <ion-label>
+                                    <p>Version: {{ appVersion }}</p>
+                                </ion-label>
                             </ion-col>
                         </ion-row>
                     </ion-grid>
@@ -64,7 +91,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref, defineProps, computed } from 'vue';
+import { getCurrentInstance, ref, defineProps, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useLoginStore } from '@/store/loginStore';
 
@@ -82,6 +109,23 @@ const logout = () => {
     loginStore.logout();
     router.replace({ name: 'Login' });
 };
+const appVersion = ref('');
+const isDropdownOpen = ref(false);
+
+const getCurrentVersion = async () => {
+    appVersion.value = await proxy.$appUpdate.getCurrentAppVersion();
+};
+// methods 
+const dropdownIcon = computed(() => {
+    return isDropdownOpen.value ? icons.chevronUp : icons.chevronDown;
+});
+
+const toggleDropdown = () => {
+    isDropdownOpen.value = !isDropdownOpen.value;
+};
+onMounted(() => {
+    getCurrentVersion();
+});
 </script>
 
 <style scoped>

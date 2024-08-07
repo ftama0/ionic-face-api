@@ -137,7 +137,7 @@ const handleAction = async (action) => {
 
     switch (action) {
         case 'Approve':
-            response = await prStore.ApprovePr(user.value.username, selectedId.value);
+            response = await prStore.approvePr(user.value.username, selectedId.value);
             if (response) {
                 console.log(response)
                 proxy.$toast(response.message, response.status);
@@ -145,7 +145,7 @@ const handleAction = async (action) => {
             }
             break;
         case 'Reject':
-            response = await prStore.RejectPr(user.value.username, selectedId.value);
+            response = await prStore.rejectPr(user.value.username, selectedId.value);
             if (response) {
                 proxy.$toast('Reject Done', 'success');
             }

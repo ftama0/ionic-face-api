@@ -27,10 +27,10 @@
                                 <ion-card-header>
                                     <ion-row class="ion-align-items-center">
                                         <ion-col size="6" class="ion-text-center">
-                                            <ion-text class="ion-card-title">{{ item.BANFN }}</ion-text>
+                                            <ion-text class="ion-card-title">{{ item.username }}</ion-text>
                                         </ion-col>
                                         <ion-col size="6" class="ion-text-center">
-                                            <ion-chip>Active</ion-chip>
+                                            <ion-chip>{{ item.status }}</ion-chip>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-header>
@@ -90,6 +90,7 @@ import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import Modal from './VUserAccountModal.vue'
 import { modalController } from '@ionic/vue';
+import { A11y } from 'swiper/modules';
 
 // data
 const { proxy } = getCurrentInstance()
@@ -149,7 +150,16 @@ const fetchListPr = async () => {
     }
 };
 // computed 
-const vdata = computed(() => prStore.daftarPr);
+const fakeData = [
+    { username: 'User1', status: 'Active', array: ['A1', 'A2', 'A3'] },
+    { username: 'User2', status: 'Non Active', array: ['A1', 'A2', 'A3'] },
+    { username: 'User3', status: 'Active', array: ['A1', 'A2', 'A3'] },
+    { username: 'User4', status: 'Active', array: ['A1', 'A2', 'A3'] },
+    { username: 'User5', status: 'Active', array: ['A1', 'A2', 'A3'] }
+];
+
+const vdata = ref(fakeData);
+// const vdata = computed(() => fakeChan.listUserAcount);
 const user = computed(() => loginStore.user);
 // another merthod 
 const loadMore = async (event) => {
@@ -205,7 +215,7 @@ const handleAction = async (action) => {
             await openModal(action);
             break;
         case 'Delete':
-            const response = await prStore.RejectPr(user.value.username, selectedId.value);
+            const response = await prStore.rejectPr(user.value.username, selectedId.value);
             if (response) {
                 proxy.$toast('Reject Done', 'success');
                 setOpen(false);

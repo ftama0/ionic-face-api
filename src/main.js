@@ -24,7 +24,8 @@ import { IonicVue, IonPage, IonHeader,IonContent, IonFooter, IonTitle, IonToolba
   IonSelectOption,
   IonToggle,
   IonProgressBar,
-  IonPopover} from '@ionic/vue';
+  IonPopover,
+  IonCheckbox} from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -64,8 +65,9 @@ import './assets/css/main.css';
 import './assets/css/main.scss';
 import { createPinia } from 'pinia';
 // plugins 
-import ToastPlugin from '@/plugins/toast'; 
-import ionicons from './plugins/ionicons';
+import ToastPlugin from '@/plugins/toastPlugin'; 
+import ionicons from './plugins/ioniconsPlugin';
+import AppUpdatePlugin from './plugins/appUpdatePlugin';
 // compoennts
 import ToastComponent from '@/components/ToastComponent.vue'
 import MenuComponent from '@/components/MenuComponent.vue';
@@ -77,7 +79,8 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(pinia)
-  .use(ionicons);
+  .use(ionicons)
+  .use(AppUpdatePlugin);
 
 // component global 
 app.component('ion-content', IonContent);
@@ -130,6 +133,7 @@ app.component('ion-select-option', IonSelectOption);
 app.component('ion-toggle', IonToggle);
 app.component('ion-progress-bar', IonProgressBar);
 app.component('ion-popover', IonPopover);
+app.component('ion-checkbox', IonCheckbox);
 // custom component
 app.component('MenuComponent', MenuComponent);
 app.component('HeaderComponent', HeaderComponent);

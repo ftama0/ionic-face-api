@@ -4,36 +4,34 @@
             <ion-buttons slot="start">
                 <ion-button color="medium" @click="cancel">Cancel</ion-button>
             </ion-buttons>
-            <ion-title>{{ typeModal }} Account</ion-title>
+            <ion-title>{{ typeModal }} Release Code PO</ion-title>
             <ion-buttons slot="end" @click="triggerSubmit">
                 <ion-button type="submit" :strong="true">Save</ion-button>
             </ion-buttons>
             <ion-progress-bar v-if="loading" type="indeterminate" color="primary"></ion-progress-bar>
         </ion-toolbar>
     </ion-header>
-    <ion-content color="light">
-        <form ref="myForm" @submit.prevent="submitForm">
+    <ion-content color="light" style="background-color: white;">
+        <form ref="myForm" @submit.prevent="submitForm" style="background-color: white;">
             <ion-row class="ion-padding">
                 <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Username" type="text" fill="outline"
-                        label="Full Name" :clear-input="true" v-model="vdata.username" required></ion-input>
+                    <ion-select aria-label="status" label="User select" label-placement="floating" placeholder="Status"
+                        fill="outline">
+                        <ion-icon slot="start" :icon="icons.personOutline" aria-hidden="true"></ion-icon>
+                        <ion-select-option value="active">Ferry</ion-select-option>
+                        <ion-select-option value="nonActive">Malik</ion-select-option>
+                        <ion-select-option value="nonActive">Rifki</ion-select-option>
+                        <ion-select-option value="nonActive">Aldo</ion-select-option>
+                        <ion-select-option value="nonActive">Angga</ion-select-option>
+                        <ion-select-option value="nonActive">Angga</ion-select-option>
+                    </ion-select>
                 </ion-col>
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Fullname" type="text" fill="outline"
-                        label="Full Name" :clear-input="true" v-model="vdata.fullname" required></ion-input>
+                <ion-col size="12">
+                    <p>Release Code</p>
                 </ion-col>
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Email" type="email" fill="outline"
-                        label="Email" :clear-input="true" v-model="vdata.email" required></ion-input>
-                </ion-col>
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Role" type="text" fill="outline"
-                        label="Role" :clear-input="true" v-model="vdata.role" required></ion-input>
-                </ion-col>
-
-                <ion-col size="12" class="ion-padding status-container">
-                    <ion-label>Status</ion-label>
-                    <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
+                <ion-col size="12" v-for="(item, index) in listRc" :key="index">
+                    <ion-checkbox :value="item.FRGCO" label-placement="end">{{ item.FRGCT }}</ion-checkbox>
+                    <br />
                 </ion-col>
             </ion-row>
         </form>
@@ -45,21 +43,25 @@ import { ref, onMounted, computed, watch, getCurrentInstance, defineProps } from
 import { modalController } from '@ionic/vue';
 import { useLoginStore } from '@/store/loginStore';
 import { userManagementStore } from '@/store/userManagementStore';
+import { purchaseOrderStore } from '@/store/poStore';
 import { useRouter } from 'vue-router';
 import { Keyboard } from '@capacitor/keyboard';
 const { proxy } = getCurrentInstance()
+const icons = ref(proxy.$icons);
 const vdata = ref({
     status: true
 });
 const myForm = ref(null);
 const cancel = () => modalController.dismiss(null, 'cancel');
 const confirm = (data) => modalController.dismiss(data, 'confirm');
-const userStore = userManagementStore(); // Menggunakan useLoginStore untuk mendapatkan store
+const userStore = userManagementStore();
+const poStore = purchaseOrderStore();
 const props = defineProps({
     typeModal: String,
     anotherParam: Number,
 });
 const loading = ref(false);
+const isLoading = ref(false);
 
 
 const toggleStatus = (event) => {
@@ -87,9 +89,22 @@ const submitForm = async () => {
         loading.value = false;
     }
 };
+const fetchReleaseCode = async () => {
+    try {
+        isLoading.value = true;
+        await poStore.fetchReleaseCode();
+    } catch (error) {
+        console.error('Error fetching list PR:', error);
+    }
+    finally {
+        isLoading.value = false;
+    }
+};
+const listRc = computed(() => poStore.listRc);
 // mount 
 onMounted(async () => {
     console.log(props.typeModal)
+    await fetchReleaseCode();
 });
 </script>
 
@@ -98,5 +113,15 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+ion-checkbox {
+    --size: 32px;
+    --checkbox-background-checked: #6815ec;
+}
+
+ion-checkbox::part(container) {
+    border-radius: 6px;
+    border: 2px solid #6815ec;
 }
 </style>

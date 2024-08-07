@@ -2,7 +2,7 @@
 
 import { defineStore } from 'pinia';
 import { prService } from '@/services/apiService'; // Import loginService dari services
-import { getDeviceInfo, isMobilePlatform } from '@/plugins/device';
+import { getDeviceInfo, isMobilePlatform } from '@/plugins/devicePlugin';
 // import { useLoginStore } from './loginStore';
 
 export const userManagementStore = defineStore({
@@ -12,6 +12,7 @@ state: () => ({
         totalPr:  null,
         daftarPr:  [],
         user:  [],
+        listUserAcount:[],
     }),
 actions: {
     async fetchTotalPr(username) {
@@ -23,6 +24,17 @@ actions: {
             throw error;
         }
     },
+    async fetchListUser(data) {
+        try {
+            const res = await prService.fetchTotalPr(username);
+            this.totalPr = res;
+            this.user = data;
+            console.log('data user Account', this.user)
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
+        }
+    }, 
     async saveUserAccount(data) {
         try {
             this.user = data;

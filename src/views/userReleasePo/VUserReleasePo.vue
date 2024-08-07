@@ -1,7 +1,7 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="userReleasePr-content" v-bind="$attrs">
-        <HeaderComponent :title="'User Release Code PR'" />
+        <HeaderComponent :title="'User Release Code PO'" />
         <ion-content class="ion-padding">
             <ion-grid>
                 <ion-row>
@@ -99,7 +99,7 @@ import { userManagementStore } from '@/store/userManagementStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
-import Modal from './VUserReleasePrModal.vue';
+import Modal from './VUserReleasePoModal.vue';
 import { modalController } from '@ionic/vue';
 // data
 const { proxy } = getCurrentInstance()

@@ -1,4 +1,4 @@
-// src/plugins/device.js
+// src/plugins/devicePlugin.js
 import { Device } from '@capacitor/device';
 
 export const getDeviceInfo = async () => {
