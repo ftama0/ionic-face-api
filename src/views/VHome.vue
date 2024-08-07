@@ -31,22 +31,20 @@
                             <ion-card-content router-link="/purchaseRequestList">
                                 <ion-icon class="custom-icon" :icon="icons.bagHandleOutline"></ion-icon>
                                 <span class="button-text">Purchase Request List</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
                     <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseRequestList">
+                            <ion-card-content router-link="/purchaseOrderList">
                                 <ion-icon class="custom-icon" :icon="icons.bagCheckOutline"></ion-icon>
                                 <span class="button-text">Purchase Order List</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
                     <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
-                            <ion-card-content>
+                            <ion-card-content router-link="/purchaseRequestApproval">
                                 <ion-icon class="custom-icon" :icon="icons.cartOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Request</span>
                                 <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
@@ -55,7 +53,7 @@
                     </ion-col>
                     <ion-col size="6" class="ion-col ion-no-padding">
                         <ion-card class="ion-card">
-                            <ion-card-content>
+                            <ion-card-content router-link="/purchaseOrderApproval">
                                 <ion-icon class="custom-icon" :icon="icons.basketOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Order</span>
                                 <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
@@ -67,7 +65,6 @@
                             <ion-card-content router-link="/userAccount">
                                 <ion-icon class="custom-icon" :icon="icons.peopleOutline"></ion-icon>
                                 <span class="button-text">User Account</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
@@ -76,7 +73,6 @@
                             <ion-card-content router-link="/userReleasePr">
                                 <ion-icon class="custom-icon" :icon="icons.idCardOutline"></ion-icon>
                                 <span class="button-text">User Release Code PR</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
@@ -85,7 +81,6 @@
                             <ion-card-content router-link="/userReleasePO">
                                 <ion-icon class="custom-icon" :icon="icons.idCardOutline"></ion-icon>
                                 <span class="button-text">User Release Code PO</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
@@ -177,7 +172,7 @@ const onEnd = (detail) => {
 };
 onMounted(async () => {
     await initialize();
-    // await fetchTotalPr();
+    await fetchTotalPr();
     // proxy.$toast('Hello dare', 'danger');
     if (userCard.value) {
         console.log('userCard', userCard.value)
@@ -230,11 +225,17 @@ ion-card {
     font-size: 14px;
 }
 
+.card-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
 .badge-top-right {
     position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(50%, -50%);
+    top: 5px;
+    right: 5px;
+    /* transform: translate(50%, -50%); */
 }
 
 .ion-center {

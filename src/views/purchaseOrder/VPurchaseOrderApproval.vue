@@ -1,7 +1,7 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="pr-content" v-bind="$attrs">
-        <HeaderComponent :title="'Purchase Request List'" />
+        <HeaderComponent :title="'Purchase Request Order'" />
         <ion-content class="ion-padding">
             <ion-grid>
                 <ion-row>

@@ -48,6 +48,7 @@ const routes = [
     component: () => import('@/views/VHome.vue'),
     
   },
+  // * pr
   {
     path: '/purchaseRequestList',
     name: 'PurchaseRequestList',
@@ -55,10 +56,17 @@ const routes = [
     
   },
   {
+    path: '/purchaseRequestApproval',
+    name: 'PurchaseRequestApproval',
+    component: () => import('@/views/purchaseRequest/VPurchaseRequestApproval.vue'),
+    
+  },
+  {
     path: '/purchaseRequestListDetail',
     name: 'PurchaseRequestListDetail',
     component: () => import('@/views/purchaseRequest/VPurchaseRequestDetail.vue'),
   },
+  // * po
   {
     path: '/purchaseOrderList',
     name: 'PurchaseOrderList',
@@ -66,10 +74,17 @@ const routes = [
     
   },
   {
+    path: '/purchaseOrderApproval',
+    name: 'PurchaseOrderApproval',
+    component: () => import('@/views/purchaseOrder/VPurchaseOrderApproval.vue'),
+    
+  },
+  {
     path: '/purchaseOrderListDetail',
     name: 'PurchaseOrderListDetail',
     component: () => import('@/views/purchaseOrder/VPurchaseOrderDetail.vue'),
   },
+  // * user account
   {
     path: '/userManagement',
     name: 'UserManagement',
@@ -85,6 +100,7 @@ const routes = [
     name: 'UserAccountDetail',
     component: () => import('@/views/userAccount/VUserAccountDetail.vue'),
   },
+  // * user release code
   {
     path: '/userReleasePr',
     name: 'UserReleasePr',

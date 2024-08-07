@@ -21,19 +21,19 @@
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseRequestList">
+                        <ion-item router-link="/purchaseOrderList">
                             <ion-icon aria-hidden="true" slot="start" :icon="icons.bagCheckOutline"></ion-icon>
                             <ion-label class="ion-padding">Purchase Order List</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseRequestList">
+                        <ion-item router-link="/purchaseRequestApproval">
                             <ion-icon aria-hidden="true" slot="start" :icon="icons.cartOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Request</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseRequestList">
+                        <ion-item router-link="/purchaseOrderApproval">
                             <ion-icon aria-hidden="true" slot="start" :icon="icons.basketOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Order</ion-label>
                         </ion-item>

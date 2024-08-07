@@ -31,12 +31,12 @@
                                                 {{ formatCurrency(item.SUM_Total_Price) }}</ion-label>
                                         </ion-col>
                                         <ion-col size="6" class="center-col">
-                                            <ion-button size="default" shape="round" color="warning"
+                                            <!-- <ion-button size="default" shape="round" color="warning"
                                                 class="action-button" @click="openActionSheet(item.BANFN)">
                                                 <ion-icon aria-hidden="true" slot="start"
                                                     :icon="icons.openOutline"></ion-icon>
                                                 Action
-                                            </ion-button>
+                                            </ion-button> -->
                                         </ion-col>
                                         <ion-col size="6" class="center-col">
                                             <ion-button size="default" shape="round" color="dark" class="detail-button"
