@@ -45,7 +45,6 @@
                                                     :key="sIndex">
                                                     <ion-chip :id="'hover-trigger-' + sIndex">{{ strategy }}</ion-chip>
                                                 </div>
-                                                <!-- Display the click-trigger chip only if there are 5 or more items -->
                                                 <ion-chip v-if="item.release_strategy.length >= 5"
                                                     :id="'click-trigger-' + index">....</ion-chip>
                                             </div>
@@ -61,9 +60,6 @@
                                                 </div>
                                             </ion-content>
                                         </ion-popover>
-                                        <!-- <ion-popover trigger="hover-trigger-A2" trigger-action="hover">
-                                            <ion-content class="ion-padding">Hello World!</ion-content>
-                                        </ion-popover> -->
                                     </ion-row>
                                 </ion-card-content>
                             </ion-card>
@@ -162,11 +158,11 @@ const fetchListPr = async () => {
 // computed 
 // const vdata = computed(() => prStore.daftarPr);
 const fakeData = [
-    { username: 'User1', status: 'Active', level: 'Approver', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
-    { username: 'User2', status: 'Inactive', level: 'Reviewer', release_strategy: ['A1', 'A2', 'A3'] },
-    { username: 'User3', status: 'Active', level: 'Editor', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
-    { username: 'User4', status: 'Pending', level: 'Viewer', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
-    { username: 'User5', status: 'Suspended', level: 'Admin', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] }
+    { id: '1', username: 'User1', status: 'Active', level: 'Approver', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
+    { id: '2', username: 'User2', status: 'Inactive', level: 'Reviewer', release_strategy: ['A1', 'A2', 'A3'] },
+    { id: '3', username: 'User3', status: 'Active', level: 'Editor', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
+    { id: '4', username: 'User4', status: 'Pending', level: 'Viewer', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
+    { id: '5', username: 'User5', status: 'Suspended', level: 'Admin', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] }
 ];
 
 const vdata = ref(fakeData);
@@ -269,6 +265,9 @@ const openModal = async (action) => {
         proxy.$toast('Add User Account Successfully', 'success');
     }
 };
+const openPopover = (index) => {
+    this.popoverId = `click-trigger-${index}`;
+}
 // mount 
 onMounted(async () => {
     isLoading.value = true;
