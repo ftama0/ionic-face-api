@@ -5,6 +5,7 @@
 - 🟩 [@capacitor/haptics@6.0.0](https://github.com/ionic-team/capacitor-plugins.git)
 - 🟩 [@capacitor/keyboard@6.0.1](https://github.com/ionic-team/capacitor-plugins.git)
 - 🟩 [@capacitor/status-bar@6.0.0](https://github.com/ionic-team/capacitor-plugins.git)
+
 ## Cordova Plugins
 
 ## Dependencies
@@ -34,18 +35,19 @@
 - 🟧 [vitest@0.34.6](https://github.com/vitest-dev/vitest.git) - (Latest 2.0.4) - Is behind 2 major versions.
 - 🟩 [vue@3.4.31](https://github.com/vuejs/core.git) - (Latest 3.4.34)
 - 🟩 [vue-router@4.4.0](https://github.com/vuejs/router.git)
+
 ### Maintenance Score
+
 25 out of 30 dependencies were up to date without issues.
 
-
-
 ## Nonstandard naming
+
 The following files and folders do not follow the standard naming convention:
 
 - \App.vue
 - \assets\images\logo_Hasnur.png
 - \components\FooterComponent.vue
-- \components\formModalComponent.vue
+- \components\FormModalComponent.vue
 - \components\HeaderComponent.vue
 - \components\MenuComponent.vue
 - \components\ToastComponent.vue

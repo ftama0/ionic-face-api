@@ -30,7 +30,7 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, defineProps } from 'vue';
-import formModalComponent from '@/components/formModalComponent.vue';
+import FormModalComponent from '@/components/FormModalComponent.vue';
 import { userManagementStore } from '@/store/userManagementStore';
 import { modalController } from '@ionic/vue';
 

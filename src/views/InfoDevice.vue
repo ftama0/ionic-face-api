@@ -22,7 +22,7 @@
                 <ion-title class="ion-text-center">
                     <h6>Copyright © 2024</h6>
                     <h6>PT Hasnur Informasi Teknologi</h6>
-                    <h6 class="italic">All rights reserved</h6>
+                    <h6>All rights reserved</h6>
                 </ion-title>
             </ion-toolbar>
         </ion-footer>

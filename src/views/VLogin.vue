@@ -9,7 +9,7 @@
                                 height="120" />
                         </ion-col>
                         <ion-col size="12">
-                            <h3 class="ion-padding-top">Approval System</h3>
+                            <h3 class="ion-padding-top" ><b>Approval System</b></h3>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -47,9 +47,9 @@
         <ion-footer class="ion-no-border" keyboard-attach>
             <ion-toolbar>
                 <ion-title class="ion-text-center">
-                    <h6>Copyright © 2024</h6>
-                    <h6>PT Hasnur Informasi Teknologi</h6>
-                    <h6 class="italic">All rights reserved</h6>
+                    <h6> <b> Copyright © 2024 </b></h6>
+                    <h6> <b> PT Hasnur Informasi Teknologi</b> </h6>
+                    <h6><i><b> All rights reserved </b> </i> </h6>
                 </ion-title>
             </ion-toolbar>
         </ion-footer>

@@ -1,11 +1,17 @@
 html {
     --ion-dynamic-font: var(--ion-default-dynamic-font);
-    --ion-font-family: 'Roboto', sans-serif;
+    --ion-font-family: 'Inter', sans-serif;
   }
 .italic {
     font-style: italic;
 }
+body {
+  background-color: #ffffff;
+}
 
+ion-content {
+  --background: #ffffff;
+}
 /* toast css  */
 ion-toast.custom-toast {
   --background: #f4f4fa;

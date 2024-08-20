@@ -12,36 +12,27 @@
                     <ion-col size="12">
                         <div v-for="(item, index) in vdata" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
-                                <ion-card-header color="secondary">
-                                    <ion-text class="ion-card-title">{{ item.BANFN }}</ion-text>
-                                </ion-card-header>
                                 <ion-card-content>
-                                    <ion-row class="ion-padding-top">
+                                    <ion-row class="ion-margin-top">
                                         <ion-col size="12">
+                                            <ion-label class="ion-card-title">{{ item.BANFN }}</ion-label>
+                                        </ion-col>
+                                        <ion-col size="12" class="ion-no-padding-top ion-no-padding-bottom">
                                             <ion-label class="ion-card-label">{{ item.HEADER }}</ion-label>
                                         </ion-col>
-                                        <ion-col size="12">
+                                        <ion-col size="12" class="ion-no-padding-top ion-no-padding-bottom">
                                             <ion-label class="ion-card-label">{{ item.total_item }} Item</ion-label>
                                         </ion-col>
-                                        <ion-col size="12">
+                                        <ion-col size="12" class="ion-no-padding-top ion-no-padding-bottom">
                                             <ion-label class="ion-card-label">{{ item.BADAT }}</ion-label>
                                         </ion-col>
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label ion-card-title">Rp.
+                                        <ion-col size="6" class="center-col-1">
+                                            <ion-label class="ion-card-amount center-col">Rp.
                                                 {{ formatCurrency(item.SUM_Total_Price) }}</ion-label>
                                         </ion-col>
                                         <ion-col size="6" class="center-col">
-                                            <!-- <ion-button size="default" shape="round" color="warning"
-                                                class="action-button" @click="openActionSheet(item.BANFN)">
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.openOutline"></ion-icon>
-                                                Action
-                                            </ion-button> -->
-                                        </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <ion-button size="default" shape="round" color="dark" class="detail-button"
-                                                @click="fetchDetailPr(item)">
-                                                <!-- router-link="/purchaseRequestListDetail"> -->
+                                            <ion-button size="default" shape="default" color="white"
+                                                class="detail-button" @click="fetchDetailPr(item)">
                                                 <ion-icon aria-hidden="true" slot="start"
                                                     :icon="icons.readerOutline"></ion-icon>
                                                 Detail
@@ -224,8 +215,24 @@ onMounted(async () => {
 
 <style scoped>
 .ion-card-title {
-    font-size: 18px;
+    font-size: 20px;
+    line-height: 18px;
     font-weight: 600;
+    color: #0070F2;
+}
+
+.ion-card-amount {
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: 700;
+    color: #626060;
+}
+
+.ion-card-label {
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #626060;
 }
 
 .custom-item {
@@ -241,6 +248,11 @@ onMounted(async () => {
     align-items: center;
 }
 
+.center-col-1 {
+    display: flex;
+    align-items: center;
+}
+
 ion-fab-button {
     --background: #b7f399;
     --background-activated: #87d361;
@@ -248,6 +260,30 @@ ion-fab-button {
     --border-radius: 15px;
     --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
     --color: black;
+}
+
+.detail-button {
+    /* --background: #93e9be;
+    --background-hover: #9ce0be;
+    --background-activated: #88f4be;
+    --background-focused: #88f4be; */
+
+    --color: #0070F2;
+
+    --border-radius: 10px;
+    --border-color: #BCC3CA;
+    --border-style: solid;
+    --border-width: 1px;
+
+    /* --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.2); */
+
+    --ripple-color: deeppink;
+
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: 600;
 }
 
 /* ion-action-sheet.my-custom-class {

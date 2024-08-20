@@ -23,35 +23,33 @@
                 <ion-row>
                     <ion-col size="12">
                         <div v-for="(item, index) in vdata" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
+                            <ion-card class="ion-margin-top ion-elevation-3" style="border-radius: 15px;">
                                 <ion-card-header>
                                     <ion-row class="ion-align-items-center">
-                                        <ion-col size="6" class="ion-text-center">
+                                        <ion-col size="6" class="ion-text-left">
                                             <ion-text class="ion-card-title">{{ item.username }}</ion-text>
                                         </ion-col>
-                                        <ion-col size="6" class="ion-text-center">
-                                            <ion-chip>{{ item.status }}</ion-chip>
+                                        <ion-col size="6" class="ion-text-right">
+                                            <ChipComponent :color="item.status === 'Active' ? 'success' : 'danger'">
+                                                {{ item.status }}
+                                            </ChipComponent>
+
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-header>
                                 <ion-card-content>
                                     <ion-row>
-                                        <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="warning" class="action-button"
-                                                @click="openActionSheet(item.BANFN)">
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.openOutline"></ion-icon>
+                                        <ion-col size="6" class="ion-text-left">
+                                            <ButtonActionComponent :icon="icons.openOutline" :item="item"
+                                                :class="actionButton" @action-click="openActionSheet">
                                                 Action
-                                            </ion-button>
+                                            </ButtonActionComponent>
                                         </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <ion-button size="default" color="dark" class="detail-button"
-                                                @click="fetchDetailUserAccount(item)">
-                                                <!-- router-link="/purchaseRequestListDetail"> -->
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.readerOutline"></ion-icon>
+                                        <ion-col size="6" class="ion-text-right">
+                                            <ButtonActionComponent :icon="icons.readerOutline" :item="item"
+                                                :class="detailButton" @action-click="fetchDetailUserAccount">
                                                 Detail
-                                            </ion-button>
+                                            </ButtonActionComponent>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-content>
@@ -91,6 +89,8 @@ import { debounce } from 'lodash';
 import Modal from './VUserAccountModal.vue'
 import { modalController } from '@ionic/vue';
 import { A11y } from 'swiper/modules';
+import ButtonActionComponent from '@/components/ButtonActionComponent.vue';
+import ChipComponent from '@/components/ChipComponent.vue';
 
 // data
 const { proxy } = getCurrentInstance()
@@ -108,6 +108,11 @@ const mainContentId = 'userAccount-content';
 const isOpen = ref(false);
 const selectedId = ref('');
 const actionSheetButtons = ref([]);
+const actionButton = ref('action-button');
+const detailButton = ref('detail-button');
+const primary = ref('primary');
+const danger = ref('danger');
+
 
 const fetchDetailUserAccount = async (item) => {
     try {
@@ -175,8 +180,10 @@ const formatCurrency = (price) => {
     return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
 };
 // Method to open Action Sheet with specific item
-const openActionSheet = (id) => {
-    console.log(id)
+const openActionSheet = (item) => {
+    console.log(item);
+    console.log('item');
+    const id = item.id;
     selectedId.value = id;
     actionSheetButtons.value = [
         {
@@ -264,8 +271,9 @@ onMounted(async () => {
 
 <style scoped>
 .ion-card-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
+    line-height: 18px;
 }
 
 .custom-item {
@@ -279,11 +287,6 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-ion-chip {
-    --background: green;
-    --color: white;
 }
 
 ion-fab-button {
