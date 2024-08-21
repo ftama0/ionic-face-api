@@ -22,44 +22,42 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/VLogin.vue'),
-    
+
   },
   {
     path: '/info-device',
     name: 'InfoDevice',
     component: () => import('@/views/InfoDevice.vue'),
-    
+
   },
   {
     path: '/testing',
     name: 'testing',
     component: () => import('@/views/VTesting.vue'),
-    
+
   },
   {
     path: '/testingEss',
     name: 'testingEss',
     component: () => import('@/views/VtestingEss.vue'),
-    
+
   },
   {
     path: '/home',
     name: 'Home',
     component: () => import('@/views/VHome.vue'),
-    
+
   },
   // * pr
   {
     path: '/purchaseRequestList',
     name: 'PurchaseRequestList',
     component: () => import('@/views/purchaseRequest/VPurchaseRequestList.vue'),
-    
   },
   {
     path: '/purchaseRequestApproval',
     name: 'PurchaseRequestApproval',
     component: () => import('@/views/purchaseRequest/VPurchaseRequestApproval.vue'),
-    
   },
   {
     path: '/purchaseRequestListDetail',
@@ -71,13 +69,13 @@ const routes = [
     path: '/purchaseOrderList',
     name: 'PurchaseOrderList',
     component: () => import('@/views/purchaseOrder/VPurchaseOrderList.vue'),
-    
+
   },
   {
     path: '/purchaseOrderApproval',
     name: 'PurchaseOrderApproval',
     component: () => import('@/views/purchaseOrder/VPurchaseOrderApproval.vue'),
-    
+
   },
   {
     path: '/purchaseOrderListDetail',
