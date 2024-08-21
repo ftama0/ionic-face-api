@@ -1,6 +1,6 @@
 <template>
     <form-modal-component :config="modalConfig" :submitForm="customSubmitForm" @closeModal="handleCloseModal">
-        <template #content>
+        <template #content class="content-modal">
             <ion-row class="ion-padding">
                 <ion-col size="12" class="ion-padding-top">
                     <ion-input label-placement="stacked" placeholder="Enter Username" type="text" fill="outline"
@@ -39,7 +39,7 @@ const props = defineProps({
 });
 const modalConfig = ref({
     actionModal: props.action,
-    modalTitle: 'User Account',
+    modalTitle: 'New Account',
     cancelButtonText: 'Close',
     cancelButtonColor: 'danger',
     saveButtonText: 'Save',
@@ -83,4 +83,7 @@ onMounted(async () => { });
     justify-content: space-between;
 }
 
+.content-modal {
+    --ion-color-base: #ffffff;
+}
 </style>

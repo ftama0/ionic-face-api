@@ -12,62 +12,56 @@
             <ion-list>
                 <ion-item>
                     <ion-label>
-                        <h6>Username</h6>
-                        <p>aaaaa</p>
+                        <p class="detail__header">Username</p>
+                        <p class="detail__sub">aaaaa</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Full name</h6>
-                        <p>aaaaa</p>
+                        <p class="detail__header">Full name</p>
+                        <p class="detail__sub">aaaaa</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Email</h6>
-                        <p>aaaaa</p>
+                        <p class="detail__header">Email</p>
+                        <p class="detail__sub">aaaaa</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Role</h6>
-                        <p>aaaaa</p>
+                        <p class="detail__header">Role</p>
+                        <p class="detail__sub">aaaaa</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Create At</h6>
-                        <p>Paragraph</p>
+                        <p class="detail__header">Create At</p>
+                        <p class="detail__sub">Paragraph</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Update At</h6>
-                        <p>Paragraph</p>
+                        <p class="detail__header">Update At</p>
+                        <p class="detail__sub">Paragraph</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Last Login</h6>
-                        <p>Paragraph</p>
+                        <p class="detail__header">Last Login</p>
+                        <p class="detail__sub">Paragraph</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Status</h6>
-                        <p>Paragraph</p>
+                        <p class="detail__header">Status</p>
                     </ion-label>
+                    <ChipComponent>
+                        Active
+                    </ChipComponent>
                 </ion-item>
             </ion-list>
-            <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-                <ion-fab-button @click="openActionSheet(parent.BANFN)">
-                    <ion-icon :icon="icons.openOutline"></ion-icon>
-                </ion-fab-button>
-            </ion-fab> -->
         </ion-content>
-        <!-- <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
-            class="my-custom-class">
-        </ion-action-sheet> -->
     </ion-page>
 </template>
 
@@ -76,6 +70,8 @@ import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
+import ChipComponent from '@/components/ChipComponent.vue';
+
 // data
 const { proxy } = getCurrentInstance()
 const isLoading = ref(false);

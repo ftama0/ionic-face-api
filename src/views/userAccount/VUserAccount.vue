@@ -13,16 +13,16 @@
                 <ion-row>
                     <ion-col size="12" class="ion-padding">
                         <ion-select aria-label="status" label="Status select" label-placement="floating"
-                            placeholder="Status" fill="outline">
+                            placeholder="Status" fill="outline" v-model="selectedStatus">
                             <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="active">Active</ion-select-option>
-                            <ion-select-option value="nonActive">Non Active</ion-select-option>
+                            <ion-select-option value="Active">Active</ion-select-option>
+                            <ion-select-option value="Non Active">Non Active</ion-select-option>
                         </ion-select>
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col size="12">
-                        <div v-for="(item, index) in vdata" :key="index">
+                        <div v-for="(item, index) in filteredData" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3" style="border-radius: 15px;">
                                 <ion-card-header>
                                     <ion-row class="ion-align-items-center">
@@ -33,7 +33,6 @@
                                             <ChipComponent :color="item.status === 'Active' ? 'success' : 'danger'">
                                                 {{ item.status }}
                                             </ChipComponent>
-
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-header>
@@ -112,6 +111,7 @@ const actionButton = ref('action-button');
 const detailButton = ref('detail-button');
 const primary = ref('primary');
 const danger = ref('danger');
+const selectedStatus = ref('');
 
 
 const fetchDetailUserAccount = async (item) => {
@@ -261,6 +261,12 @@ const openModal = async (action) => {
         proxy.$toast('Add User Account Successfully', 'success');
     }
 };
+const filteredData = computed(() => {
+    if (!selectedStatus.value) {
+        return vdata.value; // Return all data if no status is selected
+    }
+    return vdata.value.filter(item => item.status === selectedStatus.value);
+});
 // mount 
 onMounted(async () => {
     isLoading.value = true;

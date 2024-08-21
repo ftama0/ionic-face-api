@@ -1,35 +1,87 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Contoh </ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <MenuComponent :contentId="mainContentId" />
+  <ion-page id="userAccount-content" v-bind="$attrs">
+    <HeaderComponent :title="'User Account'" />
     <ion-content class="ion-padding">
-      <ion-button expand="block" @click="openModal">Tambah Data</ion-button>
-      <p>{{ message }}</p>
+      <ion-card class="ion-card">
+        <ion-card-content>
+          <ion-item button detail="true" router-link="/userAccount">
+            <ion-icon class="custom__icon1" :icon="icons.peopleOutline" slot="start"></ion-icon>
+            <ion-label class="label__header">User Account</ion-label>
+          </ion-item>
+
+          <ion-item button detail="true" router-link="/userReleasePr">
+            <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
+            <ion-label class="label__header">User Release Code PR</ion-label>
+          </ion-item>
+
+          <ion-item button detail="true" router-link="/userReleasePo">
+            <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
+            <ion-label class="label__header">User Release Code PO</ion-label>
+          </ion-item>
+
+          <ion-item button detail="true" router-link="/purchaseRequestApproval">
+            <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
+            <ion-label class="label__header">Maintain Cost Center PR</ion-label>
+          </ion-item>
+
+          <ion-item button detail="true" router-link="/purchaseRequestApproval">
+            <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
+            <ion-label class="label__header">Maintain Cost Center PO</ion-label>
+          </ion-item>
+
+        </ion-card-content>
+      </ion-card>
     </ion-content>
+    <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
+      class="my-custom-class">
+    </ion-action-sheet>
+    <FooterComponent />
   </ion-page>
 </template>
 
-<script lang="ts" setup>
-import { IonButton, IonContent, IonPage, IonHeader, IonToolbar, IonTitle, modalController } from '@ionic/vue';
-import Modal from './VModal.vue';
-import { ref } from 'vue';
+<script setup>
+import { ref, onMounted, getCurrentInstance, computed } from 'vue';
+import { useRouter } from 'vue-router';
+// data
+const { proxy } = getCurrentInstance()
+const isLoading = ref(false);
+const icons = ref(proxy.$icons);
+const router = useRouter();
+const mainContentId = 'userAccount-content';
+/// State to manage Action Sheet
+const isOpen = ref(false);
+const actionSheetButtons = ref([]);
 
-const message = ref('This modal example uses the modalController to present and dismiss modals.');
 
-const openModal = async () => {
-  const modal = await modalController.create({
-    component: Modal,
-  });
-
-  modal.present();
-
-  const { data, role } = await modal.onWillDismiss();
-
-  if (role === 'confirm') {
-    message.value = `Hello, ${data}!`;
+const fetchDetailUserAccount = async (item) => {
+  try {
+    isLoading.value = true;
+    // await userStore.fetchDetailUserAccount(item.BANFN);
+    // await userStore.saveParentPr(item);
+    router.push({ name: 'UserAccountDetail' });
+  } catch (error) {
+    console.error('Login failed:', error);
+    proxy.$toast('Username or password is wrong', 'danger');
+  }
+  finally {
+    isLoading.value = false;
   }
 };
+
+// api 
+// computed 
+// mount 
+onMounted(async () => {
+  isLoading.value = true;
+});
 </script>
+
+<style scoped>
+.label__header {
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 18px;
+  color: #626060;
+}
+</style>
