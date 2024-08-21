@@ -82,4 +82,5 @@ onMounted(async () => { });
     align-items: center;
     justify-content: space-between;
 }
+
 </style>
