@@ -42,7 +42,7 @@
 import { ref, onMounted, computed, watch, getCurrentInstance, defineProps } from 'vue';
 import { modalController } from '@ionic/vue';
 import { useLoginStore } from '@/store/loginStore';
-import { userManagementStore } from '@/store/userManagementStore';
+import { userAccountStore } from '@/store/userAccountStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { Keyboard } from '@capacitor/keyboard';
@@ -54,7 +54,7 @@ const vdata = ref({
 const myForm = ref(null);
 const cancel = () => modalController.dismiss(null, 'cancel');
 const confirm = (data) => modalController.dismiss(data, 'confirm');
-const userStore = userManagementStore();
+const userStore = userAccountStore();
 const prStore = purchaseRequestStore();
 const props = defineProps({
     typeModal: String,

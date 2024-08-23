@@ -56,6 +56,42 @@ export const useLoginStore = defineStore({
         return false;
       }
     },
+    // async session(data) {
+    //     try {
+    //         const isMobile = await isMobilePlatform();
+    //         // Proceed only if the platform is not web
+    //         if (isMobile) {
+    //             data = JSON.parse(data);
+    //             const idMobile = data.profilku.id_mobile;
+
+    //             // Memeriksa ID mobile dengan loginService
+    //             const resCheckMobile = await loginService.checkIdMobile(data.username);
+    //             const mobileId = resCheckMobile.id_mobile;
+
+    //             const formData = new FormData();
+    //             formData.append('username', data.username);
+    //             formData.append('password', data.password);
+    //             formData.append('id_mobile', idMobile);
+
+    //             if (mobileId === idMobile) {
+    //               // Melakukan login jika ID mobile sesuai
+    //             const res = await loginService.login(formData);
+    //             await storage.set('user-login', JSON.stringify(res));
+    //             this.commit('setUser', res);
+    //             return true;
+    //             } else {
+    //                 await storage.clear();
+    //                 throw new Error('Mobile ID mismatch. Please Login Again');
+    //             }
+    //         } else {
+    //             console.log('Running on web, skipping mobile ID check.');
+    //           // Optionally, handle the web scenario here
+    //         }
+    //     } catch (error) {
+    //         console.error('Auto login error:', error);
+    //         throw error;
+    //     }
+    // },
   },
   // note : persist pinia
   persist: {

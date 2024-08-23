@@ -15,8 +15,8 @@
                         <ion-select aria-label="status" label="Status select" label-placement="floating"
                             placeholder="Status" fill="outline" v-model="selectedStatus">
                             <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="Active">Active</ion-select-option>
-                            <ion-select-option value="Non Active">Non Active</ion-select-option>
+                            <ion-select-option value="true">Active</ion-select-option>
+                            <ion-select-option value="false">Non Active</ion-select-option>
                         </ion-select>
                     </ion-col>
                 </ion-row>
@@ -81,8 +81,7 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
-import { userManagementStore } from '@/store/userManagementStore';
-import { purchaseRequestStore } from '@/store/prStore';
+import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import Modal from './VUserAccountModal.vue'
@@ -96,8 +95,7 @@ const { proxy } = getCurrentInstance()
 const isLoading = ref(false);
 const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
-const prStore = purchaseRequestStore();
-const userStore = userManagementStore();
+const userAccount = userAccountStore();
 const router = useRouter();
 const page = ref(1);
 const perPage = ref(5);
@@ -117,8 +115,8 @@ const selectedStatus = ref('');
 const fetchDetailUserAccount = async (item) => {
     try {
         isLoading.value = true;
-        // await userStore.fetchDetailUserAccount(item.BANFN);
-        // await userStore.saveParentPr(item);
+        // await userAccountStore.fetchDetailUserAccount(item.BANFN);
+        // await userAccountStore.saveParentPr(item);
         router.push({ name: 'UserAccountDetail' });
     } catch (error) {
         console.error('Login failed:', error);
@@ -142,10 +140,10 @@ const initialize = async () => {
         router.replace({ name: 'Login' });
     }
 };
-const fetchListPr = async () => {
+const fetchAllUser = async () => {
     try {
         isLoading.value = true;
-        await prStore.fetchListPr(user.value.username);
+        await userAccount.fetchAllUser();
         page.value++;
     } catch (error) {
         console.error('Error fetching list PR:', error);
@@ -155,26 +153,26 @@ const fetchListPr = async () => {
     }
 };
 // computed 
-const fakeData = [
-    { username: 'User1', status: 'Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User2', status: 'Non Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User3', status: 'Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User4', status: 'Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User5', status: 'Active', array: ['A1', 'A2', 'A3'] }
-];
+// const fakeData = [
+//     { username: 'User1', status: 'Active', array: ['A1', 'A2', 'A3'] },
+//     { username: 'User2', status: 'Non Active', array: ['A1', 'A2', 'A3'] },
+//     { username: 'User3', status: 'Active', array: ['A1', 'A2', 'A3'] },
+//     { username: 'User4', status: 'Active', array: ['A1', 'A2', 'A3'] },
+//     { username: 'User5', status: 'Active', array: ['A1', 'A2', 'A3'] }
+// ];
 
-const vdata = ref(fakeData);
-// const vdata = computed(() => fakeChan.listUserAcount);
+// const vdata = ref(fakeData);
+const vdata = computed(() => userAccount.allUser);
 const user = computed(() => loginStore.user);
 // another merthod 
 const loadMore = async (event) => {
-    await fetchListPr();
+    await fetchAllUser();
     event.target.complete();
 };
 const handleSearch = debounce(() => {
     page.value = 1;
-    prStore.daftarPr = [];
-    fetchListPr();
+    userAccount.daftarPr = [];
+    fetchAllUser();
 }, 1000); // Set the debounce delay to 300ms or adjust as needed
 const formatCurrency = (price) => {
     return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
@@ -222,7 +220,7 @@ const handleAction = async (action) => {
             await openModal(action);
             break;
         case 'Delete':
-            const response = await prStore.rejectPr(user.value.username, selectedId.value);
+            const response = await userAccount.rejectPr(user.value.username, selectedId.value);
             if (response) {
                 proxy.$toast('Reject Done', 'success');
                 setOpen(false);
@@ -265,13 +263,12 @@ const filteredData = computed(() => {
     if (!selectedStatus.value) {
         return vdata.value; // Return all data if no status is selected
     }
-    return vdata.value.filter(item => item.status === selectedStatus.value);
+    return vdata.value.filter(item => item.status == selectedStatus.value);
 });
 // mount 
 onMounted(async () => {
     isLoading.value = true;
-    await initialize();
-    await fetchListPr();
+    await fetchAllUser();
 });
 </script>
 

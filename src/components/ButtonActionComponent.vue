@@ -1,5 +1,5 @@
 <template>
-    <ion-button :size="size" :color="color" :class="class" @click="handleClick">
+    <ion-button :size="size" :color="color" :class="class" :shape="shape" :fill="fill" @click="handleClick">
         <ion-icon aria-hidden="true" slot="start" :icon="icon"></ion-icon>
         <slot>Action</slot>
     </ion-button>
@@ -26,6 +26,14 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    shape: {
+        type: String,
+        default: 'default',
+    },
+    fill: {
+        type: String,
+        default: 'solid',
+    },
     item: {
         type: Object,
         required: true,
@@ -44,12 +52,12 @@ onMounted(async () => {
 
 <style scoped>
 .action-button {
-    background-color: #CFE5FF;
-
+    /* --background-color: #CFE5FF; */
+    --background: #93e9be;
     --color: #0070F2;
 
     --border-radius: 10px;
-    --border-color: #BCC3CA;
+    --border-color: #CFE5FF;
     --border-style: solid;
     --border-width: 1px;
 

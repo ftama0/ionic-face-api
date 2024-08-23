@@ -91,24 +91,6 @@ const router = useRouter();
 const mainContentId = 'home-content';
 const userCard = ref(null);
 // api 
-const submitForm = async () => {
-};
-const handlePurchaseRequest = async () => {
-    try {
-    } catch (error) {
-    }
-    finally {
-        isLoading.value = false;
-    }
-};
-const handlePurchaseOrder = async () => {
-    try {
-    } catch (error) {
-    }
-    finally {
-        isLoading.value = false;
-    }
-};
 const fetchTotalPr = async () => {
     try {
         isLoading.value = true;
@@ -124,16 +106,12 @@ const logout = () => {
     router.replace({ name: 'Login' });
 };
 const initialize = async () => {
-    const res = await loginStore.loadUser()
-    if (!user.value) {
-        router.replace({ name: 'Login' });
-    }
 };
 // computed 
 const totalPR = computed(() => prStore.totalPr);
 const user = computed(() => loginStore.user);
-
-// Methods
+console.log(user);
+// Another Methods
 const onMove = (detail) => {
     const { deltaX } = detail;
     if (deltaX > 0) {
@@ -155,11 +133,11 @@ const onEnd = (detail) => {
     }
 };
 onMounted(async () => {
-    await initialize();
+    // await initialize();
     await fetchTotalPr();
     // proxy.$toast('Hello dare', 'danger');
     if (userCard.value) {
-        console.log('userCard', userCard.value)
+        // console.log('userCard', userCard.value)
         const gesture = createGesture({
             el: userCard.value.$el,
             gestureName: 'swipe-to-dismiss',

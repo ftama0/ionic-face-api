@@ -56,7 +56,7 @@ The following files and folders do not follow the standard naming convention:
 - \store\loginStore.js
 - \store\poStore.js
 - \store\prStore.js
-- \store\userManagementStore.js
+- \store\userAccountStore.js
 - \views\HomePage.vue
 - \views\InfoDevice.vue
 - \views\NewItem.vue

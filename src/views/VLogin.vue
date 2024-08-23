@@ -9,7 +9,7 @@
                                 height="120" />
                         </ion-col>
                         <ion-col size="12">
-                            <h3 class="ion-padding-top" ><b>Approval System</b></h3>
+                            <h3 class="ion-padding-top"><b>Approval System</b></h3>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -87,17 +87,16 @@ const submitForm = async () => {
     }
 };
 const initialize = async () => {
-    await loginStore.loadUser()
-    if (user.value) {
-        await loginStore.autoLogin(user.value).then(() => {
-            proxy.$toast('Welcome Back', 'primary');
-            // Redirect
-            router.push({ name: 'Home' });
-        }).catch((error) => {
-            console.error('Auto login error:', error);
-            proxy.$toast(error.message || 'Silahkan login terlebih dahulu', 'warning');
-        });
-    }
+    // await loginStore.loadUser()
+    // if (user.value) {
+    //     await loginStore.session(user.value).then(() => {
+    //         proxy.$toast('Welcome Back', 'primary');
+    //         router.replace({ name: 'Home' });
+    //     }).catch((error) => {
+    //         console.error('Auto login error:', error);
+    //         proxy.$toast(error.message || 'Silahkan login terlebih dahulu', 'warning');
+    //     });
+    // }
 };
 const user = computed(() => loginStore.user);
 

@@ -95,7 +95,7 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
-import { userManagementStore } from '@/store/userManagementStore';
+import { userAccountStore } from '@/store/userAccountStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
@@ -107,7 +107,7 @@ const isLoading = ref(false);
 const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
-const userStore = userManagementStore();
+const userStore = userAccountStore();
 const router = useRouter();
 const page = ref(1);
 const perPage = ref(5);

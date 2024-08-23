@@ -22,6 +22,10 @@
                     <ion-label>Status</ion-label>
                     <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
                 </ion-col>
+                <ion-col size="12" class="ion-padding status-container">
+                    <ion-label>Status</ion-label>
+                    <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
+                </ion-col>
             </ion-row>
         </template>
     </form-modal-component>
@@ -31,7 +35,7 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, defineProps } from 'vue';
 import FormModalComponent from '@/components/FormModalComponent.vue';
-import { userManagementStore } from '@/store/userManagementStore';
+import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
 
 const props = defineProps({
@@ -48,7 +52,7 @@ const modalConfig = ref({
 const vdata = ref({
     status: true
 });
-const userStore = userManagementStore();
+const userStore = userAccountStore();
 const { proxy } = getCurrentInstance()
 const toggleStatus = (event) => {
     vdata.value.status = event.detail.checked;
