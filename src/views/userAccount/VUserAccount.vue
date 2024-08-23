@@ -30,8 +30,8 @@
                                             <ion-text class="ion-card-title">{{ item.username }}</ion-text>
                                         </ion-col>
                                         <ion-col size="6" class="ion-text-right">
-                                            <ChipComponent :color="item.status === 'Active' ? 'success' : 'danger'">
-                                                {{ item.status }}
+                                            <ChipComponent :color="item.status == true ? 'success' : 'danger'">
+                                                {{ item.status == true ? 'Active' : 'Non Active' }}
                                             </ChipComponent>
                                         </ion-col>
                                     </ion-row>
@@ -132,13 +132,6 @@ const handleRefresh = (event) => {
     setTimeout(() => {
         event.target.complete();
     }, 2000);
-};
-const initialize = async () => {
-    const res = await loginStore.loadUser()
-    // console.log(res);
-    if (!res) {
-        router.replace({ name: 'Login' });
-    }
 };
 const fetchAllUser = async () => {
     try {

@@ -136,11 +136,6 @@ const handleRefresh = (event) => {
     }, 2000);
 };
 const initialize = async () => {
-    if (loginStore.loadUser()) {
-        user.value = loginStore.user;
-    } else {
-        router.push({ name: 'Login' });
-    }
 };
 const fetchListPr = async () => {
     try {
@@ -175,7 +170,6 @@ const handleSearch = debounce(() => {
 }, 600); // Set the debounce delay to 300ms or adjust as needed
 // mount 
 onMounted(async () => {
-    await initialize();
     await fetchListPr();
 });
 </script>

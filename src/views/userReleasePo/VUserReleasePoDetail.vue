@@ -92,12 +92,6 @@ const logout = () => {
 
     router.replace({ name: 'Login' });
 };
-const initialize = async () => {
-    const res = await loginStore.loadUser()
-    if (!res) {
-        router.replace({ name: 'Login' });
-    }
-};
 // computed 
 const user = computed(() => loginStore.user);
 const child = computed(() => prStore.detailPr);
@@ -168,7 +162,6 @@ const setOpen = (state) => {
 };
 
 onMounted(async () => {
-    await initialize();
     console.log(child.value)
 
 });

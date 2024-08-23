@@ -104,13 +104,6 @@ const handleRefresh = (event) => {
         event.target.complete();
     }, 2000);
 };
-const initialize = async () => {
-    const res = await loginStore.loadUser()
-    // console.log(res);
-    if (!res) {
-        router.replace({ name: 'Login' });
-    }
-};
 const fetchListPr = async () => {
     try {
         isLoading.value = true;
@@ -208,7 +201,6 @@ const setOpen = (state) => {
 // mount 
 onMounted(async () => {
     isLoading.value = true;
-    await initialize();
     await fetchListPr();
 });
 </script>

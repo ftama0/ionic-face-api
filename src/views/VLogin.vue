@@ -102,7 +102,7 @@ const user = computed(() => loginStore.user);
 
 loginStore
 onMounted(async () => {
-    await initialize();
+    // await initialize();
 
     // Keyboard.addListener('keyboardWillShow', (info) => {
     //     document.querySelector('ion-footer').style.marginBottom = `${info.keyboardHeight}px`;

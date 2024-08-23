@@ -1,5 +1,5 @@
 // src/middleware/checkTokenExpiration.js
-import { storage, initStorage } from "@/store/storage";
+import { storage, initStorage } from "@/store/configStorage";
 import { useLoginStore } from "@/store/loginStore";
 import { tokenService } from "@/services/apiService";
 import { jwtDecode } from "jwt-decode";

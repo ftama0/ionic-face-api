@@ -13,7 +13,7 @@ const setupAxiosInstance = ({ checkToken = true } = {}) => {
     apiService.interceptors.request.use(
       async (config) => {
         const accessToken = await checkTokenExpiration();
-        console.log("accessToken", accessToken);
+        // console.log("accessToken", accessToken);
         if (accessToken) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         } else {
@@ -21,7 +21,7 @@ const setupAxiosInstance = ({ checkToken = true } = {}) => {
           router.replace({ name: "Login" });
           return Promise.reject(new Error("Unauthorized"));
         }
-        console.log('Request Headers:', config.headers);
+        // console.log('Request Headers:', config.headers);
         return config;
       },
       (error) => {

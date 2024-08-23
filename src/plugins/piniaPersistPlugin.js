@@ -1,6 +1,6 @@
 // plugins/piniaPersistPlugin.js
 import { createPersistedStatePlugin } from "pinia-plugin-persistedstate-2";
-import { storage } from "@/store/storage";
+import { storage } from "@/store/configStorage";
 
 // Create and configure the plugin
 export const piniaPersistPlugin = createPersistedStatePlugin({

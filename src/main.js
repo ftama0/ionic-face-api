@@ -103,14 +103,19 @@ import MenuComponent from "@/components/MenuComponent.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 // storage
-import { initStorage } from "@/store/storage";
+import { initStorage } from "@/store/configStorage";
 await initStorage();
 // create/run
-import { piniaPersistPlugin } from "@/plugins/piniaPersistPlugin";
+
 const pinia = createPinia();
-pinia.use(piniaPersistPlugin);
-// import persistedState from "pinia-plugin-persistedstate";
-// pinia.use(persistedState);
+
+// note : pakai persist 2, can async-storage like indexedDB
+// import { piniaPersistPlugin } from "@/plugins/piniaPersistPlugin";
+// pinia.use(piniaPersistPlugin);
+
+// note : pakai persist, only sync-storage like local storage
+import persistedState from "pinia-plugin-persistedstate";
+pinia.use(persistedState);
 
 const app = createApp(App)
   .use(IonicVue)

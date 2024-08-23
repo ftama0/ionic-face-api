@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import { loginService, tokenService } from "@/services/apiService"; // Import  dari services
 import { getDeviceInfo, isMobilePlatform } from "@/plugins/devicePlugin";
-import { storage } from "@/store/storage";
+import { storage } from "@/store/configStorage";
 import { jwtDecode } from "jwt-decode";
 // note : access token : 24 jam , refresh token : 30 hari
 
