@@ -129,7 +129,7 @@ const fetchDetailUserAccount = async (item) => {
         // await userStore.saveParentPr(item);
         router.push({ name: 'VUserReleasePrDetail' });
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('API failed:', error);
         proxy.$toast('Username or password is wrong', 'danger');
     }
     finally {

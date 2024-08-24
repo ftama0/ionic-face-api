@@ -15,18 +15,19 @@
                         label="Email" :clear-input="true" v-model="vdata.email" required></ion-input>
                 </ion-col>
                 <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Role" type="text" fill="outline"
-                        label="Role" :clear-input="true" v-model="vdata.role" required></ion-input>
-                </ion-col>
-                <ion-col size="12" class="ion-padding status-container">
-                    <ion-label>Status</ion-label>
-                    <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
+                    <ion-select aria-label="status" label="Select Role" label-placement="floating" placeholder="Status"
+                        fill="outline" v-model="vdata.role">
+                        <ion-select-option value=1>Admin</ion-select-option>
+                        <ion-select-option value=2>Approver</ion-select-option>
+                        <ion-select-option value=3>User</ion-select-option>
+                    </ion-select>
                 </ion-col>
                 <ion-col size="12" class="ion-padding status-container">
                     <ion-label>Status</ion-label>
                     <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
                 </ion-col>
             </ion-row>
+            <ion-loading :is-open="loading" :duration="3000" message="Processing..." spinner="circles"></ion-loading>
         </template>
     </form-modal-component>
 </template>
@@ -38,6 +39,7 @@ import FormModalComponent from '@/components/FormModalComponent.vue';
 import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
 
+const loading = ref(false);
 const props = defineProps({
     action: String,
 });
@@ -49,10 +51,8 @@ const modalConfig = ref({
     saveButtonText: 'Save',
     anotherParam: 1
 });
-const vdata = ref({
-    status: true
-});
-const userStore = userAccountStore();
+let vdata = ref({ status: true });
+const userAccount = userAccountStore();
 const { proxy } = getCurrentInstance()
 const toggleStatus = (event) => {
     vdata.value.status = event.detail.checked;
@@ -60,24 +60,35 @@ const toggleStatus = (event) => {
 };
 // api
 const customSubmitForm = async () => {
+    loading.value = true;
     try {
-        console.log('ini parent', vdata.value)
-        // loading.value = true;
-        await userStore.saveUserAccount(vdata);
+        console.log('ini form data', vdata.value)
+        console.log(vdata.value)
+        if (props.action == 'Edit') {
+            await userAccount.updateUser(vdata);
+        } else {
+            await userAccount.createUser(vdata);
+        }
         await $modal.close(vdata.value, 'confirm');
     } catch (error) {
         console.error('Save Data:', error);
         proxy.$toast('Failed to save data', 'danger');
     } finally {
-        // loading.value = false;
+        loading.value = false;
     }
 };
 const handleCloseModal = (action, data) => {
     console.log(action, data)
     modalController.dismiss(data, action);
 };
+const initialize = async () => {
+};
 // mount 
-onMounted(async () => { });
+onMounted(async () => {
+    if (props.action == 'Edit') {
+        vdata.value = Object.assign({}, vdata.value, userAccount.readUser);
+    }
+});
 </script>
 
 <style scoped>

@@ -79,7 +79,7 @@ const submitForm = async () => {
         await loginStore.login(vdata.value.username, vdata.value.password);
         router.push({ name: 'Home' });
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('API failed:', error);
         proxy.$toast('Username or password is wrong', 'danger');
     }
     finally {

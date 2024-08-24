@@ -5,6 +5,7 @@ import router from "@/router";
 
 const setupAxiosInstance = ({ checkToken = true } = {}) => {
   const apiService = axios.create({
+    // baseURL: "https://192.168.89.28",
     baseURL: "https://dev-mobileapproval.hasnurgroup.com",
     timeout: 10000, // Atur timeout request jika diperlukan
   });

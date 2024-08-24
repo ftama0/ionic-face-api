@@ -99,7 +99,7 @@ const fetchDetailPr = async (item) => {
         await prStore.saveParentPr(item);
         router.push({ name: 'PurchaseRequestListDetail' });
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('API failed:', error);
         proxy.$toast('Username or password is wrong', 'danger');
     }
     finally {
@@ -215,7 +215,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-
 .ion-card-title {
     font-size: 18px;
     font-weight: 600;
@@ -233,6 +232,7 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
 }
+
 ion-fab-button {
     --background: #b7f399;
     --background-activated: #87d361;
@@ -241,6 +241,7 @@ ion-fab-button {
     --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
     --color: black;
 }
+
 /* ion-action-sheet.my-custom-class {
     --background: #EBF4F6;
     --backdrop-opacity: 0.6;

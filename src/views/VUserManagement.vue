@@ -53,22 +53,6 @@ const mainContentId = 'userAccount-content';
 const isOpen = ref(false);
 const actionSheetButtons = ref([]);
 
-
-const fetchDetailUserAccount = async (item) => {
-  try {
-    isLoading.value = true;
-    // await userStore.fetchDetailUserAccount(item.BANFN);
-    // await userStore.saveParentPr(item);
-    router.push({ name: 'UserAccountDetail' });
-  } catch (error) {
-    console.error('Login failed:', error);
-    proxy.$toast('Username or password is wrong', 'danger');
-  }
-  finally {
-    isLoading.value = false;
-  }
-};
-
 // api 
 // computed 
 // mount 

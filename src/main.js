@@ -97,11 +97,13 @@ import { createPinia } from "pinia";
 import ToastPlugin from "@/plugins/toastPlugin";
 import ionicons from "./plugins/ioniconsPlugin";
 import AppUpdatePlugin from "./plugins/appUpdatePlugin";
-// compoennts
+// components
 import ToastComponent from "@/components/ToastComponent.vue";
 import MenuComponent from "@/components/MenuComponent.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
+import RefresherComponent from "@/components/RefresherComponent.vue";
+import LoadingComponent from "@/components/LoadingComponent.vue";
 // storage
 import { initStorage } from "@/store/configStorage";
 await initStorage();
@@ -180,7 +182,9 @@ app.component("ion-checkbox", IonCheckbox);
 app.component("MenuComponent", MenuComponent);
 app.component("HeaderComponent", HeaderComponent);
 app.component("FooterComponent", FooterComponent);
-// toast
+app.component("RefresherComponent", RefresherComponent);
+app.component("LoadingComponent", LoadingComponent);
+// note :toast
 // Buat instance toastApp dan mount ke body
 const toastApp = createApp(ToastComponent);
 const toastDiv = document.createElement("div");

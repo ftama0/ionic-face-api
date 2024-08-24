@@ -90,7 +90,7 @@ const fetchDetailPr = async (item) => {
         await prStore.saveParentPr(item);
         router.push({ name: 'PurchaseRequestListDetail' });
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('API failed:', error);
         proxy.$toast('Username or password is wrong', 'danger');
     }
     finally {

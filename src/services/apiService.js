@@ -177,46 +177,34 @@ export const userAccountService = {
       throw error;
     }
   },
-  async fetchListPr(user) {
+  async createUser(data) {
     try {
-      const res = await apiService.get(`/getDataPR?user=${user}`);
+      const res = await apiService.post("/api/v1/users/", data);
       return res.data;
     } catch (error) {
       throw error;
     }
   },
-  async fetchDetailPr(id) {
+  async readUser(uuid) {
     try {
-      const res = await apiService.get(`/getDetailPR?BANFN=${id}`);
+      const res = await apiService.get(`/api/v1/users/${uuid}`);
+      return res.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async updateUser(data) {
+    try {
+      const res = await apiService.put(`/api/v1/users/${data.uuid}`, data);
       return res.data;
     } catch (error) {
       throw error;
     }
   },
-  async approvePr(username, id) {
+  async deleteUser(uuid) {
     try {
-      const res = await apiService.post(
-        `/ApprovePR?BANFN=${id}&user=${username}`
-      );
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async rejectPr(username, id) {
-    try {
-      const res = await apiService.post(
-        `/RejectPR?BANFN=${id}&user=${username}`
-      );
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async fetchReleaseCode() {
-    try {
-      const res = await apiService.get(`/getReleaseCode`);
-      return res.data;
+      const res = await apiService.delete(`/api/v1/users/${uuid}`);
+      return res.data.data;
     } catch (error) {
       throw error;
     }

@@ -23,9 +23,17 @@ export const useLoginStore = defineStore({
         formData.append("password", password);
 
         const res = await loginService.login(formData);
+        console.log("res login", res);
         this.token = res;
         const decode = jwtDecode(res.access_token);
-        this.user = decode;
+        // Convert exp (UTC) to WITA (UTC+8)
+        const expUtc = new Date(decode.exp * 1000); // exp is in seconds, convert to milliseconds
+        const expWita = new Date(expUtc.getTime() + 8 * 60 * 60 * 1000); // Add 8 hours
+
+        this.user = {
+          ...decode,
+          exp_wita: expWita,
+        };
       } catch (error) {
         console.error("Login error:", error);
         throw error;
@@ -45,16 +53,6 @@ export const useLoginStore = defineStore({
     async logout() {
       await storage.clear();
       this.$reset();
-    },
-    async loadUser() {
-      const user = await storage.get("user-login");
-      if (user) {
-        let data = JSON.parse(user);
-        this.user = data.profilku;
-        return true;
-      } else {
-        return false;
-      }
     },
   },
   // note : persist pinia
