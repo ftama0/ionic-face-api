@@ -116,6 +116,32 @@ const routes = [
     name: "UserManagement",
     component: () => import("@/views/VUserManagement.vue"),
   },
+  // * maintan cost center pr
+  {
+    path: "/costCenterPr",
+    name: "costCenterPr",
+    component: () =>
+      import("@/views/maintainCostCenterPr/VMaintanCostCenterPrList.vue"),
+  },
+  {
+    path: "/costCenterPrDetail",
+    name: "costCenterPrDetail",
+    component: () =>
+      import("@/views/maintainCostCenterPr/VMaintainCostCenterPrDetail.vue"),
+  },
+  // * maintan cost center po
+  {
+    path: "/costCenterPo",
+    name: "costCenterPo",
+    component: () =>
+      import("@/views/maintainCostCenterPo/VMaintanCostCenterPoList.vue"),
+  },
+  {
+    path: "/costCenterPoDetail",
+    name: "costCenterPoDetail",
+    component: () =>
+      import("@/views/maintainCostCenterPo/VMaintainCostCenterPoDetail.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -133,7 +159,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (authRequired && !isAuthenticated) {
     // Jika halaman memerlukan autentikasi dan tidak ada token yang valid
-      next({ name: "Login" });
+    next({ name: "Login" });
   } else if (to.path === "/login" && isAuthenticated) {
     console.log("Redirecting to Home");
     next({ name: "Home" });
