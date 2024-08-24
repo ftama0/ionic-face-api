@@ -27,7 +27,7 @@
                     <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
                 </ion-col>
             </ion-row>
-            <ion-loading :is-open="loading" :duration="3000" message="Processing..." spinner="circles"></ion-loading>
+            <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
         </template>
     </form-modal-component>
 </template>
@@ -35,7 +35,6 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, defineProps } from 'vue';
-import FormModalComponent from '@/components/FormModalComponent.vue';
 import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
 
@@ -69,7 +68,7 @@ const customSubmitForm = async () => {
         } else {
             await userAccount.createUser(vdata);
         }
-        await $modal.close(vdata.value, 'confirm');
+        await handleCloseModal('confirm', vdata.value);
     } catch (error) {
         console.error('Save Data:', error);
         proxy.$toast('Failed to save data', 'danger');
@@ -77,9 +76,9 @@ const customSubmitForm = async () => {
         loading.value = false;
     }
 };
-const handleCloseModal = (action, data) => {
-    console.log(action, data)
-    modalController.dismiss(data, action);
+const handleCloseModal = async (action, data) => {
+    console.log('Closing modal with action:', action, 'and data:', data);
+    await modalController.dismiss(data, action);
 };
 const initialize = async () => {
 };

@@ -123,13 +123,15 @@ const fetchAllUser = async () => {
     }
 };
 
-const fetchReadUser = async (item) => {
+const fetchReadUser = async (item, action = null) => {
     loading.value = true;
     try {
         console.log(item.uuid);
         console.log('Apakah fungsi readUser tersedia?', typeof userAccount.readUser);
-        await userAccount.readUser(item.uuid);
-        router.push({ name: 'UserAccountDetail' });
+        await userAccount.readUser(item.uuid);;
+        if (!action) {
+            await router.push({ name: 'UserAccountDetail' });
+        }
     } catch (error) {
         console.error('API failed:', error);
         proxy.$toast('Error Read User', 'danger');
@@ -201,7 +203,7 @@ const handleAction = async (action) => {// Method to handle action button click 
             await openModal(action);
             break;
         case 'Edit':
-            await fetchReadUser(selectedItem.value);
+            await fetchReadUser(selectedItem.value, action);
             await openModal(action);
             break;
         case 'Delete':

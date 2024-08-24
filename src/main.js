@@ -104,6 +104,7 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 import RefresherComponent from "@/components/RefresherComponent.vue";
 import LoadingComponent from "@/components/LoadingComponent.vue";
+import FormModalComponent from "@/components/FormModalComponent.vue";
 // storage
 import { initStorage } from "@/store/configStorage";
 await initStorage();
@@ -184,6 +185,7 @@ app.component("HeaderComponent", HeaderComponent);
 app.component("FooterComponent", FooterComponent);
 app.component("RefresherComponent", RefresherComponent);
 app.component("LoadingComponent", LoadingComponent);
+app.component("form-modal-component", FormModalComponent);
 // note :toast
 // Buat instance toastApp dan mount ke body
 const toastApp = createApp(ToastComponent);
