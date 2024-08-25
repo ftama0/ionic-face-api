@@ -169,10 +169,12 @@ export const poService = {
 // note : user management
 // user account
 export const userAccountService = {
-  async fetchAllUser() {
+  async fetchAllUser(page = 1, limit = 5, search = "") {
     try {
-      const res = await apiService.get(`/api/v1/users/`);
-      return res.data.data;
+      const res = await apiService.get(
+        `/api/v1/users/?page=${page}&limit=${limit}`
+      );
+      return res.data;
     } catch (error) {
       throw error;
     }

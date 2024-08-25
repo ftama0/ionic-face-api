@@ -15,8 +15,8 @@
                         <ion-select aria-label="status" label="Status select" label-placement="floating"
                             placeholder="Status" fill="outline" v-model="selectedStatus">
                             <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="true">Active</ion-select-option>
-                            <ion-select-option value="false">Non Active</ion-select-option>
+                            <ion-select-option :value="true">Active</ion-select-option>
+                            <ion-select-option :value="false">Non Active</ion-select-option>
                         </ion-select>
                     </ion-col>
                 </ion-row>
@@ -66,7 +66,7 @@
                     <ion-icon :icon="icons.personAddOutline"></ion-icon>
                 </ion-fab-button>
             </ion-fab>
-            <RefresherComponent @refresh="fetchAllUser" />
+            <RefresherComponent @refresh="fetchAllUser(true)" />
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
@@ -97,7 +97,7 @@ const loginStore = useLoginStore();
 const userAccount = userAccountStore();
 const router = useRouter();
 const page = ref(1);
-const perPage = ref(5);
+const limit = ref(5);
 const search = ref('');
 const mainContentId = 'userAccount-content';
 /// State to manage Action Sheet
@@ -110,11 +110,11 @@ const selectedStatus = ref('');
 // computed 
 const vdata = computed(() => userAccount.userList);
 // api 
-const fetchAllUser = async () => {
-    loading.value = true;
+const fetchAllUser = async (isloading = true) => {
+    loading.value = isloading;
     try {
-        await userAccount.fetchAllUser();
-        page.value++;
+        await userAccount.fetchAllUser(page.value, limit.value);
+        isloading == true ? page.value++ : '';
     } catch (error) {
         console.error('Error fetching : ', error);
     }
@@ -160,7 +160,14 @@ const deleteUser = async (item) => {
 };
 // another merthod 
 const loadMore = async (event) => {
-    await fetchAllUser();
+    console.log(vdata.value.length)
+    console.log(vdata.value.total)
+    if (vdata.value.length >= vdata.value.total) {
+        event.target.disabled = true;
+        event.target.complete();
+        return;
+    }
+    await fetchAllUser(false);
     event.target.complete();
 };
 const handleSearch = debounce(() => {
@@ -239,15 +246,6 @@ const openModal = async (action) => { // Method to open Modal
 const filteredData = computed(() => {
     if (!selectedStatus.value) {
         return vdata.value; // Return all data if no status is selected
-    }
-    const boolStatus = selectedStatus.value === 'true'
-
-    if (true == boolStatus) {
-        console.log('yes');
-    }
-
-    if ('true' == boolStatus) {
-        console.log('no');
     }
     return vdata.value.filter(item => item.status == selectedStatus.value);
 });
