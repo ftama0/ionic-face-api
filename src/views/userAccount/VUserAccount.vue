@@ -39,16 +39,16 @@
                                 <ion-card-content>
                                     <ion-row>
                                         <ion-col size="6" class="ion-text-left">
-                                            <ButtonActionComponent :icon="icons.openOutline" :item="item"
+                                            <ButtonComponent :icon="icons.openOutline" :item="item"
                                                 :class="actionButton" @action-click="openActionSheet">
                                                 Action
-                                            </ButtonActionComponent>
+                                            </ButtonComponent>
                                         </ion-col>
                                         <ion-col size="6" class="ion-text-right">
-                                            <ButtonActionComponent :icon="icons.readerOutline" :item="item"
+                                            <ButtonComponent :icon="icons.readerOutline" :item="item"
                                                 :class="detailButton" @action-click="fetchReadUser">
                                                 Detail
-                                            </ButtonActionComponent>
+                                            </ButtonComponent>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-content>
@@ -85,7 +85,7 @@ import { debounce } from 'lodash';
 import Modal from './VUserAccountModal.vue'
 import { modalController } from '@ionic/vue';
 import { A11y } from 'swiper/modules';
-import ButtonActionComponent from '@/components/ButtonActionComponent.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
 import LoadingComponent from '../../components/LoadingComponent.vue';
 

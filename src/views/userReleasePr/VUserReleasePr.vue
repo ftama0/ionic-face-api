@@ -61,10 +61,10 @@
                                             </ion-popover>
                                         </ion-col>
                                         <ion-col size="12" class="ion-text-end">
-                                            <ButtonActionComponent :size="sizeButton" :icon="icons.openOutline"
-                                                :item="item" :class="actionButton" @action-click="openActionSheet">
+                                            <ButtonComponent :size="sizeButton" :icon="icons.openOutline" :item="item"
+                                                :class="actionButton" @action-click="openActionSheet">
                                                 Action
-                                            </ButtonActionComponent>
+                                            </ButtonComponent>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-content>
@@ -99,7 +99,7 @@ import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import Modal from './VUserReleasePrModal.vue';
 import { modalController } from '@ionic/vue';
-import ButtonActionComponent from '@/components/ButtonActionComponent.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
 // data
 const { proxy } = getCurrentInstance()
