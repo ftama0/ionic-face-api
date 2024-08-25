@@ -1,5 +1,5 @@
 <template>
-    <form-modal-component :config="modalConfig" :submitForm="customSubmitForm" @closeModal="handleCloseModal">
+    <form-modal-component :config="modalConfig" :submitForm="SubmitForm" @closeModal="handleCloseModal">
         <template #content class="content-modal">
             <ion-row class="ion-padding">
                 <ion-col size="12" class="ion-padding-top">
@@ -17,9 +17,9 @@
                 <ion-col size="12" class="ion-padding-top">
                     <ion-select aria-label="status" label="Select Role" label-placement="floating" placeholder="Status"
                         fill="outline" v-model="vdata.role">
-                        <ion-select-option value=1>Admin</ion-select-option>
-                        <ion-select-option value=2>Approver</ion-select-option>
-                        <ion-select-option value=3>User</ion-select-option>
+                        <ion-select-option :value="1">Admin</ion-select-option>
+                        <ion-select-option :value="2">Approver</ion-select-option>
+                        <ion-select-option :value="3">User</ion-select-option>
                     </ion-select>
                 </ion-col>
                 <ion-col size="12" class="ion-padding status-container">
@@ -34,7 +34,7 @@
 
 
 <script setup>
-import { ref, onMounted, getCurrentInstance, defineProps } from 'vue';
+import { ref, onMounted, getCurrentInstance, defineProps, watch } from 'vue';
 import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
 
@@ -58,36 +58,38 @@ const toggleStatus = (event) => {
     console.log(vdata.value)
 };
 // api
-const customSubmitForm = async () => {
+const SubmitForm = async () => {
     loading.value = true;
     try {
         console.log('ini form data', vdata.value)
-        console.log(vdata.value)
+        console.log(vdata.value);
+        let res = ';'
         if (props.action == 'Edit') {
-            await userAccount.updateUser(vdata);
+            res = await userAccount.updateUser(vdata);
         } else {
-            await userAccount.createUser(vdata);
+            res = await userAccount.createUser(vdata);
         }
-        await handleCloseModal('confirm', vdata.value);
+        await handleCloseModal(res, 'confirm');
     } catch (error) {
         console.error('Save Data:', error);
-        proxy.$toast('Failed to save data', 'danger');
+        proxy.$toast('Faile d to save data', 'danger');
     } finally {
         loading.value = false;
     }
 };
-const handleCloseModal = async (action, data) => {
-    console.log('Closing modal with action:', action, 'and data:', data);
-    await modalController.dismiss(data, action);
+const handleCloseModal = async (res, action) => {
+    await modalController.dismiss(res, action);
 };
 const initialize = async () => {
 };
 // mount 
 onMounted(async () => {
     if (props.action == 'Edit') {
-        vdata.value = Object.assign({}, vdata.value, userAccount.readUser);
+        vdata.value = Object.assign({}, vdata.value, userAccount.userDetails);
+        vdata.value.role = vdata.value.role_id;
     }
 });
+
 </script>
 
 <style scoped>

@@ -23,7 +23,7 @@
                 <ion-row>
                     <ion-col size="12">
                         <div v-for="(item, index) in filteredData" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3" style="border-radius: 15px;">
+                            <ion-card class="ion-margin-top ion-elevation-3">
                                 <ion-card-header>
                                     <ion-row class="ion-align-items-center">
                                         <ion-col size="6" class="ion-text-left">
@@ -197,7 +197,8 @@ const openActionSheet = (item) => {// Method to open Action Sheet with specific 
 };
 const handleAction = async (action) => {// Method to handle action button click in Action Sheet
     loading.value = true;
-    console.log(`Action ${action} for item: ${selectedItem.value}`);
+    console.log(`Action ${action} for item:`);
+    console.log(selectedItem.value);
     switch (action) {
         case 'Add':
             await openModal(action);
@@ -221,16 +222,18 @@ const openModal = async (action) => { // Method to open Modal
     const modal = await modalController.create({
         component: Modal,
         componentProps: {
-            // Kirim parameter ke modal
+            // Kirim parameter ke modal 
             action: action,
         },
     });
     modal.present();
     const { data, role } = await modal.onWillDismiss();
+    console.log(data.message);
+    console.log(role);
     if (role === 'confirm') {
-        // message.value = `Hello, ${data}!`;
-        console.log(data);
-        proxy.$toast('Add User Account Successfully', 'success');
+        // message.value = `Hello, ${res}!`;
+        console.log(data.message);
+        proxy.$toast(data.message, 'success');
     }
 };
 const filteredData = computed(() => {

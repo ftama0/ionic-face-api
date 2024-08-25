@@ -51,7 +51,8 @@ export const useLoginStore = defineStore({
       }
     },
     async logout() {
-      await storage.clear();
+      // await storage.clear();
+      localStorage.clear();
       this.$reset();
     },
   },

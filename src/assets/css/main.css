@@ -48,3 +48,7 @@ ion-toast.custom-toast::part(button) {
   font-size: 32px;
   color: #0070F2;
 }
+
+ion-card{
+  border-radius: 15px;
+}
