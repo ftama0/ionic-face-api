@@ -8,7 +8,7 @@
                 <ion-title>Account Detail</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-list>
 
                 <div v-for="(item, index) in items" :key="index">

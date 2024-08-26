@@ -2,7 +2,7 @@
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="userAccount-content" v-bind="$attrs">
         <HeaderComponent :title="'User Account'" />
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
@@ -15,8 +15,8 @@
                         <ion-select aria-label="status" label="Status select" label-placement="floating"
                             placeholder="Status" fill="outline" v-model="selectedStatus">
                             <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option :value="true">Active</ion-select-option>
-                            <ion-select-option :value="false">Non Active</ion-select-option>
+                            <ion-select-option value="true">Active</ion-select-option>
+                            <ion-select-option value="false">Non Active</ion-select-option>
                         </ion-select>
                     </ion-col>
                 </ion-row>
@@ -250,7 +250,7 @@ const filteredData = computed(() => {
         return vdata.value;
     }
     console.log(selectedStatus.value);
-    return vdata.value.filter(item => item.status == selectedStatus.value);
+    return vdata.value.filter(item => item.status.toString() === selectedStatus.value);
 });
 // mount 
 onMounted(async () => {

@@ -2,7 +2,7 @@
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="cost-center-pr-content" v-bind="$attrs">
         <HeaderComponent :title="'Cost Center Purchase Request'" />
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">

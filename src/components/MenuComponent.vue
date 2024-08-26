@@ -3,10 +3,10 @@
         <ion-menu :content-id="contentId">
             <ion-header>
                 <ion-toolbar>
-                    <ion-title>Menu Content</ion-title>
+                    <ion-title>Content Menu</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <ion-content class="ion-padding">
+            <ion-content>
                 <ion-list>
                     <ion-menu-toggle>
                         <ion-item router-link="/home">

@@ -22,7 +22,7 @@ ion-modal ion-toolbar {
       <ion-title>App</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
+  <ion-content>
     <ion-button id="open-modal" expand="block">Open Modal</ion-button>
 
     <ion-modal ref="modal" trigger="open-modal">

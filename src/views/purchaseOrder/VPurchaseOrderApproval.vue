@@ -2,7 +2,7 @@
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="pr-content" v-bind="$attrs">
         <HeaderComponent :title="'Purchase Request Order'" />
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
