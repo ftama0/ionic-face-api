@@ -110,11 +110,12 @@ const selectedStatus = ref('');
 // computed 
 const vdata = computed(() => userAccount.userList);
 // api 
-const fetchAllUser = async (isloading = true) => {
-    loading.value = isloading;
+const fetchAllUser = async (refresh = true) => {
+    loading.value = refresh;
     try {
-        await userAccount.fetchAllUser(page.value, limit.value);
-        isloading == true ? page.value++ : '';
+        refresh == true ? '' : page.value++;
+        await userAccount.allUser(refresh, page.value, limit.value);
+        console.log(page.value)
     } catch (error) {
         console.error('Error fetching : ', error);
     }
@@ -147,7 +148,7 @@ const deleteUser = async (item) => {
         console.log(item.uuid);
         console.log('Apakah fungsi readUser tersedia?', typeof userAccount.readUser);
         await userAccount.deleteUser(item.uuid);
-        await fetchAllUser();
+        await fetchAllUser(true);
         proxy.$toast('Deleted Successfully', 'success');
         setOpen(false);
     } catch (error) {
@@ -173,7 +174,7 @@ const loadMore = async (event) => {
 const handleSearch = debounce(() => {
     page.value = 1;
     userAccount.daftarPr = [];
-    fetchAllUser();
+    fetchAllUser(true);
 }, 1000); // Set the debounce delay to 300ms or adjust as needed
 
 const openActionSheet = (item) => {// Method to open Action Sheet with specific item
@@ -240,19 +241,21 @@ const openModal = async (action) => { // Method to open Modal
     if (role === 'confirm') {
         // message.value = `Hello, ${res}!`;
         console.log(data.message);
+        await fetchAllUser(true);
         proxy.$toast(data.message, 'success');
     }
 };
 const filteredData = computed(() => {
     if (!selectedStatus.value) {
-        return vdata.value; // Return all data if no status is selected
+        return vdata.value;
     }
+    console.log(selectedStatus.value);
     return vdata.value.filter(item => item.status == selectedStatus.value);
 });
 // mount 
 onMounted(async () => {
     loading.value = true;
-    await fetchAllUser();
+    await fetchAllUser(true);
 });
 </script>
 

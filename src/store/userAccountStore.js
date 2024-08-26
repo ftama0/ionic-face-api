@@ -23,10 +23,11 @@ export const userAccountStore = defineStore({
     formattedLastLogin: (state) => formatDatetime(state.userDetails.last_login),
   },
   actions: {
-    async fetchAllUser(page, limit) {
+    async allUser(refresh, page, limit) {
       try {
-        const res = await userAccountService.fetchAllUser(page, limit);
-        this.userList = [...this.userList, ...res.data];
+        const res = await userAccountService.allUser(page, limit);
+        console.log("refresh", refresh);
+        this.userList = refresh ? res.data : [...this.userList, ...res.data];
         this.userList.total = res.total;
         console.log("data all user", this.userList);
       } catch (error) {
