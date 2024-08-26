@@ -84,10 +84,10 @@ export const prService = {
   },
   async fetchUserEss(page = 1, perPage = 5, search = '') {
     try {
-        const res = await apiEss.get(`/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`);
-        return res.data;
+      const res = await apiEss.get(`/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`);
+      return res.data;
     } catch (error) {
-        throw error;
+      throw error;
     }
   },
 };
@@ -135,10 +135,96 @@ export const poService = {
   },
   async fetchUserEss(page = 1, perPage = 5, search = '') {
     try {
-        const res = await apiEss.get(`/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`);
-        return res.data;
+      const res = await apiEss.get(`/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`);
+      return res.data;
     } catch (error) {
-        throw error;
+      throw error;
     }
   },
 };
+// cost center pr
+export const costCenterPrService = {
+  async fetchTotalCostCenterPr(prop) {
+    try {
+      const res = await apiService.get(`/...?...=${prop}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchListCostCenterPr(prop) {
+    try {
+      const res = await apiService.get(`/...?...=${prop}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchDetailCostCenterPr(prop) {
+    try {
+      const res = await apiService.get(`/...?prop=${prop}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchAddCostCenterPr(formData) {
+    try {
+      const res = await apiService.post('/...', formData);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchUpdateCostCenterPr(formData) {
+    try {
+      const res = await apiService.put('/...', formData);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+}
+// cost center po
+export const costCenterPoService = {
+  async fetchTotalCostCenterPr(prop) {
+    try {
+      const res = await apiService.get(`/...?...=${prop}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchListCostCenterPo(prop) {
+    try {
+      const res = await apiService.get(`/...?...=${prop}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchDetailCostCenterPo(prop) {
+    try {
+      const res = await apiService.get(`/...?prop=${prop}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchAddCostCenterPo(formData) {
+    try {
+      const res = await apiService.post('/...', formData);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async fetchEditCostCenterPo(formData) {
+    try {
+      const res = await apiService.put('/...', formData);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+}
