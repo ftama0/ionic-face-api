@@ -66,7 +66,7 @@
                     <ion-icon :icon="icons.personAddOutline"></ion-icon>
                 </ion-fab-button>
             </ion-fab>
-            <RefresherComponent @refresh="fetchAllUser(true)" />
+            <RefresherComponent @refresh="refreshData()" />
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
@@ -113,7 +113,7 @@ const vdata = computed(() => userAccount.userList);
 const fetchAllUser = async (refresh = true) => {
     loading.value = refresh;
     try {
-        refresh == true ? '' : page.value++;
+        refresh == true ? page.value = 1 : page.value++;
         await userAccount.allUser(refresh, page.value, limit.value);
         console.log(page.value)
     } catch (error) {
@@ -159,12 +159,16 @@ const deleteUser = async (item) => {
         loading.value = false;
     }
 };
-// another merthod 
+// another merthod
+const refreshData = async () => {
+    await fetchAllUser(true);
+    selectedStatus.value = null;
+
+};
+
 const loadMore = async (event) => {
-    console.log(vdata.value.length)
-    console.log(vdata.value.total)
     if (vdata.value.length >= vdata.value.total) {
-        event.target.disabled = true;
+        // event.target.disabled = true;
         event.target.complete();
         return;
     }
@@ -172,8 +176,6 @@ const loadMore = async (event) => {
     event.target.complete();
 };
 const handleSearch = debounce(() => {
-    page.value = 1;
-    userAccount.daftarPr = [];
     fetchAllUser(true);
 }, 1000); // Set the debounce delay to 300ms or adjust as needed
 
@@ -203,8 +205,8 @@ const openActionSheet = (item) => {// Method to open Action Sheet with specific 
     ];
     setOpen(true);
 };
+
 const handleAction = async (action) => {// Method to handle action button click in Action Sheet
-    loading.value = true;
     console.log(`Action ${action} for item:`);
     console.log(selectedItem.value);
     switch (action) {
@@ -223,9 +225,11 @@ const handleAction = async (action) => {// Method to handle action button click 
             proxy.$toast('Failed, contact admin', 'danger');
     }
 };
+
 const setOpen = (state) => { // Method to set the open state of the Action Sheet
     isOpen.value = state;
 };
+
 const openModal = async (action) => { // Method to open Modal
     const modal = await modalController.create({
         component: Modal,
@@ -241,7 +245,6 @@ const openModal = async (action) => { // Method to open Modal
     if (role === 'confirm') {
         // message.value = `Hello, ${res}!`;
         console.log(data.message);
-        await fetchAllUser(true);
         proxy.$toast(data.message, 'success');
     }
 };
@@ -254,7 +257,6 @@ const filteredData = computed(() => {
 });
 // mount 
 onMounted(async () => {
-    loading.value = true;
     await fetchAllUser(true);
 });
 </script>

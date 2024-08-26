@@ -23,7 +23,7 @@ export const userAccountStore = defineStore({
     formattedLastLogin: (state) => formatDatetime(state.userDetails.last_login),
   },
   actions: {
-    async allUser(refresh, page, limit) {
+    async allUser(refresh, page = 1, limit = 5) {
       try {
         const res = await userAccountService.allUser(page, limit);
         console.log("refresh", refresh);

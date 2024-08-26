@@ -69,6 +69,7 @@ const SubmitForm = async () => {
         } else {
             res = await userAccount.createUser(vdata);
         }
+        await userAccount.allUser(true);
         await handleCloseModal(res, 'confirm');
     } catch (error) {
         console.error('Save Data:', error);
