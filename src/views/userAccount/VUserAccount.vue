@@ -13,43 +13,42 @@
                 <ion-row>
                     <ion-col size="12" class="ion-padding">
                         <ion-select aria-label="status" label="Status select" label-placement="floating"
-                            placeholder="Status" fill="outline">
+                            placeholder="Status" fill="outline" v-model="selectedStatus">
                             <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="active">Active</ion-select-option>
-                            <ion-select-option value="nonActive">Non Active</ion-select-option>
+                            <ion-select-option :value="true">Active</ion-select-option>
+                            <ion-select-option :value="false">Non Active</ion-select-option>
                         </ion-select>
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col size="12">
-                        <div v-for="(item, index) in vdata" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3" style="border-radius: 15px;">
+                        <div v-for="(item, index) in filteredData" :key="index">
+                            <ion-card class="ion-margin-top ion-elevation-3">
                                 <ion-card-header>
                                     <ion-row class="ion-align-items-center">
                                         <ion-col size="6" class="ion-text-left">
                                             <ion-text class="ion-card-title">{{ item.username }}</ion-text>
                                         </ion-col>
                                         <ion-col size="6" class="ion-text-right">
-                                            <ChipComponent :color="item.status === 'Active' ? 'success' : 'danger'">
-                                                {{ item.status }}
+                                            <ChipComponent :color="item.status == true ? 'success' : 'danger'">
+                                                {{ item.status == true ? 'Active' : 'Non Active' }}
                                             </ChipComponent>
-
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-header>
                                 <ion-card-content>
                                     <ion-row>
                                         <ion-col size="6" class="ion-text-left">
-                                            <ButtonActionComponent :icon="icons.openOutline" :item="item"
+                                            <ButtonComponent :icon="icons.openOutline" :item="item"
                                                 :class="actionButton" @action-click="openActionSheet">
                                                 Action
-                                            </ButtonActionComponent>
+                                            </ButtonComponent>
                                         </ion-col>
                                         <ion-col size="6" class="ion-text-right">
-                                            <ButtonActionComponent :icon="icons.readerOutline" :item="item"
-                                                :class="detailButton" @action-click="fetchDetailUserAccount">
+                                            <ButtonComponent :icon="icons.readerOutline" :item="item"
+                                                :class="detailButton" @action-click="fetchReadUser">
                                                 Detail
-                                            </ButtonActionComponent>
+                                            </ButtonComponent>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-content>
@@ -67,14 +66,12 @@
                     <ion-icon :icon="icons.personAddOutline"></ion-icon>
                 </ion-fab-button>
             </ion-fab>
+            <RefresherComponent @refresh="fetchAllUser(true)" />
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
-        <!-- <ion-button id="open-loading">Show Loading</ion-button>
-        <ion-loading trigger="open-loading" :duration="3000" message="Dismissing after 3 seconds..." spinner="circles">
-        </ion-loading>
-        <ion-loading v-if="isLoading" message="Loading ..." spinner="circles"></ion-loading> -->
+        <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
         <FooterComponent />
     </ion-page>
 </template>
@@ -82,109 +79,106 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
-import { userManagementStore } from '@/store/userManagementStore';
-import { purchaseRequestStore } from '@/store/prStore';
+import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import Modal from './VUserAccountModal.vue'
 import { modalController } from '@ionic/vue';
 import { A11y } from 'swiper/modules';
-import ButtonActionComponent from '@/components/ButtonActionComponent.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
+import LoadingComponent from '../../components/LoadingComponent.vue';
 
 // data
 const { proxy } = getCurrentInstance()
-const isLoading = ref(false);
+const loading = ref(false);
 const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
-const prStore = purchaseRequestStore();
-const userStore = userManagementStore();
+const userAccount = userAccountStore();
 const router = useRouter();
 const page = ref(1);
-const perPage = ref(5);
+const limit = ref(5);
 const search = ref('');
 const mainContentId = 'userAccount-content';
 /// State to manage Action Sheet
 const isOpen = ref(false);
-const selectedId = ref('');
+const selectedItem = ref('');
 const actionSheetButtons = ref([]);
 const actionButton = ref('action-button');
 const detailButton = ref('detail-button');
-const primary = ref('primary');
-const danger = ref('danger');
-
-
-const fetchDetailUserAccount = async (item) => {
-    try {
-        isLoading.value = true;
-        // await userStore.fetchDetailUserAccount(item.BANFN);
-        // await userStore.saveParentPr(item);
-        router.push({ name: 'UserAccountDetail' });
-    } catch (error) {
-        console.error('Login failed:', error);
-        proxy.$toast('Username or password is wrong', 'danger');
-    }
-    finally {
-        isLoading.value = false;
-    }
-};
-
-// api 
-const handleRefresh = (event) => {
-    setTimeout(() => {
-        event.target.complete();
-    }, 2000);
-};
-const initialize = async () => {
-    const res = await loginStore.loadUser()
-    // console.log(res);
-    if (!res) {
-        router.replace({ name: 'Login' });
-    }
-};
-const fetchListPr = async () => {
-    try {
-        isLoading.value = true;
-        await prStore.fetchListPr(user.value.username);
-        page.value++;
-    } catch (error) {
-        console.error('Error fetching list PR:', error);
-    }
-    finally {
-        isLoading.value = false;
-    }
-};
+const selectedStatus = ref('');
 // computed 
-const fakeData = [
-    { username: 'User1', status: 'Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User2', status: 'Non Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User3', status: 'Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User4', status: 'Active', array: ['A1', 'A2', 'A3'] },
-    { username: 'User5', status: 'Active', array: ['A1', 'A2', 'A3'] }
-];
+const vdata = computed(() => userAccount.userList);
+// api 
+const fetchAllUser = async (isloading = true) => {
+    loading.value = isloading;
+    try {
+        await userAccount.fetchAllUser(page.value, limit.value);
+        isloading == true ? page.value++ : '';
+    } catch (error) {
+        console.error('Error fetching : ', error);
+    }
+    finally {
+        loading.value = false;
+    }
+};
 
-const vdata = ref(fakeData);
-// const vdata = computed(() => fakeChan.listUserAcount);
-const user = computed(() => loginStore.user);
+const fetchReadUser = async (item, action = null) => {
+    loading.value = true;
+    try {
+        console.log(item.uuid);
+        console.log('Apakah fungsi readUser tersedia?', typeof userAccount.readUser);
+        await userAccount.readUser(item.uuid);;
+        if (!action) {
+            await router.push({ name: 'UserAccountDetail' });
+        }
+    } catch (error) {
+        console.error('API failed:', error);
+        proxy.$toast('Error Read User', 'danger');
+    }
+    finally {
+        loading.value = false;
+    }
+};
+
+const deleteUser = async (item) => {
+    loading.value = true;
+    try {
+        console.log(item.uuid);
+        console.log('Apakah fungsi readUser tersedia?', typeof userAccount.readUser);
+        await userAccount.deleteUser(item.uuid);
+        await fetchAllUser();
+        proxy.$toast('Deleted Successfully', 'success');
+        setOpen(false);
+    } catch (error) {
+        console.error('API failed:', error);
+        proxy.$toast('Error Read User', 'danger');
+    }
+    finally {
+        loading.value = false;
+    }
+};
 // another merthod 
 const loadMore = async (event) => {
-    await fetchListPr();
+    console.log(vdata.value.length)
+    console.log(vdata.value.total)
+    if (vdata.value.length >= vdata.value.total) {
+        event.target.disabled = true;
+        event.target.complete();
+        return;
+    }
+    await fetchAllUser(false);
     event.target.complete();
 };
 const handleSearch = debounce(() => {
     page.value = 1;
-    prStore.daftarPr = [];
-    fetchListPr();
+    userAccount.daftarPr = [];
+    fetchAllUser();
 }, 1000); // Set the debounce delay to 300ms or adjust as needed
-const formatCurrency = (price) => {
-    return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
-};
-// Method to open Action Sheet with specific item
-const openActionSheet = (item) => {
+
+const openActionSheet = (item) => {// Method to open Action Sheet with specific item
     console.log(item);
-    console.log('item');
-    const id = item.id;
-    selectedId.value = id;
+    selectedItem.value = item;
     actionSheetButtons.value = [
         {
             text: 'Edit',
@@ -195,7 +189,7 @@ const openActionSheet = (item) => {
         {
             text: 'Delete',
             role: 'destructive',
-            handler: () => handleAction('Reject'),
+            handler: () => handleAction('Delete'),
             cssClass: 'reject-button',
             icon: icons.value.trashOutline,
         },
@@ -208,64 +202,57 @@ const openActionSheet = (item) => {
     ];
     setOpen(true);
 };
-// Method to handle action button click in Action Sheet
-const handleAction = async (action) => {
-    isLoading.value = true;
-    console.log(`Action ${action} for Id: ${selectedId.value}`);
-
-    let response;
+const handleAction = async (action) => {// Method to handle action button click in Action Sheet
+    loading.value = true;
+    console.log(`Action ${action} for item:`);
+    console.log(selectedItem.value);
     switch (action) {
         case 'Add':
             await openModal(action);
             break;
         case 'Edit':
+            await fetchReadUser(selectedItem.value, action);
             await openModal(action);
             break;
         case 'Delete':
-            const response = await prStore.rejectPr(user.value.username, selectedId.value);
-            if (response) {
-                proxy.$toast('Reject Done', 'success');
-                setOpen(false);
-                isLoading.value = false;
-            } else {
-                console.error(`Failed to ${action.toLowerCase()} for Id: ${selectedId.value}`);
-                proxy.$toast('Failed, contact admin', 'danger');
-            }
+            await deleteUser(selectedItem.value);
             break;
         default:
             console.warn(`Unknown action: ${action}`);
             proxy.$toast('Failed, contact admin', 'danger');
     }
 };
-// Method to set the open state of the Action Sheet
-const setOpen = (state) => {
+const setOpen = (state) => { // Method to set the open state of the Action Sheet
     isOpen.value = state;
 };
-const openModal = async (action) => {
+const openModal = async (action) => { // Method to open Modal
     const modal = await modalController.create({
         component: Modal,
         componentProps: {
-            // Kirim parameter ke modal
+            // Kirim parameter ke modal 
             action: action,
         },
     });
-
-
     modal.present();
-
     const { data, role } = await modal.onWillDismiss();
-
+    console.log(data.message);
+    console.log(role);
     if (role === 'confirm') {
-        // message.value = `Hello, ${data}!`;
-        console.log(data);
-        proxy.$toast('Add User Account Successfully', 'success');
+        // message.value = `Hello, ${res}!`;
+        console.log(data.message);
+        proxy.$toast(data.message, 'success');
     }
 };
+const filteredData = computed(() => {
+    if (!selectedStatus.value) {
+        return vdata.value; // Return all data if no status is selected
+    }
+    return vdata.value.filter(item => item.status == selectedStatus.value);
+});
 // mount 
 onMounted(async () => {
-    isLoading.value = true;
-    await initialize();
-    await fetchListPr();
+    loading.value = true;
+    await fetchAllUser();
 });
 </script>
 

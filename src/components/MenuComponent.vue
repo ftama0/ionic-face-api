@@ -10,55 +10,64 @@
                 <ion-list>
                     <ion-menu-toggle>
                         <ion-item router-link="/home">
-                            <ion-icon aria-hidden="true" slot="start" :icon="icons.homeOutline"></ion-icon>
+                            <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                :icon="icons.homeOutline"></ion-icon>
                             <ion-label class="ion-padding">Home</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
                         <ion-item router-link="/purchaseRequestList">
-                            <ion-icon aria-hidden="true" slot="start" :icon="icons.bagHandleOutline"></ion-icon>
+                            <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                :icon="icons.bagHandleOutline"></ion-icon>
                             <ion-label class="ion-padding">Purchase Request List</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
                         <ion-item router-link="/purchaseOrderList">
-                            <ion-icon aria-hidden="true" slot="start" :icon="icons.bagCheckOutline"></ion-icon>
+                            <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                :icon="icons.bagCheckOutline"></ion-icon>
                             <ion-label class="ion-padding">Purchase Order List</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
                         <ion-item router-link="/purchaseRequestApproval">
-                            <ion-icon aria-hidden="true" slot="start" :icon="icons.cartOutline"></ion-icon>
+                            <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                :icon="icons.cartOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Request</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
                         <ion-item router-link="/purchaseOrderApproval">
-                            <ion-icon aria-hidden="true" slot="start" :icon="icons.basketOutline"></ion-icon>
+                            <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                :icon="icons.basketOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Order</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-item lines="none" button @click="toggleDropdown">
-                        <ion-icon aria-hidden="true" slot="start" :icon="icons.peopleOutline"></ion-icon>
+                        <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                            :icon="icons.peopleOutline"></ion-icon>
                         <ion-label class="ion-padding">User Management</ion-label>
                         <ion-icon slot="end" :icon="dropdownIcon"></ion-icon>
                     </ion-item>
                     <ion-list v-if="isDropdownOpen" class="ion-padding-start">
                         <ion-menu-toggle>
                             <ion-item router-link="/userAccount">
-                                <ion-icon aria-hidden="true" slot="start" :icon="icons.peopleOutline"></ion-icon>
+                                <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                    :icon="icons.peopleOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Account</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
                         <ion-menu-toggle>
                             <ion-item router-link="/userReleasePR">
-                                <ion-icon aria-hidden="true" slot="start" :icon="icons.idCardOutline"></ion-icon>
+                                <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                    :icon="icons.idCardOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Release PR</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
                         <ion-menu-toggle>
-                            <ion-item router-link="/userReleasePO">
-                                <ion-icon aria-hidden="true" slot="start" :icon="icons.idCardOutline"></ion-icon>
+                            <ion-item router-link="/userReleasePo">
+                                <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                    :icon="icons.idCardOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Release PO</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
@@ -140,5 +149,9 @@ ion-menu::part(container) {
 
 ion-icon {
     --ionicon-stroke-width: 36px;
+}
+
+.custom-icon {
+    color: #0070F2;
 }
 </style>

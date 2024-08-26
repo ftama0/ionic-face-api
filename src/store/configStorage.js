@@ -1,11 +1,12 @@
 // storage.js
-import { Storage } from '@ionic/storage';
-import { Drivers } from '@ionic/storage';
+import { Storage } from "@ionic/storage";
+import { Drivers } from "@ionic/storage";
 
 // Create a singleton storage instance
 const storage = new Storage({
-  name: '_hasnurDB',
-  driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
+  name: "_hasnurDB",
+  // driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage],
+  driverOrder: [Drivers.IndexedDB],
 });
 
 let isInitialized = false;

@@ -1,5 +1,5 @@
 <template>
-    <ion-button :size="size" :color="color" :class="class" @click="handleClick">
+    <ion-button :size="size" :color="color" :class="class" :shape="shape" fill="default" @click="handleClick">
         <ion-icon aria-hidden="true" slot="start" :icon="icon"></ion-icon>
         <slot>Action</slot>
     </ion-button>
@@ -26,6 +26,10 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    shape: {
+        type: String,
+        default: 'default',
+    },
     item: {
         type: Object,
         required: true,
@@ -43,20 +47,12 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.action-button {
-    background-color: #CFE5FF;
-
-    --color: #0070F2;
-
+.action-button,
+.detail-button {
     --border-radius: 10px;
-    --border-color: #BCC3CA;
     --border-style: solid;
     --border-width: 1px;
-
-    /* --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.2); */
-
-    --ripple-color: deeppink;
-
+    --box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.10);
     --padding-top: 10px;
     --padding-bottom: 10px;
     font-size: 17px;
@@ -64,27 +60,17 @@ onMounted(async () => {
     font-weight: 600;
 }
 
-.detail-button {
-    /* --background: #93e9be;
-    --background-hover: #9ce0be;
-    --background-activated: #88f4be;
-    --background-focused: #88f4be; */
-
+.action-button {
+    --background-color: #CFE5FF;
+    --background: #CFE5FF;
     --color: #0070F2;
-
-    --border-radius: 10px;
-    --border-color: #BCC3CA;
-    --border-style: solid;
-    --border-width: 1px;
-
-    /* --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.2); */
-
+    --border-color: #CFE5FF;
     --ripple-color: deeppink;
+}
 
-    --padding-top: 10px;
-    --padding-bottom: 10px;
-    font-size: 17px;
-    line-height: 18px;
-    font-weight: 600;
+.detail-button {
+    --color: #0070F2;
+    --border-color: #BCC3CA;
+    --ripple-color: deeppink;
 }
 </style>

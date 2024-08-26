@@ -1,5 +1,5 @@
 <template>
-    <ion-chip :class="class" :color="color">
+    <ion-chip :class="class" :color="color" :style="{ width: chipWidth }">
         <slot>Default</slot>
     </ion-chip>
 </template>
@@ -15,7 +15,6 @@ const props = defineProps({
     color: {
         type: String,
         default: 'primary',
-        required: true,
     },
     class: {
         type: String,
@@ -27,6 +26,10 @@ const props = defineProps({
     item: {
         type: Object,
     },
+    width: {
+        type: String,
+        default: '100px',
+    },
 });
 
 const emit = defineEmits(['action-click']);
@@ -34,6 +37,7 @@ const emit = defineEmits(['action-click']);
 function handleClick() {
     emit('action-click', props.item);
 }
+const chipWidth = props.width;
 onMounted(async () => {
     // console.log('Props:', props.data);
 });
@@ -41,7 +45,6 @@ onMounted(async () => {
 
 <style scoped>
 ion-chip {
-    width: 100px;
     justify-content: center;
     font-size: 12px;
     font-weight: 600;

@@ -25,41 +25,47 @@
                             <ion-card class="ion-margin-top ion-elevation-3" style="border-radius: 15px;">
                                 <ion-card-content>
                                     <ion-row class="ion-align-items-center">
-                                        <ion-col size="6" class="ion-text-center">
-                                            <div class="text-container">
-                                                <ion-text class="ion-card-title">{{ item.username }}</ion-text>
-                                                <ion-text class="ion-card-title">{{ item.level }}</ion-text>
-                                            </div>
-                                            <div class="text-container ion-padding-top">
-                                                <ion-button size="default" color="warning" class="action-button"
-                                                    @click="openActionSheet(item.level)">
-                                                    <ion-icon aria-hidden="true" slot="start"
-                                                        :icon="icons.openOutline"></ion-icon>
-                                                    Action
-                                                </ion-button>
-                                            </div>
+                                        <ion-col size="12" class="ion-text-start">
+                                            <ion-text class="text__header">{{ item.username
+                                                }}</ion-text>
                                         </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <div class="text-container-3">
-                                                <div v-for="(strategy, sIndex) in item.release_strategy.slice(0, 5)"
+                                        <ion-col size="12" class="ion-text-start">
+                                            <ion-text class="text__sub">{{ item.level }}</ion-text>
+                                        </ion-col>
+                                        <ion-col size="12" class="ion-text-center ion-text-justify">
+                                            <div class="chip__container">
+                                                <div v-for="(strategy, sIndex) in item.release_strategy.slice(0, 4)"
                                                     :key="sIndex">
-                                                    <ion-chip :id="'hover-trigger-' + sIndex">{{ strategy }}</ion-chip>
+                                                    <ChipComponent :id="'hover-trigger-' + sIndex" :width="widthButton">
+                                                        {{ strategy }}
+                                                    </ChipComponent>
                                                 </div>
-                                                <ion-chip v-if="item.release_strategy.length >= 5"
-                                                    :id="'click-trigger-' + index">....</ion-chip>
+                                                <ChipComponent v-if="item.release_strategy.length >= 4"
+                                                    :id="'hover-trigger-' + index" :width="widthButton">
+                                                    ....
+                                                </ChipComponent>
                                             </div>
-                                        </ion-col>
-                                        <ion-popover :trigger="'click-trigger-' + index" side="left"
-                                            trigger-action="click" size="auto">
-                                            <ion-content class="ion-padding">
-                                                <div class="text-container-3">
-                                                    <div v-for="(strategy, sIndex) in item.release_strategy"
-                                                        :key="sIndex">
-                                                        <ion-chip>{{ strategy }}</ion-chip>
+                                            <ion-popover :trigger="'click-trigger-' + index" side="left"
+                                                trigger-action="click" size="auto">
+                                                <ion-content class="ion-padding">
+                                                    <div class="chip__container">
+                                                        <div v-for="(strategy, sIndex) in item.release_strategy"
+                                                            :key="sIndex">
+                                                            <ion-chip>{{ strategy }}</ion-chip>
+                                                            <ChipComponent :width="widthButton">
+                                                                {{ strategy }}
+                                                            </ChipComponent>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </ion-content>
-                                        </ion-popover>
+                                                </ion-content>
+                                            </ion-popover>
+                                        </ion-col>
+                                        <ion-col size="12" class="ion-text-end">
+                                            <ButtonComponent :size="sizeButton" :icon="icons.openOutline" :item="item"
+                                                :class="actionButton" @action-click="openActionSheet">
+                                                Action
+                                            </ButtonComponent>
+                                        </ion-col>
                                     </ion-row>
                                 </ion-card-content>
                             </ion-card>
@@ -80,10 +86,6 @@
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
-        <!-- <ion-button id="open-loading">Show Loading</ion-button>
-        <ion-loading trigger="open-loading" :duration="3000" message="Dismissing after 3 seconds..." spinner="circles">
-        </ion-loading>
-        <ion-loading v-if="isLoading" message="Loading ..." spinner="circles"></ion-loading> -->
         <FooterComponent />
     </ion-page>
 </template>
@@ -91,19 +93,21 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
-import { userManagementStore } from '@/store/userManagementStore';
+import { userAccountStore } from '@/store/userAccountStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import Modal from './VUserReleasePrModal.vue';
 import { modalController } from '@ionic/vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import ChipComponent from '@/components/ChipComponent.vue';
 // data
 const { proxy } = getCurrentInstance()
 const isLoading = ref(false);
 const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
-const userStore = userManagementStore();
+const userStore = userAccountStore();
 const router = useRouter();
 const page = ref(1);
 const perPage = ref(5);
@@ -113,6 +117,10 @@ const mainContentId = 'userReleasePr-content';
 const isOpen = ref(false);
 const selectedId = ref('');
 const actionSheetButtons = ref([]);
+const actionButton = ref('action-button');
+const sizeButton = ref('small');
+const widthButton = ref('50px');
+
 
 const fetchDetailUserAccount = async (item) => {
     try {
@@ -121,7 +129,7 @@ const fetchDetailUserAccount = async (item) => {
         // await userStore.saveParentPr(item);
         router.push({ name: 'VUserReleasePrDetail' });
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('API failed:', error);
         proxy.$toast('Username or password is wrong', 'danger');
     }
     finally {
@@ -134,13 +142,6 @@ const handleRefresh = (event) => {
     setTimeout(() => {
         event.target.complete();
     }, 2000);
-};
-const initialize = async () => {
-    const res = await loginStore.loadUser()
-    // console.log(res);
-    if (!res) {
-        router.replace({ name: 'Login' });
-    }
 };
 const fetchListPr = async () => {
     try {
@@ -271,7 +272,6 @@ const openPopover = (index) => {
 // mount 
 onMounted(async () => {
     isLoading.value = true;
-    await initialize();
     await fetchListPr();
 });
 </script>
@@ -315,13 +315,27 @@ ion-fab-button {
     align-items: center;
 }
 
-.text-container-3 {
+.chip__container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* Maksimal 3 elemen ke samping */
-    gap: 8px;
+    grid-template-columns: repeat(5, 1fr);
+    /* Maksimal 5 elemen ke samping */
+    gap: 2px;
     /* Jarak antar elemen */
     justify-items: center;
     /* Pusatkan elemen secara horizontal */
+}
+
+.text__header {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 18px;
+    color: #626060;
+}
+
+.text__sub {
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 18px;
+    color: #626060;
 }
 </style>
