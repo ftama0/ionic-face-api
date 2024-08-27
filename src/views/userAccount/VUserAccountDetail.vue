@@ -8,7 +8,7 @@
                 <ion-title>Account Detail</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-list>
                 <ion-item>
                     <ion-label>
@@ -32,8 +32,7 @@
                     <ion-label>
                         <p class="detail__header">Role</p>
                         <p class="detail__sub">
-                            {{ vdata.role == 1 ? 'Admin' : vdata.role == 2 ? 'Approver' : vdata.role == 3 ? 'User'
-                            :'Unknown' }}
+                            {{ vdata.role_name }}
                         </p>
 
                     </ion-label>

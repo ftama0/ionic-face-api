@@ -2,7 +2,7 @@
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="userAccount-content" v-bind="$attrs">
         <HeaderComponent :title="'User Account'" />
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
@@ -15,8 +15,8 @@
                         <ion-select aria-label="status" label="Status select" label-placement="floating"
                             placeholder="Status" fill="outline" v-model="selectedStatus">
                             <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option :value="true">Active</ion-select-option>
-                            <ion-select-option :value="false">Non Active</ion-select-option>
+                            <ion-select-option value="true">Active</ion-select-option>
+                            <ion-select-option value="false">Non Active</ion-select-option>
                         </ion-select>
                     </ion-col>
                 </ion-row>
@@ -66,7 +66,7 @@
                     <ion-icon :icon="icons.personAddOutline"></ion-icon>
                 </ion-fab-button>
             </ion-fab>
-            <RefresherComponent @refresh="fetchAllUser(true)" />
+            <RefresherComponent @refresh="refreshData()" />
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
@@ -110,11 +110,12 @@ const selectedStatus = ref('');
 // computed 
 const vdata = computed(() => userAccount.userList);
 // api 
-const fetchAllUser = async (isloading = true) => {
-    loading.value = isloading;
+const fetchAllUser = async (refresh = true) => {
+    loading.value = refresh;
     try {
-        await userAccount.fetchAllUser(page.value, limit.value);
-        isloading == true ? page.value++ : '';
+        refresh == true ? page.value = 1 : page.value++;
+        await userAccount.allUser(refresh, page.value, limit.value);
+        console.log(page.value)
     } catch (error) {
         console.error('Error fetching : ', error);
     }
@@ -147,7 +148,7 @@ const deleteUser = async (item) => {
         console.log(item.uuid);
         console.log('Apakah fungsi readUser tersedia?', typeof userAccount.readUser);
         await userAccount.deleteUser(item.uuid);
-        await fetchAllUser();
+        await fetchAllUser(true);
         proxy.$toast('Deleted Successfully', 'success');
         setOpen(false);
     } catch (error) {
@@ -158,12 +159,16 @@ const deleteUser = async (item) => {
         loading.value = false;
     }
 };
-// another merthod 
+// another merthod
+const refreshData = async () => {
+    await fetchAllUser(true);
+    selectedStatus.value = null;
+
+};
+
 const loadMore = async (event) => {
-    console.log(vdata.value.length)
-    console.log(vdata.value.total)
     if (vdata.value.length >= vdata.value.total) {
-        event.target.disabled = true;
+        // event.target.disabled = true;
         event.target.complete();
         return;
     }
@@ -171,9 +176,7 @@ const loadMore = async (event) => {
     event.target.complete();
 };
 const handleSearch = debounce(() => {
-    page.value = 1;
-    userAccount.daftarPr = [];
-    fetchAllUser();
+    fetchAllUser(true);
 }, 1000); // Set the debounce delay to 300ms or adjust as needed
 
 const openActionSheet = (item) => {// Method to open Action Sheet with specific item
@@ -202,8 +205,8 @@ const openActionSheet = (item) => {// Method to open Action Sheet with specific 
     ];
     setOpen(true);
 };
+
 const handleAction = async (action) => {// Method to handle action button click in Action Sheet
-    loading.value = true;
     console.log(`Action ${action} for item:`);
     console.log(selectedItem.value);
     switch (action) {
@@ -222,9 +225,11 @@ const handleAction = async (action) => {// Method to handle action button click 
             proxy.$toast('Failed, contact admin', 'danger');
     }
 };
+
 const setOpen = (state) => { // Method to set the open state of the Action Sheet
     isOpen.value = state;
 };
+
 const openModal = async (action) => { // Method to open Modal
     const modal = await modalController.create({
         component: Modal,
@@ -245,14 +250,14 @@ const openModal = async (action) => { // Method to open Modal
 };
 const filteredData = computed(() => {
     if (!selectedStatus.value) {
-        return vdata.value; // Return all data if no status is selected
+        return vdata.value;
     }
-    return vdata.value.filter(item => item.status == selectedStatus.value);
+    console.log(selectedStatus.value);
+    return vdata.value.filter(item => item.status.toString() === selectedStatus.value);
 });
 // mount 
 onMounted(async () => {
-    loading.value = true;
-    await fetchAllUser();
+    await fetchAllUser(true);
 });
 </script>
 

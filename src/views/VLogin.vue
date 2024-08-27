@@ -37,7 +37,6 @@
                                 <span>Login</span>
                                 <ion-icon slot="end" :icon="icons.logInOutline"></ion-icon>
                             </ion-button>
-                            <ion-loading v-if="isLoading" message="Loading ..." spinner="circles"></ion-loading>
                         </ion-col>
 
                     </ion-row>
@@ -53,6 +52,7 @@
                 </ion-title>
             </ion-toolbar>
         </ion-footer>
+        <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
     </ion-page>
 </template>
 
@@ -66,15 +66,16 @@ const vdata = ref({
     username: '',
     password: ''
 });
-const isLoading = ref(false);
-const loginStore = useLoginStore(); // Menggunakan useLoginStore untuk mendapatkan store
+const loginStore = useLoginStore();
 const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
 const router = useRouter();
+const loading = ref(false);
+
 // api 
 const submitForm = async () => {
+    loading.value = true;
     try {
-        isLoading.value = true;
         console.log('masuk', vdata.value)
         await loginStore.login(vdata.value.username, vdata.value.password);
         router.push({ name: 'Home' });
@@ -83,27 +84,12 @@ const submitForm = async () => {
         proxy.$toast('Username or password is wrong', 'danger');
     }
     finally {
-        isLoading.value = false;
+        loading.value = false;
     }
 };
 const initialize = async () => {
-    // await loginStore.loadUser()
-    // if (user.value) {
-    //     await loginStore.session(user.value).then(() => {
-    //         proxy.$toast('Welcome Back', 'primary');
-    //         router.replace({ name: 'Home' });
-    //     }).catch((error) => {
-    //         console.error('Auto login error:', error);
-    //         proxy.$toast(error.message || 'Silahkan login terlebih dahulu', 'warning');
-    //     });
-    // }
 };
-const user = computed(() => loginStore.user);
-
-loginStore
 onMounted(async () => {
-    // await initialize();
-
     // Keyboard.addListener('keyboardWillShow', (info) => {
     //     document.querySelector('ion-footer').style.marginBottom = `${info.keyboardHeight}px`;
     // });

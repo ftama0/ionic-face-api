@@ -2,7 +2,7 @@
   <MenuComponent :contentId="mainContentId" />
   <ion-page id="userAccount-content" v-bind="$attrs">
     <HeaderComponent :title="'User Account'" />
-    <ion-content class="ion-padding">
+    <ion-content>
       <ion-card class="ion-card">
         <ion-card-content>
           <ion-item button detail="true" router-link="/userAccount">

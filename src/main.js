@@ -107,7 +107,7 @@ import LoadingComponent from "@/components/LoadingComponent.vue";
 import FormModalComponent from "@/components/FormModalComponent.vue";
 // storage
 import { initStorage } from "@/store/configStorage";
-await initStorage();
+initStorage();
 // create/run
 
 const pinia = createPinia();

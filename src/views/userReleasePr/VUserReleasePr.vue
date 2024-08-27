@@ -2,7 +2,7 @@
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="userReleasePr-content" v-bind="$attrs">
         <HeaderComponent :title="'User Release Code PR'" />
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
@@ -47,7 +47,7 @@
                                             </div>
                                             <ion-popover :trigger="'click-trigger-' + index" side="left"
                                                 trigger-action="click" size="auto">
-                                                <ion-content class="ion-padding">
+                                                <ion-content>
                                                     <div class="chip__container">
                                                         <div v-for="(strategy, sIndex) in item.release_strategy"
                                                             :key="sIndex">

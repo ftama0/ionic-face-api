@@ -8,7 +8,7 @@
                 <ion-title>Detail</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-list>
                 <ion-item>
                     <ion-label>
@@ -133,7 +133,7 @@ const logout = () => {
     router.replace({ name: 'Login' });
 };
 // computed 
-const user = computed(() => loginStore.user); 
+const user = computed(() => loginStore.user);
 const child = computed(() => prStore.detailPr);
 const parent = computed(() => prStore.parentPr);
 // Another Method 

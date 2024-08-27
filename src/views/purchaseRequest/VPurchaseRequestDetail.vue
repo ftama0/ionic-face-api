@@ -8,7 +8,7 @@
                 <ion-title>Detail</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-list>
                 <ion-item>
                     <ion-label>

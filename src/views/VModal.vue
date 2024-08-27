@@ -10,7 +10,7 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
+  <ion-content>
     <ion-item>
       <ion-input label-placement="stacked" label="Enter your name" v-model="name" placeholder="Your name"></ion-input>
       <ion-input label-placement="stacked" label="Enter your NRP" v-model="name" placeholder="Your NRP"></ion-input>

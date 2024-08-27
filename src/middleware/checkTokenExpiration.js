@@ -28,9 +28,12 @@ export async function checkTokenExpiration() {
     } else {
       // Token akses sudah kedaluwarsa tetapi refresh token masih berlaku
       try {
-        const formData = new FormData();
-        formData.append("refresh_token", refresh_token);
-        const res = await tokenService.refreshToken(formData);
+        // const formData = new FormData();
+        // formData.append("refresh_token", refresh_token);
+        const requestData = {
+          refresh_token: refresh_token,
+        };
+        const res = await tokenService.refreshToken(requestData);
         await initStorage();
         await storage.set(
           "token",
