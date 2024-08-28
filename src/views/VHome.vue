@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, getCurrentInstance, computed } from 'vue';
+import { ref, onMounted, getCurrentInstance, computed, onBeforeUnmount } from 'vue';
 import { createGesture } from '@ionic/vue';
 import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
@@ -100,12 +100,6 @@ const fetchTotalPr = async () => {
     finally {
         isLoading.value = false;
     }
-};
-const logout = () => {
-    loginStore.logout();
-    router.replace({ name: 'Login' });
-};
-const initialize = async () => {
 };
 // computed 
 const totalPR = computed(() => prStore.totalPr);
@@ -132,6 +126,12 @@ const onEnd = (detail) => {
         userCard.value.$el.style.transform = 'translateX(0)';
     }
 };
+const handleHardwareBackButton = (event) => {
+    event.detail.register(10, () => {
+        // Prevent default action (which would be navigating back)
+        // You can optionally show a confirmation dialog here
+    });
+};
 onMounted(async () => {
     // await initialize();
     await fetchTotalPr();
@@ -146,7 +146,13 @@ onMounted(async () => {
         });
 
         gesture.enable();
+
+        document.addEventListener('ionBackButton', handleHardwareBackButton);
     }
+});
+onBeforeUnmount(() => {
+    // Remove the event listener when the component is unmounted
+    document.removeEventListener('ionBackButton', handleHardwareBackButton);
 });
 </script>
 

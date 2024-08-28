@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, getCurrentInstance, defineProps } from 'vue';
+import { ref, onMounted, computed, watch, getCurrentInstance } from 'vue';
 import { modalController } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 import { Keyboard } from '@capacitor/keyboard';

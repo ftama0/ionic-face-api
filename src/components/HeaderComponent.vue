@@ -20,7 +20,7 @@
 </style>
 
 <script setup>
-import { getCurrentInstance, ref, defineProps } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 
 const props = defineProps({
     title: String,

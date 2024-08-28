@@ -23,9 +23,9 @@ export const userAccountStore = defineStore({
     formattedLastLogin: (state) => formatDatetime(state.userDetails.last_login),
   },
   actions: {
-    async allUser(refresh, page = 1, limit = 5) {
+    async allUser(refresh, page = 1, limit = 5, search = "") {
       try {
-        const res = await userAccountService.allUser(page, limit);
+        const res = await userAccountService.allUser(page, limit, search);
         console.log("refresh", refresh);
         this.userList = refresh ? res.data : [...this.userList, ...res.data];
         this.userList.total = res.total;

@@ -1,7 +1,7 @@
 <template>
 
     <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-        <ion-fab-button router-link="/home">
+        <ion-fab-button @click="replaceToHome">
             <ion-icon :icon="icons.homeOutline"></ion-icon>
         </ion-fab-button>
     </ion-fab>
@@ -43,7 +43,7 @@
 
 <style scoped>
 .toolbar-custom {
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
     border-top-left-radius: 40px;
     border-top-right-radius: 40px;
     margin-top: 10px;
@@ -54,7 +54,7 @@
 </style>
 
 <script setup>
-import { getCurrentInstance, ref, defineProps } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 import { useRouter } from 'vue-router';
 const { proxy } = getCurrentInstance()
 const router = useRouter();
@@ -62,4 +62,8 @@ const icons = ref(proxy.$icons);
 const props = defineProps({
     contentId: String,
 });
+
+const replaceToHome = () => {
+    router.replace({ name: 'Home' });
+};
 </script>

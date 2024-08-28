@@ -9,35 +9,35 @@
             <ion-content>
                 <ion-list>
                     <ion-menu-toggle>
-                        <ion-item router-link="/home">
+                        <ion-item @click="replaceToHome">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.homeOutline"></ion-icon>
                             <ion-label class="ion-padding">Home</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseRequestList">
+                        <ion-item router-link="/purchaseRequestList" @click="isDropdownOpen = false">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.bagHandleOutline"></ion-icon>
                             <ion-label class="ion-padding">Purchase Request List</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseOrderList">
+                        <ion-item router-link="/purchaseOrderList" @click="isDropdownOpen = false">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.bagCheckOutline"></ion-icon>
                             <ion-label class="ion-padding">Purchase Order List</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseRequestApproval">
+                        <ion-item router-link="/purchaseRequestApproval" @click="isDropdownOpen = false">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.cartOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Request</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseOrderApproval">
+                        <ion-item router-link="/purchaseOrderApproval" @click="isDropdownOpen = false">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.basketOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Order</ion-label>
@@ -51,24 +51,38 @@
                     </ion-item>
                     <ion-list v-if="isDropdownOpen" class="ion-padding-start">
                         <ion-menu-toggle>
-                            <ion-item router-link="/userAccount">
+                            <ion-item router-link="/userAccount" @click="isDropdownOpen = false">
                                 <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                     :icon="icons.peopleOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Account</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
                         <ion-menu-toggle>
-                            <ion-item router-link="/userReleasePR">
+                            <ion-item router-link="/userReleasePR" @click="isDropdownOpen = false">
                                 <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                     :icon="icons.idCardOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Release PR</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
                         <ion-menu-toggle>
-                            <ion-item router-link="/userReleasePo">
+                            <ion-item router-link="/userReleasePo" @click="isDropdownOpen = false">
                                 <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                     :icon="icons.idCardOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Release PO</ion-label>
+                            </ion-item>
+                        </ion-menu-toggle>
+                        <ion-menu-toggle>
+                            <ion-item router-link="/costCenterPr" @click="isDropdownOpen = false">
+                                <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                    :icon="icons.idCardOutline"></ion-icon>
+                                <ion-label class="ion-padding">Maintain Cost Center PR</ion-label>
+                            </ion-item>
+                        </ion-menu-toggle>
+                        <ion-menu-toggle>
+                            <ion-item router-link="/costCenterPo" @click="isDropdownOpen = false">
+                                <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                    :icon="icons.idCardOutline"></ion-icon>
+                                <ion-label class="ion-padding">Maintain Cost Center PO</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
                     </ion-list>
@@ -100,7 +114,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref, defineProps, computed, onMounted } from 'vue';
+import { getCurrentInstance, ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useLoginStore } from '@/store/loginStore';
 
@@ -117,6 +131,10 @@ const showMenu = computed(() => route.name !== 'Login');
 const logout = () => {
     loginStore.logout();
     router.replace({ name: 'Login' });
+};
+const replaceToHome = () => {
+    isDropdownOpen.value = false;
+    router.replace({ name: 'Home' });
 };
 const appVersion = ref('');
 const isDropdownOpen = ref(false);

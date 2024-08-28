@@ -114,7 +114,7 @@ const fetchAllUser = async (refresh = true) => {
     loading.value = refresh;
     try {
         refresh == true ? page.value = 1 : page.value++;
-        await userAccount.allUser(refresh, page.value, limit.value);
+        await userAccount.allUser(refresh, page.value, limit.value, search.value);
         console.log(page.value)
     } catch (error) {
         console.error('Error fetching : ', error);

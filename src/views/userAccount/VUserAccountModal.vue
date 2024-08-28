@@ -34,7 +34,7 @@
 
 
 <script setup>
-import { ref, onMounted, getCurrentInstance, defineProps, watch } from 'vue';
+import { ref, onMounted, getCurrentInstance, watch } from 'vue';
 import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
 
