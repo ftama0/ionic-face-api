@@ -106,9 +106,10 @@ const routes = [
   },
   // * user release code
   {
-    path: "/userReleasePr",
+    path: "/userReleasePr/:type",
     name: "UserReleasePr",
     component: () => import("@/views/userReleasePr/VUserReleasePr.vue"),
+    props: true,
   },
   {
     path: "/userReleasePo",

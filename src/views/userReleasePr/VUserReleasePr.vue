@@ -118,6 +118,13 @@ import { modalController } from '@ionic/vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
 import LoadingComponent from '../../components/LoadingComponent.vue';
+
+const props = defineProps({
+    type: {
+        type: String,
+        required: true
+    }
+});
 // data
 const { proxy } = getCurrentInstance()
 const rcStore = releaseCodeStore();
@@ -127,13 +134,13 @@ const loading = ref(false);
 const icons = ref(proxy.$icons);
 const router = useRouter();
 const page = ref(1);
-const limit = ref(80);
+const limit = ref(5);
 const search = ref('');
 const isOpen = ref(false);
 const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
 const selectedStatus = ref('');
-const type = ref('RH');
+const type = computed(() => props.type);
 const actionButton = ref('action-button');
 const mainContentId = 'userReleasePr-content';
 const sizeButton = ref('small');
@@ -172,8 +179,9 @@ const fetchReadUser = async (item, action = null) => {
 const deleteUser = async (item) => {
     loading.value = true;
     try {
-        await userAccount.deleteUser(item.uuid);
-        await fetchAllUser(true);
+        const data = { uuid: item.uuid, type: type.value };
+        await rcStore.deleteUserReleaseCode(data);
+        await rcStore.fetchAllUser(true);
         proxy.$toast('Deleted Successfully', 'success');
         setOpen(false);
     } catch (error) {
@@ -267,11 +275,15 @@ const filteredData = computed(() =>
         : vdata.value
 );
 
+
 // mount 
 onMounted(async () => {
     await fetchAllUser();
+    console.log('Props type:', props.type);
 });
 
+// Gunakan props.type di sini
+console.log(props.type); // Akan mencetak 'RH'
 </script>
 
 <style scoped>

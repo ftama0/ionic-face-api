@@ -21,7 +21,13 @@ export const releaseCodeStore = defineStore({
   //   formattedLastLogin: (state) => formatDatetime(state.userDetails.last_login),
   // },
   actions: {
-    async allUserReleaseCode(type, page = 1, limit = 5, search = "", refresh) {
+    async allUserReleaseCode(
+      type,
+      page = 1,
+      limit = 5,
+      search = "",
+      refresh = true
+    ) {
       try {
         const res = await releaseCodeService.allUserReleaseCode(
           type,
@@ -74,9 +80,9 @@ export const releaseCodeStore = defineStore({
         throw error;
       }
     },
-    async deleteUserReleaseCode(uuid) {
+    async deleteUserReleaseCode(data) {
       try {
-        const res = await releaseCodeService.deleteUserReleaseCode(uuid);
+        const res = await releaseCodeService.deleteUserReleaseCode(data);
         return res;
       } catch (error) {
         console.error("Store error:", error);
