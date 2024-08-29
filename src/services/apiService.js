@@ -272,9 +272,11 @@ export const releaseCodeService = {
       throw error;
     }
   },
-  async deleteUserReleaseCode(uuid) {
+  async deleteUserReleaseCode(data) {
     try {
-      const res = await apiService.delete(`/api/v1/users-release/${uuid}`);
+      const res = await apiService.delete(
+        `/api/v1/users-release/?uuid=${data.uuid}&type=${data.type}`
+      );
       return res.data.data;
     } catch (error) {
       throw error;

@@ -44,10 +44,11 @@ const props = defineProps({
 let vdata = ref({ release_id: [], type: props.type });
 const listUser = computed(() => userAccount.userList);
 const listReleaseCode = computed(() => rcStore.releaseCodeList);
+const title = computed(() => props.type === 'RH' ? 'PR' : 'PO');
 
 const modalConfig = ref({
     actionModal: props.action,
-    modalTitle: 'Release Code PR',
+    modalTitle: `Release Code ${title.value}`,
     cancelButtonText: 'Close',
     cancelButtonColor: 'danger',
     saveButtonText: 'Save',

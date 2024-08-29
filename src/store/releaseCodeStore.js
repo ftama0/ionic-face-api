@@ -11,6 +11,7 @@ export const releaseCodeStore = defineStore({
     userList: [],
     releaseCodeList: [],
     userDetails: [],
+    type: "",
   }),
   persist: {
     enabled: true,
@@ -21,7 +22,13 @@ export const releaseCodeStore = defineStore({
   //   formattedLastLogin: (state) => formatDatetime(state.userDetails.last_login),
   // },
   actions: {
-    async allUserReleaseCode(type, page = 1, limit = 5, search = "", refresh) {
+    async allUserReleaseCode(
+      type,
+      page = 1,
+      limit = 5,
+      search = "",
+      refresh = true
+    ) {
       try {
         const res = await releaseCodeService.allUserReleaseCode(
           type,
@@ -29,8 +36,14 @@ export const releaseCodeStore = defineStore({
           limit,
           search
         );
-        this.userList = refresh ? res.data : [...this.userList, ...res.data];
-        this.userList.total = res.total;
+        if (this.type !== type) {
+          this.userList = res.data;
+          this.userList.total = res.total;
+          this.type = type;
+        } else {
+          this.userList = refresh ? res.data : [...this.userList, ...res.data];
+          this.userList.total = res.total;
+        }
       } catch (error) {
         console.error("Store error:", error);
         throw error;
@@ -56,7 +69,6 @@ export const releaseCodeStore = defineStore({
     },
     async createUserReleaseCode(data) {
       try {
-        console.log("1", data.value);
         const res = await releaseCodeService.createUserReleaseCode(data.value);
         return res;
       } catch (error) {
@@ -66,7 +78,6 @@ export const releaseCodeStore = defineStore({
     },
     async updateUserReleaseCode(data) {
       try {
-        console.log("2", data.value);
         const res = await releaseCodeService.updateUserReleaseCode(data.value);
         return res;
       } catch (error) {
@@ -74,9 +85,9 @@ export const releaseCodeStore = defineStore({
         throw error;
       }
     },
-    async deleteUserReleaseCode(uuid) {
+    async deleteUserReleaseCode(data) {
       try {
-        const res = await releaseCodeService.deleteUserReleaseCode(uuid);
+        const res = await releaseCodeService.deleteUserReleaseCode(data);
         return res;
       } catch (error) {
         console.error("Store error:", error);

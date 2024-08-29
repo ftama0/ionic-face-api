@@ -1,7 +1,7 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
-    <ion-page id="userReleasePr-content" v-bind="$attrs">
-        <HeaderComponent :title="'User Release Code PR'" />
+    <ion-page id="userReleaseCode-content" v-bind="$attrs">
+        <HeaderComponent :title="`User Release Code ${title}`" />
         <ion-content>
             <ion-grid>
                 <ion-row>
@@ -113,11 +113,18 @@ import { releaseCodeStore } from '@/store/releaseCodeStore';
 import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
-import Modal from './VUserReleasePrModal.vue';
+import Modal from './VUserReleaseCodeModal.vue';
 import { modalController } from '@ionic/vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
 import LoadingComponent from '../../components/LoadingComponent.vue';
+
+const props = defineProps({
+    type: {
+        type: String,
+        required: true
+    }
+});
 // data
 const { proxy } = getCurrentInstance()
 const rcStore = releaseCodeStore();
@@ -127,15 +134,16 @@ const loading = ref(false);
 const icons = ref(proxy.$icons);
 const router = useRouter();
 const page = ref(1);
-const limit = ref(80);
+const limit = ref(5);
 const search = ref('');
 const isOpen = ref(false);
 const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
 const selectedStatus = ref('');
-const type = ref('RH');
+const type = computed(() => props.type);
+const title = computed(() => props.type === 'RH' ? 'PR' : 'PO');
 const actionButton = ref('action-button');
-const mainContentId = 'userReleasePr-content';
+const mainContentId = 'userReleaseCode-content';
 const sizeButton = ref('small');
 const widthButton = ref('50px');
 
@@ -172,8 +180,9 @@ const fetchReadUser = async (item, action = null) => {
 const deleteUser = async (item) => {
     loading.value = true;
     try {
-        await userAccount.deleteUser(item.uuid);
-        await fetchAllUser(true);
+        const data = { uuid: item.uuid, type: type.value };
+        await rcStore.deleteUserReleaseCode(data);
+        await rcStore.fetchAllUser(true);
         proxy.$toast('Deleted Successfully', 'success');
         setOpen(false);
     } catch (error) {
@@ -267,11 +276,17 @@ const filteredData = computed(() =>
         : vdata.value
 );
 
+
 // mount 
 onMounted(async () => {
-    await fetchAllUser();
+    console.log('Masuk:');
+
+    await fetchAllUser(true);
+    console.log('Props type:', props.type);
 });
 
+// Gunakan props.type di sini
+console.log(props.type); // Akan mencetak 'RH'
 </script>
 
 <style scoped>

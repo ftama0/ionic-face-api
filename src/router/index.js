@@ -106,24 +106,16 @@ const routes = [
   },
   // * user release code
   {
-    path: "/userReleasePr",
-    name: "UserReleasePr",
-    component: () => import("@/views/userReleasePr/VUserReleasePr.vue"),
+    path: "/userReleaseCode/:type",
+    name: "UserReleaseCode",
+    component: () => import("@/views/userReleaseCode/VUserReleaseCode.vue"),
+    props: true,
   },
   {
-    path: "/userReleasePo",
-    name: "UserReleasePo",
-    component: () => import("@/views/userReleasePo/VUserReleasePo.vue"),
-  },
-  {
-    path: "/userReleasePrDetail",
-    name: "UserReleasePrDetail",
-    component: () => import("@/views/userReleasePr/VUserReleasePrDetail.vue"),
-  },
-  {
-    path: "/userManagement",
-    name: "UserManagement",
-    component: () => import("@/views/VUserManagement.vue"),
+    path: "/userReleaseCodeDetail",
+    name: "UserReleaseCodeDetail",
+    component: () =>
+      import("@/views/userReleaseCode/VUserReleaseCodeDetail.vue"),
   },
   // * maintan cost center pr
   {
@@ -160,8 +152,8 @@ const router = createRouter({
 
 // note : Global navigation guard to log route history
 router.beforeEach((to, from, next) => {
-  console.log("Navigating to:", to.fullPath);
-  console.log("Navigating from:", from.fullPath);
+  // console.log("Navigating to:", to.fullPath);
+  // console.log("Navigating from:", from.fullPath);
   next();
 });
 
