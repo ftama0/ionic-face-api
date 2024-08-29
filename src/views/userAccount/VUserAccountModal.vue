@@ -34,7 +34,7 @@
 
 
 <script setup>
-import { ref, onMounted, getCurrentInstance, defineProps, watch } from 'vue';
+import { ref, onMounted, getCurrentInstance, watch } from 'vue';
 import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
 
@@ -63,7 +63,7 @@ const SubmitForm = async () => {
     try {
         console.log('ini form data', vdata.value)
         console.log(vdata.value);
-        let res = ';'
+        let res = '';
         if (props.action == 'Edit') {
             res = await userAccount.updateUser(vdata);
         } else {
@@ -81,12 +81,10 @@ const SubmitForm = async () => {
 const handleCloseModal = async (res, action) => {
     await modalController.dismiss(res, action);
 };
-const initialize = async () => {
-};
 // mount 
 onMounted(async () => {
     if (props.action == 'Edit') {
-        vdata.value = Object.assign({}, vdata.value, userAccount.userDetails);
+        vdata.value = Object.assign({}, vdata.value, userAccount.userDetails.data);
         vdata.value.role = vdata.value.role_id;
     }
 });

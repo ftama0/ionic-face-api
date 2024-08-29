@@ -27,6 +27,7 @@
     "axios": "^1.7.2",
     "ionicons": "^7.0.0",
     "jwt-decode": "^4.0.0",
+    "onesignal-cordova-plugin": "^5.2.4",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "pinia-plugin-persistedstate-2": "^2.0.24",

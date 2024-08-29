@@ -26,22 +26,28 @@
                                 <ion-card-content>
                                     <ion-row class="ion-align-items-center">
                                         <ion-col size="12" class="ion-text-start">
-                                            <ion-text class="text__header">{{ item.username
-                                                }}</ion-text>
+                                            <ion-text class="text__header">{{ item.username }}</ion-text>
                                         </ion-col>
                                         <ion-col size="12" class="ion-text-start">
-                                            <ion-text class="text__sub">{{ item.level }}</ion-text>
+                                            <ion-text class="text__sub">{{ item.fullname }}</ion-text>
                                         </ion-col>
                                         <ion-col size="12" class="ion-text-center ion-text-justify">
                                             <div class="chip__container">
-                                                <div v-for="(strategy, sIndex) in item.release_strategy.slice(0, 4)"
+                                                <div v-for="(strategy, sIndex) in item.user_prpo.slice(0, 4)"
                                                     :key="sIndex">
-                                                    <ChipComponent :id="'hover-trigger-' + sIndex" :width="widthButton">
-                                                        {{ strategy }}
+                                                    <ChipComponent :id="'hover-trigger-' + index + '-' + sIndex"
+                                                        :width="widthButton">
+                                                        {{ strategy.frgco }}
                                                     </ChipComponent>
+                                                    <ion-popover :trigger="'hover-trigger-' + index + '-' + sIndex"
+                                                        side="top" trigger-action="click" size="auto">
+                                                        <ion-content class="ion-padding">
+                                                            {{ strategy.frgct }}
+                                                        </ion-content>
+                                                    </ion-popover>
                                                 </div>
-                                                <ChipComponent v-if="item.release_strategy.length >= 4"
-                                                    :id="'hover-trigger-' + index" :width="widthButton">
+                                                <ChipComponent v-if="item.user_prpo.length > 4"
+                                                    :id="'click-trigger-' + index" :width="widthButton">
                                                     ....
                                                 </ChipComponent>
                                             </div>
@@ -49,12 +55,21 @@
                                                 trigger-action="click" size="auto">
                                                 <ion-content>
                                                     <div class="chip__container">
-                                                        <div v-for="(strategy, sIndex) in item.release_strategy"
-                                                            :key="sIndex">
-                                                            <ion-chip>{{ strategy }}</ion-chip>
-                                                            <ChipComponent :width="widthButton">
-                                                                {{ strategy }}
-                                                            </ChipComponent>
+                                                        <div v-for="(strategy, sIndex) in item.user_prpo" :key="sIndex">
+                                                            <div class="ion-no-padding">
+                                                                <ChipComponent
+                                                                    :id="'hover-trigger-' + index + '-' + sIndex + '-full'"
+                                                                    :width="widthButton">
+                                                                    {{ strategy.frgco }}
+                                                                </ChipComponent>
+                                                                <ion-popover
+                                                                    :trigger="'hover-trigger-' + index + '-' + sIndex + '-full'"
+                                                                    side="top" trigger-action="click" size="auto">
+                                                                    <ion-content class="ion-padding">
+                                                                        {{ strategy.frgct }}
+                                                                    </ion-content>
+                                                                </ion-popover>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </ion-content>
@@ -82,109 +97,112 @@
                     <ion-icon :icon="icons.addOutline"></ion-icon>
                 </ion-fab-button>
             </ion-fab>
+            <RefresherComponent @refresh="refreshData()" />
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
+        <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
         <FooterComponent />
     </ion-page>
 </template>
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
-import { useLoginStore } from '@/store/loginStore';
+import { releaseCodeStore } from '@/store/releaseCodeStore';
 import { userAccountStore } from '@/store/userAccountStore';
-import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import Modal from './VUserReleasePrModal.vue';
 import { modalController } from '@ionic/vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
+import LoadingComponent from '../../components/LoadingComponent.vue';
 // data
 const { proxy } = getCurrentInstance()
-const isLoading = ref(false);
+const rcStore = releaseCodeStore();
+const userAccount = userAccountStore();
+
+const loading = ref(false);
 const icons = ref(proxy.$icons);
-const loginStore = useLoginStore();
-const prStore = purchaseRequestStore();
-const userStore = userAccountStore();
 const router = useRouter();
 const page = ref(1);
-const perPage = ref(5);
+const limit = ref(80);
 const search = ref('');
-const mainContentId = 'userReleasePr-content';
-/// State to manage Action Sheet
 const isOpen = ref(false);
-const selectedId = ref('');
+const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
+const selectedStatus = ref('');
+const type = ref('RH');
 const actionButton = ref('action-button');
+const mainContentId = 'userReleasePr-content';
 const sizeButton = ref('small');
 const widthButton = ref('50px');
 
+const vdata = computed(() => rcStore.userList);
 
-const fetchDetailUserAccount = async (item) => {
+const fetchAllUser = async (refresh = true) => {
+    loading.value = refresh;
     try {
-        isLoading.value = true;
-        // await userStore.fetchDetailUserAccount(item.BANFN);
-        // await userStore.saveParentPr(item);
-        router.push({ name: 'VUserReleasePrDetail' });
+        refresh ? page.value = 1 : page.value++;
+        await rcStore.allUserReleaseCode(type.value, page.value, limit.value, search.value, refresh);
+        console.log(vdata.value)
     } catch (error) {
-        console.error('API failed:', error);
-        proxy.$toast('Username or password is wrong', 'danger');
-    }
-    finally {
-        isLoading.value = false;
+        console.error('Error fetching users:', error);
+    } finally {
+        loading.value = false;
     }
 };
 
-// api 
-const handleRefresh = (event) => {
-    setTimeout(() => {
-        event.target.complete();
-    }, 2000);
-};
-const fetchListPr = async () => {
+const fetchReadUser = async (item, action = null) => {
+    loading.value = true;
     try {
-        isLoading.value = true;
-        await prStore.fetchListPr(user.value.username);
-        page.value++;
+        await userAccount.readUser(item.uuid);
+        if (!action) {
+            await router.push({ name: 'UserAccountDetail' });
+        }
     } catch (error) {
-        console.error('Error fetching list PR:', error);
-    }
-    finally {
-        isLoading.value = false;
+        console.error('Error reading user:', error);
+        proxy.$toast('Error Reading User', 'danger');
+    } finally {
+        loading.value = false;
     }
 };
 
-// computed 
-// const vdata = computed(() => prStore.daftarPr);
-const fakeData = [
-    { id: '1', username: 'User1', status: 'Active', level: 'Approver', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
-    { id: '2', username: 'User2', status: 'Inactive', level: 'Reviewer', release_strategy: ['A1', 'A2', 'A3'] },
-    { id: '3', username: 'User3', status: 'Active', level: 'Editor', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
-    { id: '4', username: 'User4', status: 'Pending', level: 'Viewer', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] },
-    { id: '5', username: 'User5', status: 'Suspended', level: 'Admin', release_strategy: ['A1', 'A2', 'A3', 'A1', 'A2', 'A3'] }
-];
+const deleteUser = async (item) => {
+    loading.value = true;
+    try {
+        await userAccount.deleteUser(item.uuid);
+        await fetchAllUser(true);
+        proxy.$toast('Deleted Successfully', 'success');
+        setOpen(false);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        proxy.$toast('Error Deleting User', 'danger');
+    } finally {
+        loading.value = false;
+    }
+};
 
-const vdata = ref(fakeData);
-const user = computed(() => loginStore.user);
-// another merthod 
+const refreshData = async () => {
+    await fetchAllUser(true);
+    selectedStatus.value = null;
+};
+
 const loadMore = async (event) => {
-    await fetchListPr();
+    if (vdata.value.length >= vdata.value.total) {
+        event.target.complete();
+        return;
+    }
+    await fetchAllUser(false);
     event.target.complete();
 };
-const handleSearch = debounce(() => {
-    page.value = 1;
-    prStore.daftarPr = [];
-    fetchListPr();
-}, 1000); // Set the debounce delay to 300ms or adjust as needed
-const formatCurrency = (price) => {
-    return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
-};
-// Method to open Action Sheet with specific item
-const openActionSheet = (id) => {
-    console.log(id)
-    selectedId.value = id;
+
+const handleSearch = debounce(() => fetchAllUser(true), 300);
+
+const openActionSheet = (item) => {
+    console.log(item)
+    selectedItem.value = item;
     actionSheetButtons.value = [
         {
             text: 'Edit',
@@ -195,7 +213,7 @@ const openActionSheet = (id) => {
         {
             text: 'Delete',
             role: 'destructive',
-            handler: () => handleAction('Reject'),
+            handler: () => handleAction('Delete'),
             cssClass: 'reject-button',
             icon: icons.value.trashOutline,
         },
@@ -208,72 +226,52 @@ const openActionSheet = (id) => {
     ];
     setOpen(true);
 };
-// Method to handle action button click in Action Sheet
-const handleAction = async (action) => {
-    isLoading.value = true;
-    console.log(`Action ${action} for Id: ${selectedId.value}`);
 
-    let response;
+const handleAction = async (action) => {
     switch (action) {
         case 'Add':
-            await openModal(action);
-            break;
         case 'Edit':
-            await openModal(action);
-            response = await prStore.approvePr(user.value.username, selectedId.value);
+            await (action === 'Edit' && fetchReadUser(selectedItem.value, action));
+            await openModal(action, type.value);
             break;
         case 'Delete':
-            response = await prStore.rejectPr(user.value.username, selectedId.value);
-            if (response) {
-                proxy.$toast('Reject Done', 'success');
-            }
+            await deleteUser(selectedItem.value);
             break;
         default:
             console.warn(`Unknown action: ${action}`);
             proxy.$toast('Failed, contact admin', 'danger');
-
-    }
-
-    if (response) {
-        setOpen(false);
-        isLoading.value = false;
-    } else {
-        console.error(`Failed to ${action.toLowerCase()} PR for Id: ${selectedId.value}`);
     }
 };
-// Method to set the open state of the Action Sheet
+
 const setOpen = (state) => {
     isOpen.value = state;
 };
+
 const openModal = async (action) => {
+    await rcStore.readReleaseCode(type.value);
+    await userAccount.allUser(true, 1, 100);
     const modal = await modalController.create({
         component: Modal,
-        componentProps: {
-            // Kirim parameter ke modal
-            typeModal: action,
-            anotherParam: 123,
-        },
+        componentProps: { action, type: type.value },
     });
-
-
     modal.present();
-
     const { data, role } = await modal.onWillDismiss();
-
     if (role === 'confirm') {
-        // message.value = `Hello, ${data}!`;
-        console.log(data);
-        proxy.$toast('Add User Account Successfully', 'success');
+        proxy.$toast(data.message, 'success');
     }
 };
-const openPopover = (index) => {
-    this.popoverId = `click-trigger-${index}`;
-}
+
+const filteredData = computed(() =>
+    selectedStatus.value
+        ? vdata.value.filter(item => item.status.toString() === selectedStatus.value)
+        : vdata.value
+);
+
 // mount 
 onMounted(async () => {
-    isLoading.value = true;
-    await fetchListPr();
+    await fetchAllUser();
 });
+
 </script>
 
 <style scoped>

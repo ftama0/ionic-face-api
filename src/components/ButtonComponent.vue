@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 const props = defineProps({
     size: {

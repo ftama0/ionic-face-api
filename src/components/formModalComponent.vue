@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits, defineProps } from 'vue';
+import { ref, onMounted } from 'vue';
 const props = defineProps({
     config: {
         type: Object,
