@@ -1,8 +1,5 @@
-// store/loginStore.js
-
 import { defineStore } from "pinia";
 import { userAccountService } from "@/services/apiService"; // Import userAccountService dari services
-import { getDeviceInfo, isMobilePlatform } from "@/plugins/devicePlugin";
 import { jwtDecode } from "jwt-decode";
 import { formatDatetime } from "@/utils/datetimeUtils";
 // import { useLoginStore } from './loginStore';
@@ -26,10 +23,10 @@ export const userAccountStore = defineStore({
     async allUser(refresh, page = 1, limit = 5, search = "") {
       try {
         const res = await userAccountService.allUser(page, limit, search);
-        console.log("refresh", refresh);
+        // console.log("refresh", refresh);
         this.userList = refresh ? res.data : [...this.userList, ...res.data];
         this.userList.total = res.total;
-        console.log("data all user", this.userList);
+        // console.log("data all user", this.userList);
       } catch (error) {
         console.error("Store error:", error);
         throw error;

@@ -105,9 +105,11 @@ import FooterComponent from "@/components/FooterComponent.vue";
 import RefresherComponent from "@/components/RefresherComponent.vue";
 import LoadingComponent from "@/components/LoadingComponent.vue";
 import FormModalComponent from "@/components/FormModalComponent.vue";
+// one signal
+
 // storage
-import { initStorage } from "@/store/configStorage";
-initStorage();
+// import { initStorage } from "@/store/configStorage";
+// initStorage();
 // create/run
 
 const pinia = createPinia();

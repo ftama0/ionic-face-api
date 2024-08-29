@@ -9,40 +9,74 @@
                         <ion-searchbar v-model="search" placeholder="Search PR Number"
                             @ionInput="handleSearch"></ion-searchbar>
                     </ion-col>
+                    <ion-col size="8" class="ion-padding ion-align-self-center">
+                        <ion-label>134 purchase request found</ion-label>
+                    </ion-col>
+                    <ion-col size="4" class="ion-padding ion-align-self-center">
+                        <ion-select aria-label="status" label="Filter" label-placement="floating" fill="outline"
+                            v-model="selectedStatus">
+                            <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
+                            <ion-select-option value="true">Active</ion-select-option>
+                            <ion-select-option value="false">Non Active</ion-select-option>
+                        </ion-select>
+                    </ion-col>
                     <ion-col size="12">
                         <div v-for="(item, index) in vdata" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
                                 <ion-card-content>
                                     <ion-row class="ion-margin-top">
                                         <ion-col size="12">
-                                            <ion-label class="ion-card-title">{{ item.BANFN }}</ion-label>
+                                            <ion-row>
+                                                <ion-col size="2"> <ion-icon class="custom-icon-cart"
+                                                        :icon="icons.cartOutline"></ion-icon></ion-col>
+                                                <ion-col size="8">
+                                                    <div class="row">
+                                                        <ion-col size="12">
+                                                            <ion-label class="ion-card-title">
+                                                                {{ item.BANFN }}</ion-label>
+                                                        </ion-col>
+                                                    </div>
+                                                    <ion-row>
+                                                        <ion-col size="4">
+                                                            <ion-label class="ion-card-label">{{ item.total_item }}
+                                                                Item</ion-label>
+                                                        </ion-col>
+                                                        <ion-col size="1">
+                                                            ·
+                                                        </ion-col>
+                                                        <ion-col size="7">
+                                                            <ion-label class="ion-card-label">{{ item.BADAT
+                                                                }}</ion-label>
+                                                        </ion-col>
+                                                    </ion-row>
+                                                </ion-col>
+                                                <ion-col size="2">
+                                                    <ion-button fill="clear" @click="fetchDetailPr(item)">
+                                                        <ion-icon class="custom-icon"
+                                                            :icon="icons.ellipsisVertical"></ion-icon>
+                                                    </ion-button>
+                                                </ion-col>
+                                            </ion-row>
                                         </ion-col>
-                                        <ion-col size="12" class="ion-no-padding-top ion-no-padding-bottom">
+
+                                        <ion-col size="12" class="ion-padding ion-no-padding-top ion-no-padding-bottom">
                                             <ion-label class="ion-card-label">{{ item.HEADER }}</ion-label>
                                         </ion-col>
-                                        <ion-col size="12" class="ion-no-padding-top ion-no-padding-bottom">
-                                            <ion-label class="ion-card-label">{{ item.total_item }} Item</ion-label>
-                                        </ion-col>
-                                        <ion-col size="12" class="ion-no-padding-top ion-no-padding-bottom">
-                                            <ion-label class="ion-card-label">{{ item.BADAT }}</ion-label>
-                                        </ion-col>
-                                        <ion-col size="6" class="center-col-1">
-                                            <ion-label class="ion-card-amount center-col">Rp.
+                                        <ion-col size="6" class="ion-padding ion-text-start ion-align-self-center">
+                                            <ion-label class="ion-card-amount">Rp.
                                                 {{ formatCurrency(item.SUM_Total_Price) }}</ion-label>
                                         </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <ion-button size="default" shape="default" color="white"
-                                                class="detail-button" @click="fetchDetailPr(item)">
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.readerOutline"></ion-icon>
-                                                Detail
-                                            </ion-button>
+                                        <ion-col size="6" class="ion-padding ion-text-end">
+                                            <ChipComponent :color="item.status == true ? 'success' : 'danger'"
+                                                :width="'150px'">
+                                                {{ item.status == true ? 'Active' : 'To Approve' }}
+                                            </ChipComponent>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-content>
                             </ion-card>
                         </div>
-                        <ion-infinite-scroll threshold="10px" @ionInfinite="loadMore">
+                        <ion-infinite-scroll threshold=" 10px" @ionInfinite="loadMore">
                             <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
                             </ion-infinite-scroll-content>
                         </ion-infinite-scroll>
@@ -67,6 +101,7 @@ import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
+import ChipComponent from '@/components/ChipComponent.vue';
 // data
 const { proxy } = getCurrentInstance()
 const isLoading = ref(false);
@@ -83,11 +118,71 @@ const isOpen = ref(false);
 const selectedId = ref('');
 const actionSheetButtons = ref([]);
 
+// Data dummy untuk daftar Purchase Request
+const dummyData = ref([
+    {
+        BANFN: 'PR001',
+        HEADER: 'Pembelian Alat Kantor',
+        total_item: 5,
+        BADAT: '2023-04-15',
+        SUM_Total_Price: 5000000
+    },
+    {
+        BANFN: 'PR002',
+        HEADER: 'Pembelian Bahan Baku',
+        total_item: 3,
+        BADAT: '2023-04-16',
+        SUM_Total_Price: 7500000
+    },
+    {
+        BANFN: 'PR003',
+        HEADER: 'Pembelian Peralatan IT',
+        total_item: 2,
+        BADAT: '2023-04-17',
+        SUM_Total_Price: 15000000
+    },
+    {
+        BANFN: 'PR004',
+        HEADER: 'Pembelian Furnitur',
+        total_item: 4,
+        BADAT: '2023-04-18',
+        SUM_Total_Price: 10000000
+    },
+    {
+        BANFN: 'PR005',
+        HEADER: 'Pembelian Alat Kebersihan',
+        total_item: 6,
+        BADAT: '2023-04-19',
+        SUM_Total_Price: 3000000
+    }
+]);
+
+// Ganti computed property vdata untuk menggunakan data dummy
+const vdata = computed(() => dummyData.value);
+
+// Hapus atau komentari fungsi fetchListPr yang asli
+// const fetchListPr = async () => { ... };
+
+// Ganti dengan fungsi fetchListPr yang menggunakan data dummy
+const fetchListPr = async () => {
+    try {
+        isLoading.value = true;
+        // Simulasi delay jaringan
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Tidak perlu melakukan apa-apa karena kita menggunakan data dummy
+        page.value++;
+    } catch (error) {
+        console.error('Error fetching list PR:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
 const fetchDetailPr = async (item) => {
     try {
         isLoading.value = true;
-        await prStore.fetchDetailPr(item.BANFN);
-        await prStore.saveParentPr(item);
+        // await prStore.fetchDetailPr(item.BANFN);
+        // await prStore.saveParentPr(item);
         router.push({ name: 'PurchaseRequestListDetail' });
     } catch (error) {
         console.error('API failed:', error);
@@ -104,20 +199,7 @@ const handleRefresh = (event) => {
         event.target.complete();
     }, 2000);
 };
-const fetchListPr = async () => {
-    try {
-        isLoading.value = true;
-        await prStore.fetchListPr(user.value.username);
-        page.value++;
-    } catch (error) {
-        console.error('Error fetching list PR:', error);
-    }
-    finally {
-        isLoading.value = false;
-    }
-};
 // computed 
-const vdata = computed(() => prStore.daftarPr);
 const user = computed(() => loginStore.user);
 // another merthod 
 const loadMore = async (event) => {
@@ -287,4 +369,19 @@ ion-fab-button {
     --color: gray;
     --ion-color-danger: #ff0000;
 } */
+.custom-icon-cart {
+    color: #0070F2;
+    font-size: 24px;
+    background-color: #CFE5FF;
+    border-radius: 50%;
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-icon {
+    color: #0070F2;
+    font-size: 24px;
+}
 </style>

@@ -84,7 +84,7 @@ const logout = () => {
     router.replace({ name: 'Login' });
 };
 // computed 
-const vdata = computed(() => userAccount.userDetails);
+const vdata = computed(() => userAccount.userDetails.data);
 // Another Method 
 onMounted(async () => {
     console.log(vdata.value)

@@ -1,113 +1,110 @@
 <template>
-    <ion-header>
-        <ion-toolbar>
-            <ion-buttons slot="start">
-                <ion-button color="medium" @click="cancel">Cancel</ion-button>
-            </ion-buttons>
-            <ion-title>{{ typeModal }} Release Code PR</ion-title>
-            <ion-buttons slot="end" @click="triggerSubmit">
-                <ion-button type="submit" :strong="true">Save</ion-button>
-            </ion-buttons>
-            <ion-progress-bar v-if="loading" type="indeterminate" color="primary"></ion-progress-bar>
-        </ion-toolbar>
-    </ion-header>
-    <ion-content color="light" style="background-color: white;">
-        <form ref="myForm" @submit.prevent="submitForm" style="background-color: white;">
+    <form-modal-component :config="modalConfig" :submitForm="SubmitForm" @closeModal="handleCloseModal">
+        <template #content class="content-modal">
             <ion-row class="ion-padding">
                 <ion-col size="12" class="ion-padding-top">
-                    <ion-select aria-label="status" label="User select" label-placement="floating" placeholder="Status"
-                        fill="outline">
-                        <ion-icon slot="start" :icon="icons.personOutline" aria-hidden="true"></ion-icon>
-                        <ion-select-option value="active">Ferry</ion-select-option>
-                        <ion-select-option value="nonActive">Malik</ion-select-option>
-                        <ion-select-option value="nonActive">Rifki</ion-select-option>
-                        <ion-select-option value="nonActive">Aldo</ion-select-option>
-                        <ion-select-option value="nonActive">Angga</ion-select-option>
-                        <ion-select-option value="nonActive">Angga</ion-select-option>
+                    <ion-label><b>Name</b></ion-label>
+                </ion-col>
+                <ion-col size="12" class="ion-padding-top">
+                    <ion-select aria-label="status" label="Select User" label-placement="floating"
+                        placeholder="Select User" fill="outline" v-model="vdata.uuid">
+                        <ion-select-option v-for="user in listUser" :key="user.uuid" :value="user.uuid">
+                            {{ user.fullname }}
+                        </ion-select-option>
                     </ion-select>
                 </ion-col>
-                <ion-col size="12">
-                    <p>Release Code</p>
+                <ion-col size="12" class="ion-padding-top">
+                    <ion-label><b>Release Code</b></ion-label>
                 </ion-col>
-                <ion-col size="12" v-for="(item, index) in listRc" :key="index">
-                    <ion-checkbox :value="item.FRGCO" label-placement="end">{{ item.FRGCT }}</ion-checkbox>
+                <ion-col size="12" v-for="(item, index) in listReleaseCode" :key="index">
+                    <ion-checkbox :value="item.id" label-placement="end"
+                        @ionChange="handleReleaseCodeChange(item.id, $event)" :checked="isChecked(item.id)">
+                        {{ item.frgct }} ({{ item.frgco }})
+                    </ion-checkbox>
                     <br />
                 </ion-col>
             </ion-row>
-        </form>
-    </ion-content>
+            <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
+        </template>
+    </form-modal-component>
 </template>
 
+
 <script setup>
-import { ref, onMounted, computed, watch, getCurrentInstance } from 'vue';
-import { modalController } from '@ionic/vue';
-import { useLoginStore } from '@/store/loginStore';
+import { ref, onMounted, getCurrentInstance, watch, computed } from 'vue';
 import { userAccountStore } from '@/store/userAccountStore';
-import { purchaseRequestStore } from '@/store/prStore';
-import { useRouter } from 'vue-router';
-import { Keyboard } from '@capacitor/keyboard';
-const { proxy } = getCurrentInstance()
-const icons = ref(proxy.$icons);
-const vdata = ref({
-    status: true
-});
-const myForm = ref(null);
-const cancel = () => modalController.dismiss(null, 'cancel');
-const confirm = (data) => modalController.dismiss(data, 'confirm');
-const userStore = userAccountStore();
-const prStore = purchaseRequestStore();
+import { releaseCodeStore } from '@/store/releaseCodeStore';
+import { modalController } from '@ionic/vue';
+const userAccount = userAccountStore();
+const rcStore = releaseCodeStore();
 const props = defineProps({
-    typeModal: String,
-    anotherParam: Number,
+    action: String,
+    type: String,
 });
+let vdata = ref({ release_id: [], type: props.type });
+const listUser = computed(() => userAccount.userList);
+const listReleaseCode = computed(() => rcStore.releaseCodeList);
+
+const modalConfig = ref({
+    actionModal: props.action,
+    modalTitle: 'Release Code PR',
+    cancelButtonText: 'Close',
+    cancelButtonColor: 'danger',
+    saveButtonText: 'Save',
+    anotherParam: 1
+});
+const { proxy } = getCurrentInstance()
 const loading = ref(false);
-const isLoading = ref(false);
-
-
-const toggleStatus = (event) => {
-    vdata.value.status = event.detail.checked;
-    console.log(vdata.value)
-};
-
-const triggerSubmit = () => {
-    if (myForm.value && myForm.value.reportValidity()) {
-        myForm.value.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-    }
-};
 // api
-const submitForm = async () => {
+const SubmitForm = async () => {
+    loading.value = true;
     try {
-        loading.value = true;
-        console.log('masuk', vdata.value)
-        await userStore.saveUserAccount(vdata);
-        confirm(vdata.value);
+        console.log('ini form data', vdata.value)
+        console.log(vdata.value);
+        let res = '';
+        if (props.action == 'Edit') {
+            res = await rcStore.updateUserReleaseCode(vdata);
+        } else {
+            res = await rcStore.createUserReleaseCode(vdata);
+        }
+        await rcStore.allUserReleaseCode(props.type);
+        await handleCloseModal(res, 'confirm');
     } catch (error) {
         console.error('Save Data:', error);
-        proxy.$toast('Failed to save data', 'danger');
-    }
-    finally {
+        proxy.$toast('Faile d to save data', 'danger');
+    } finally {
         loading.value = false;
     }
 };
-const fetchReleaseCode = async () => {
-    try {
-        isLoading.value = true;
-        await prStore.fetchReleaseCode();
-    } catch (error) {
-        console.error('Error fetching list PR:', error);
-    }
-    finally {
-        isLoading.value = false;
-    }
+const handleCloseModal = async (res, action) => {
+    await modalController.dismiss(res, action);
 };
-const listRc = computed(() => prStore.listRc);
 // mount 
 onMounted(async () => {
-    console.log(props.typeModal)
-    await fetchReleaseCode();
+    if (props.action == 'Edit') {
+        let data = Object.assign({}, vdata.value, userAccount.userDetails);
+        vdata.value.release_id = data.pr_release ? data.pr_release.map(item => item.release_id) : [];
+        vdata.value.uuid = data.data.uuid;
+        console.log('vdata.value', vdata.value);
+    }
 });
-</script>
 
+// Tambahkan fungsi ini
+const handleReleaseCodeChange = (id, event) => {
+    if (event.detail.checked) {
+        vdata.value.release_id.push(id);
+    } else {
+        vdata.value.release_id = vdata.value.release_id.filter(item => item !== id);
+    }
+    // console.log('Release IDs:', vdata.value.release_id);
+};
+
+// Tambahkan fungsi ini
+const isChecked = (id) => {
+    return vdata.value.release_id.includes(id);
+};
+
+</script>
 <style scoped>
 .status-container {
     display: flex;
@@ -116,12 +113,12 @@ onMounted(async () => {
 }
 
 ion-checkbox {
-    --size: 32px;
-    --checkbox-background-checked: #6815ec;
+    --size: 28px;
+    --checkbox-background-checked: #0070F2;
 }
 
 ion-checkbox::part(container) {
     border-radius: 6px;
-    border: 2px solid #6815ec;
+    border: 2px solid #0070F2;
 }
 </style>

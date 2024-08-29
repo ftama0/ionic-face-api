@@ -1,7 +1,7 @@
 <template>
 
     <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-        <ion-fab-button @click="replaceToHome">
+        <ion-fab-button router-link="/home">
             <ion-icon :icon="icons.homeOutline"></ion-icon>
         </ion-fab-button>
     </ion-fab>
@@ -63,7 +63,4 @@ const props = defineProps({
     contentId: String,
 });
 
-const replaceToHome = () => {
-    router.replace({ name: 'Home' });
-};
 </script>

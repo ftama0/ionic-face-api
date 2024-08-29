@@ -9,7 +9,7 @@
             <ion-content>
                 <ion-list>
                     <ion-menu-toggle>
-                        <ion-item @click="replaceToHome">
+                        <ion-item router-link="/home" @click="isDropdownOpen = false">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.homeOutline"></ion-icon>
                             <ion-label class="ion-padding">Home</ion-label>
@@ -131,10 +131,6 @@ const showMenu = computed(() => route.name !== 'Login');
 const logout = () => {
     loginStore.logout();
     router.replace({ name: 'Login' });
-};
-const replaceToHome = () => {
-    isDropdownOpen.value = false;
-    router.replace({ name: 'Home' });
 };
 const appVersion = ref('');
 const isDropdownOpen = ref(false);

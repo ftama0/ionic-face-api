@@ -190,7 +190,7 @@ export const userAccountService = {
   async readUser(uuid) {
     try {
       const res = await apiService.get(`/api/v1/users/${uuid}`);
-      return res.data.data;
+      return res.data;
     } catch (error) {
       throw error;
     }
@@ -217,6 +217,65 @@ export const userAccountService = {
         `/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`
       );
       return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};
+// user release pr
+export const releaseCodeService = {
+  async allUserReleaseCode(type, page = 1, limit = 5, search = "") {
+    try {
+      const res = await apiService.get(
+        `/api/v1/users-release/?type=${type}&page=${page}&limit=${limit}&search=${search}`
+      );
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async readReleaseCode(type) {
+    try {
+      const res = await apiService.get(`/api/v1/release-code/?type=${type}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async createUserReleaseCode(data) {
+    try {
+      const res = await apiService.post(
+        `/api/v1/users-release/?type=${data.type}`,
+        data
+      );
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async readUser(uuid) {
+    try {
+      const res = await apiService.get(`/api/v1/users-release/${uuid}`);
+      return res.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async updateUserReleaseCode(data) {
+    try {
+      const res = await apiService.put(
+        `/api/v1/users-release/?type=${data.type}`,
+        data
+      );
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async deleteUserReleaseCode(uuid) {
+    try {
+      const res = await apiService.delete(`/api/v1/users-release/${uuid}`);
+      return res.data.data;
     } catch (error) {
       throw error;
     }

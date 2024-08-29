@@ -126,12 +126,12 @@ const onEnd = (detail) => {
         userCard.value.$el.style.transform = 'translateX(0)';
     }
 };
-const handleHardwareBackButton = (event) => {
-    event.detail.register(10, () => {
-        // Prevent default action (which would be navigating back)
-        // You can optionally show a confirmation dialog here
-    });
-};
+// const handleHardwareBackButton = (event) => {
+//     event.detail.register(10, () => {
+//         // Prevent default action (which would be navigating back)
+//         // You can optionally show a confirmation dialog here
+//     });
+// };
 onMounted(async () => {
     // await initialize();
     await fetchTotalPr();
@@ -147,13 +147,13 @@ onMounted(async () => {
 
         gesture.enable();
 
-        document.addEventListener('ionBackButton', handleHardwareBackButton);
+        // document.addEventListener('ionBackButton', handleHardwareBackButton);
     }
 });
-onBeforeUnmount(() => {
-    // Remove the event listener when the component is unmounted
-    document.removeEventListener('ionBackButton', handleHardwareBackButton);
-});
+// onBeforeUnmount(() => {
+//     // Remove the event listener when the component is unmounted
+//     document.removeEventListener('ionBackButton', handleHardwareBackButton);
+// });
 </script>
 
 <style scoped>

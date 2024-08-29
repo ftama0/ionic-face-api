@@ -78,48 +78,43 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
-import { useLoginStore } from '@/store/loginStore';
 import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import Modal from './VUserAccountModal.vue'
 import { modalController } from '@ionic/vue';
-import { A11y } from 'swiper/modules';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
 import LoadingComponent from '../../components/LoadingComponent.vue';
 
-// data
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance();
+const router = useRouter();
+const userAccount = userAccountStore();
+
 const loading = ref(false);
 const icons = ref(proxy.$icons);
-const loginStore = useLoginStore();
-const userAccount = userAccountStore();
-const router = useRouter();
 const page = ref(1);
 const limit = ref(5);
 const search = ref('');
-const mainContentId = 'userAccount-content';
-/// State to manage Action Sheet
 const isOpen = ref(false);
-const selectedItem = ref('');
+const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
+const selectedStatus = ref('');
 const actionButton = ref('action-button');
 const detailButton = ref('detail-button');
-const selectedStatus = ref('');
-// computed 
+const mainContentId = 'userAccount-content';
+
+
 const vdata = computed(() => userAccount.userList);
-// api 
+
 const fetchAllUser = async (refresh = true) => {
     loading.value = refresh;
     try {
-        refresh == true ? page.value = 1 : page.value++;
+        refresh ? page.value = 1 : page.value++;
         await userAccount.allUser(refresh, page.value, limit.value, search.value);
-        console.log(page.value)
     } catch (error) {
-        console.error('Error fetching : ', error);
-    }
-    finally {
+        console.error('Error fetching users:', error);
+    } finally {
         loading.value = false;
     }
 };
@@ -127,17 +122,14 @@ const fetchAllUser = async (refresh = true) => {
 const fetchReadUser = async (item, action = null) => {
     loading.value = true;
     try {
-        console.log(item.uuid);
-        console.log('Apakah fungsi readUser tersedia?', typeof userAccount.readUser);
-        await userAccount.readUser(item.uuid);;
+        await userAccount.readUser(item.uuid);
         if (!action) {
             await router.push({ name: 'UserAccountDetail' });
         }
     } catch (error) {
-        console.error('API failed:', error);
-        proxy.$toast('Error Read User', 'danger');
-    }
-    finally {
+        console.error('Error reading user:', error);
+        proxy.$toast('Error Reading User', 'danger');
+    } finally {
         loading.value = false;
     }
 };
@@ -145,42 +137,35 @@ const fetchReadUser = async (item, action = null) => {
 const deleteUser = async (item) => {
     loading.value = true;
     try {
-        console.log(item.uuid);
-        console.log('Apakah fungsi readUser tersedia?', typeof userAccount.readUser);
         await userAccount.deleteUser(item.uuid);
         await fetchAllUser(true);
         proxy.$toast('Deleted Successfully', 'success');
         setOpen(false);
     } catch (error) {
-        console.error('API failed:', error);
-        proxy.$toast('Error Read User', 'danger');
-    }
-    finally {
+        console.error('Error deleting user:', error);
+        proxy.$toast('Error Deleting User', 'danger');
+    } finally {
         loading.value = false;
     }
 };
-// another merthod
+
 const refreshData = async () => {
     await fetchAllUser(true);
     selectedStatus.value = null;
-
 };
 
 const loadMore = async (event) => {
     if (vdata.value.length >= vdata.value.total) {
-        // event.target.disabled = true;
         event.target.complete();
         return;
     }
     await fetchAllUser(false);
     event.target.complete();
 };
-const handleSearch = debounce(() => {
-    fetchAllUser(true);
-}, 1000); // Set the debounce delay to 300ms or adjust as needed
 
-const openActionSheet = (item) => {// Method to open Action Sheet with specific item
-    console.log(item);
+const handleSearch = debounce(() => fetchAllUser(true), 300);
+
+const openActionSheet = (item) => {
     selectedItem.value = item;
     actionSheetButtons.value = [
         {
@@ -206,15 +191,11 @@ const openActionSheet = (item) => {// Method to open Action Sheet with specific 
     setOpen(true);
 };
 
-const handleAction = async (action) => {// Method to handle action button click in Action Sheet
-    console.log(`Action ${action} for item:`);
-    console.log(selectedItem.value);
+const handleAction = async (action) => {
     switch (action) {
         case 'Add':
-            await openModal(action);
-            break;
         case 'Edit':
-            await fetchReadUser(selectedItem.value, action);
+            await (action === 'Edit' && fetchReadUser(selectedItem.value, action));
             await openModal(action);
             break;
         case 'Delete':
@@ -226,39 +207,29 @@ const handleAction = async (action) => {// Method to handle action button click 
     }
 };
 
-const setOpen = (state) => { // Method to set the open state of the Action Sheet
+const setOpen = (state) => {
     isOpen.value = state;
 };
 
-const openModal = async (action) => { // Method to open Modal
+const openModal = async (action) => {
     const modal = await modalController.create({
         component: Modal,
-        componentProps: {
-            // Kirim parameter ke modal 
-            action: action,
-        },
+        componentProps: { action },
     });
     modal.present();
     const { data, role } = await modal.onWillDismiss();
-    console.log(data.message);
-    console.log(role);
     if (role === 'confirm') {
-        // message.value = `Hello, ${res}!`;
-        console.log(data.message);
         proxy.$toast(data.message, 'success');
     }
 };
-const filteredData = computed(() => {
-    if (!selectedStatus.value) {
-        return vdata.value;
-    }
-    console.log(selectedStatus.value);
-    return vdata.value.filter(item => item.status.toString() === selectedStatus.value);
-});
-// mount 
-onMounted(async () => {
-    await fetchAllUser(true);
-});
+
+const filteredData = computed(() =>
+    selectedStatus.value
+        ? vdata.value.filter(item => item.status.toString() === selectedStatus.value)
+        : vdata.value
+);
+
+onMounted(fetchAllUser);
 </script>
 
 <style scoped>

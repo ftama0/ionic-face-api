@@ -44,6 +44,15 @@ const routes = [
     path: "/home",
     name: "Home",
     component: () => import("@/views/VHome.vue"),
+    beforeEnter: (to, from, next) => {
+      // Handle direct navigation to /home
+      if (to.name === "Home") {
+        next(); // Allow the page to load normally on refresh
+      } else {
+        // Replace history only if navigating from another route
+        next({ ...to, replace: true });
+      }
+    },
   },
   // * pr
   {
@@ -147,6 +156,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+// note : Global navigation guard to log route history
+router.beforeEach((to, from, next) => {
+  console.log("Navigating to:", to.fullPath);
+  console.log("Navigating from:", from.fullPath);
+  next();
 });
 
 //note : cek expired token
