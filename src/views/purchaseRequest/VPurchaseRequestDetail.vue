@@ -9,6 +9,45 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
+            <ion-col size="12">
+                <ion-row>
+                    <ion-col size="2"> <ion-icon class="custom-icon-cart"
+                            :icon="icons.cartOutline"></ion-icon></ion-col>
+                    <ion-col size="5">
+                        <div class="row">
+                            <ion-col size="12">
+                                <ion-label class="ion-card-title">1020000061</ion-label>
+                            </ion-col>
+                        </div>
+                        <ion-row>
+                            <ion-col size="6">
+                                <ion-label class="ion-card-label">11 Item</ion-label>
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                    <ion-col size="5">
+                        <ChipComponent :color="testing == true ? 'success' : 'danger'" :width="'100px'">
+                            {{ testing == true ? 'Active' : 'To Approve' }}
+                        </ChipComponent>
+                    </ion-col>
+                    <ion-col size="12" class="ion-padding ion-no-padding-top ion-no-padding-bottom">
+                        <ion-row>
+                            <ion-col size="2">
+                            </ion-col>
+                            <ion-col size="10">
+                                <ion-label class="ion-card-label">Total Amount</ion-label>
+                            </ion-col>
+                            <ion-col size="2">
+                            </ion-col>
+                            <ion-col size="6">
+                                <ion-label class="ion-card-amount">Rp.111111</ion-label>
+                            </ion-col>
+                        </ion-row>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+
+
             <ion-list>
                 <ion-item>
                     <ion-label>
@@ -116,6 +155,8 @@ import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
+import ChipComponent from '@/components/ChipComponent.vue';
+
 // data
 const { proxy } = getCurrentInstance()
 const isLoading = ref(false);
@@ -127,6 +168,8 @@ const mainContentId = 'home-content';
 const isOpen = ref(false);
 const selectedId = ref('');
 const actionSheetButtons = ref([]);
+const testing = ref(true);
+
 // api 
 const logout = () => {
 

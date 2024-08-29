@@ -58,14 +58,14 @@
                             </ion-item>
                         </ion-menu-toggle>
                         <ion-menu-toggle>
-                            <ion-item router-link="/userReleasePR" @click="isDropdownOpen = false">
+                            <ion-item @click="$router.push({ name: 'UserReleaseCode', params: { type: 'RH' } })">
                                 <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                     :icon="icons.idCardOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Release PR</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
                         <ion-menu-toggle>
-                            <ion-item router-link="/userReleasePo" @click="isDropdownOpen = false">
+                            <ion-item @click="$router.push({ name: 'UserReleaseCode', params: { type: 'OH' } })">
                                 <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                     :icon="icons.idCardOutline"></ion-icon>
                                 <ion-label class="ion-padding">User Release PO</ion-label>

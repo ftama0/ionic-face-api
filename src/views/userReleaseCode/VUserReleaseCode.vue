@@ -1,7 +1,7 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
-    <ion-page id="userReleasePr-content" v-bind="$attrs">
-        <HeaderComponent :title="'User Release Code PR'" />
+    <ion-page id="userReleaseCode-content" v-bind="$attrs">
+        <HeaderComponent :title="`User Release Code ${title}`" />
         <ion-content>
             <ion-grid>
                 <ion-row>
@@ -113,7 +113,7 @@ import { releaseCodeStore } from '@/store/releaseCodeStore';
 import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
-import Modal from './VUserReleasePrModal.vue';
+import Modal from './VUserReleaseCodeModal.vue';
 import { modalController } from '@ionic/vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
@@ -141,8 +141,9 @@ const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
 const selectedStatus = ref('');
 const type = computed(() => props.type);
+const title = computed(() => props.type === 'RH' ? 'PR' : 'PO');
 const actionButton = ref('action-button');
-const mainContentId = 'userReleasePr-content';
+const mainContentId = 'userReleaseCode-content';
 const sizeButton = ref('small');
 const widthButton = ref('50px');
 
@@ -278,7 +279,9 @@ const filteredData = computed(() =>
 
 // mount 
 onMounted(async () => {
-    await fetchAllUser();
+    console.log('Masuk:');
+
+    await fetchAllUser(true);
     console.log('Props type:', props.type);
 });
 

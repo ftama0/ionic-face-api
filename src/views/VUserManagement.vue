@@ -10,12 +10,12 @@
             <ion-label class="label__header">User Account</ion-label>
           </ion-item>
 
-          <ion-item button detail="true" @click="$router.push({ name: 'UserReleasePr', params: { type: 'RH' } })">
+          <ion-item button detail="true" @click="$router.push({ name: 'UserReleaseCode', params: { type: 'RH' } })">
             <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
             <ion-label class="label__header">User Release Code PR</ion-label>
           </ion-item>
 
-          <ion-item button detail="true" router-link="/userReleasePo">
+          <ion-item button detail="true" @click="$router.push({ name: 'UserReleaseCode', params: { type: 'OH' } })">
             <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
             <ion-label class="label__header">User Release Code PO</ion-label>
           </ion-item>
