@@ -232,3 +232,16 @@ export const releaseCodeService = {
     }
   },
 };
+// cost center
+export const costCenterService = {
+  async allUserCostCenter(page = 1, limit = 5, search = "") {
+    try {
+      const res = await apiService.get(
+        `/api/v1/users-csks/?page=${page}&limit=${limit}&search=${search}`
+      );
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};
