@@ -111,12 +111,6 @@ const routes = [
     component: () => import("@/views/userReleaseCode/VUserReleaseCode.vue"),
     props: true,
   },
-  {
-    path: "/userReleaseCodeDetail",
-    name: "UserReleaseCodeDetail",
-    component: () =>
-      import("@/views/userReleaseCode/VUserReleaseCodeDetail.vue"),
-  },
   // * maintan cost center pr
   {
     path: "/costCenterPr",
@@ -163,7 +157,7 @@ router.beforeEach(async (to, from, next) => {
   const authRequired = !publicPages.includes(to.path);
 
   const isAuthenticated = await checkTokenExpiration();
-  console.log("isAuthenticated", isAuthenticated);
+  // console.log("isAuthenticated", isAuthenticated);
 
   if (authRequired && !isAuthenticated) {
     // Jika halaman memerlukan autentikasi dan tidak ada token yang valid

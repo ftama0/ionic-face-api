@@ -84,7 +84,8 @@ const handleCloseModal = async (res, action) => {
 onMounted(async () => {
     if (props.action == 'Edit') {
         let data = Object.assign({}, vdata.value, userAccount.userDetails);
-        vdata.value.release_id = data.pr_release ? data.pr_release.map(item => item.release_id) : [];
+        console.log('data', data);
+        vdata.value.release_id = data[props.type === 'RH' ? 'pr_release' : 'po_release']?.map(item => item.release_id) || [];
         vdata.value.uuid = data.data.uuid;
         console.log('vdata.value', vdata.value);
     }

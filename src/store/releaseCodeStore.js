@@ -36,14 +36,9 @@ export const releaseCodeStore = defineStore({
           limit,
           search
         );
-        if (this.type !== type) {
-          this.userList = res.data;
-          this.userList.total = res.total;
-          this.type = type;
-        } else {
-          this.userList = refresh ? res.data : [...this.userList, ...res.data];
-          this.userList.total = res.total;
-        }
+        this.userList = refresh ? res.data : [...this.userList, ...res.data];
+        this.userList.total = res.total;
+        this.type = type;
       } catch (error) {
         console.error("Store error:", error);
         throw error;

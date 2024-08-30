@@ -4,24 +4,26 @@
         <HeaderComponent :title="`User Release Code ${title}`" />
         <ion-content>
             <ion-grid>
+                <div class="sticky-top">
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-searchbar v-model="search" placeholder="Search User"
+                                @ionInput="handleSearch"></ion-searchbar>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="12" class="ion-padding">
+                            <ion-select aria-label="status" placeholder="Status" fill="outline">
+                                <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
+                                <ion-select-option value="active">Active</ion-select-option>
+                                <ion-select-option value="nonActive">Non Active</ion-select-option>
+                            </ion-select>
+                        </ion-col>
+                    </ion-row>
+                </div>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-searchbar v-model="search" placeholder="Search User"
-                            @ionInput="handleSearch"></ion-searchbar>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col size="12" class="ion-padding">
-                        <ion-select aria-label="status" placeholder="Status" fill="outline">
-                            <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="active">Active</ion-select-option>
-                            <ion-select-option value="nonActive">Non Active</ion-select-option>
-                        </ion-select>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col size="12">
-                        <div v-for="(item, index) in vdata" :key="index">
+                        <div v-for="(item, index) in filteredData" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3" style="border-radius: 15px;">
                                 <ion-card-content>
                                     <ion-row class="ion-align-items-center">
@@ -47,11 +49,11 @@
                                                     </ion-popover>
                                                 </div>
                                                 <ChipComponent v-if="item.user_prpo.length > 4"
-                                                    :id="'click-trigger-' + index" :width="widthButton">
+                                                    :id="`click-trigger-${index}-${item.uuid}`" :width="widthButton">
                                                     ....
                                                 </ChipComponent>
                                             </div>
-                                            <ion-popover :trigger="'click-trigger-' + index" side="left"
+                                            <ion-popover :trigger="`click-trigger-${index}-${item.uuid}`" side="left"
                                                 trigger-action="click" size="auto">
                                                 <ion-content>
                                                     <div class="chip__container">
@@ -108,7 +110,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, getCurrentInstance, computed } from 'vue';
+import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { releaseCodeStore } from '@/store/releaseCodeStore';
 import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
@@ -140,14 +143,26 @@ const isOpen = ref(false);
 const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
 const selectedStatus = ref('');
-const type = computed(() => props.type);
-const title = computed(() => props.type === 'RH' ? 'PR' : 'PO');
 const actionButton = ref('action-button');
 const mainContentId = 'userReleaseCode-content';
 const sizeButton = ref('small');
 const widthButton = ref('50px');
-
+const type = ref(props.type);
+const title = computed(() => props.type === 'RH' ? 'PR' : 'PO');
 const vdata = computed(() => rcStore.userList);
+const route = useRoute();
+// Gunakan watch untuk memantau perubahan pada route.params.type
+watch(() => route.params.type, (newType) => {
+    // console.log('type.value', type.value)
+    // console.log('newType', newType)
+    if (newType && newType !== undefined) {
+        type.value = newType;
+        router.go(0);
+        // fetchAllUser(true);
+    }
+});
+
+
 
 const fetchAllUser = async (refresh = true) => {
     loading.value = refresh;
@@ -182,7 +197,7 @@ const deleteUser = async (item) => {
     try {
         const data = { uuid: item.uuid, type: type.value };
         await rcStore.deleteUserReleaseCode(data);
-        await rcStore.fetchAllUser(true);
+        await fetchAllUser(true);
         proxy.$toast('Deleted Successfully', 'success');
         setOpen(false);
     } catch (error) {
@@ -279,10 +294,7 @@ const filteredData = computed(() =>
 
 // mount 
 onMounted(async () => {
-    console.log('Masuk:');
-
     await fetchAllUser(true);
-    console.log('Props type:', props.type);
 });
 
 // Gunakan props.type di sini

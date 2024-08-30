@@ -253,20 +253,9 @@ export const releaseCodeService = {
       throw error;
     }
   },
-  async readUser(uuid) {
-    try {
-      const res = await apiService.get(`/api/v1/users-release/${uuid}`);
-      return res.data.data;
-    } catch (error) {
-      throw error;
-    }
-  },
   async updateUserReleaseCode(data) {
     try {
-      const res = await apiService.put(
-        `/api/v1/users-release/?type=${data.type}`,
-        data
-      );
+      const res = await apiService.put(`/api/v1/users-release/`, data);
       return res.data;
     } catch (error) {
       throw error;

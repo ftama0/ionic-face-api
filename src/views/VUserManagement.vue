@@ -45,9 +45,7 @@ import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { useRouter } from 'vue-router';
 // data
 const { proxy } = getCurrentInstance()
-const isLoading = ref(false);
 const icons = ref(proxy.$icons);
-const router = useRouter();
 const mainContentId = 'userAccount-content';
 /// State to manage Action Sheet
 const isOpen = ref(false);
@@ -57,7 +55,6 @@ const actionSheetButtons = ref([]);
 // computed 
 // mount 
 onMounted(async () => {
-  isLoading.value = true;
 });
 
 </script>
