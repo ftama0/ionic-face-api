@@ -1,5 +1,4 @@
 // store/loginStore.js
-
 import { defineStore } from "pinia";
 import { loginService, tokenService } from "@/services/apiService"; // Import  dari services
 import { getDeviceInfo, isMobilePlatform } from "@/plugins/devicePlugin";
@@ -13,7 +12,6 @@ export const useLoginStore = defineStore({
   state: () => ({
     user: {},
     token: {},
-    testing: "hello testing",
   }),
   actions: {
     async login(username, password) {
@@ -23,30 +21,18 @@ export const useLoginStore = defineStore({
         formData.append("password", password);
 
         const res = await loginService.login(formData);
-        console.log("res login", res);
-        this.token = res;
-        const decode = jwtDecode(res.access_token);
-        // Convert exp (UTC) to WITA (UTC+8)
-        const expUtc = new Date(decode.exp * 1000); // exp is in seconds, convert to milliseconds
-        const expWita = new Date(expUtc.getTime() + 8 * 60 * 60 * 1000); // Add 8 hours
-
-        this.user = {
-          ...decode,
-          exp_wita: expWita,
+        const decode_at = jwtDecode(res.access_token);
+        const decode_rt = jwtDecode(res.refresh_token);
+        const expired_at = decode_at.exp * 1000;
+        const expired_rt = decode_rt ? decode_rt.exp * 1000 : 0;
+        this.token = {
+          ...res,
+          expired_at,
+          expired_rt,
         };
+        this.user = decode_at;
       } catch (error) {
         console.error("Login error:", error);
-        throw error;
-      }
-    },
-    async session(data) {
-      try {
-        data = JSON.parse(data);
-        const idMobile = data.profilku.id_mobile;
-        const resCheckMobile = await loginService.checkIdMobile(data.username);
-        return true;
-      } catch (error) {
-        console.error("Auto login error:", error);
         throw error;
       }
     },

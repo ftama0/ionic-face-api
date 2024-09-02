@@ -52,7 +52,7 @@
                 </ion-title>
             </ion-toolbar>
         </ion-footer>
-        <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
     </ion-page>
 </template>
 

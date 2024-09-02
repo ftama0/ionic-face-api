@@ -45,26 +45,20 @@ export const loginService = {
 };
 // purhcase Request
 export const prService = {
-  async fetchTotalPr(user) {
+  async allPr(page = 1, limit = 5, search = "") {
     try {
-      const res = await apiService.get(`/getDataTotalPR?user=${user}`);
+      const res = await apiService.get(
+        `/api/v1/pr/?page=${page}&limit=${limit}&search=${search}`
+      );
       return res.data;
     } catch (error) {
       throw error;
     }
   },
-  async fetchListPr(user) {
+  async readPr(id) {
     try {
-      const res = await apiService.get(`/getDataPR?user=${user}`);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async fetchDetailPr(id) {
-    try {
-      const res = await apiService.get(`/getDetailPR?BANFN=${id}`);
-      return res.data;
+      const res = await apiService.get(`/api/v1/pr/${id}`);
+      return res.data.data;
     } catch (error) {
       throw error;
     }
@@ -83,24 +77,6 @@ export const prService = {
     try {
       const res = await apiService.post(
         `/RejectPR?BANFN=${id}&user=${username}`
-      );
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async fetchReleaseCode() {
-    try {
-      const res = await apiService.get(`/getReleaseCode`);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async fetchUserEss(page = 1, perPage = 5, search = "") {
-    try {
-      const res = await apiEss.get(
-        `/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`
       );
       return res.data;
     } catch (error) {

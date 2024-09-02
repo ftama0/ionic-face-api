@@ -1,5 +1,5 @@
 <template>
-    <ion-page id="home-content" v-bind="$attrs">
+    <ion-page id="detail-content" v-bind="$attrs">
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -10,27 +10,27 @@
         </ion-header>
         <ion-content>
             <ion-col size="12">
-                <ion-row>
+                <ion-row class="ion-padding">
                     <ion-col size="2"> <ion-icon class="custom-icon-cart"
                             :icon="icons.cartOutline"></ion-icon></ion-col>
                     <ion-col size="5">
                         <div class="row">
                             <ion-col size="12">
-                                <ion-label class="ion-card-title">1020000061</ion-label>
+                                <ion-label class="ion-card-title">{{ header.banfn }}</ion-label>
                             </ion-col>
                         </div>
                         <ion-row>
                             <ion-col size="6">
-                                <ion-label class="ion-card-label">11 Item</ion-label>
+                                <ion-label class="ion-card-label">{{ header.total_item }} Item</ion-label>
                             </ion-col>
                         </ion-row>
                     </ion-col>
                     <ion-col size="5">
-                        <ChipComponent :color="testing == true ? 'success' : 'danger'" :width="'100px'">
-                            {{ testing == true ? 'Active' : 'To Approve' }}
+                        <ChipComponent :color="header.status == true ? 'success' : 'danger'" :width="'100px'">
+                            {{ header.status == true ? 'Active' : 'To Approve' }}
                         </ChipComponent>
                     </ion-col>
-                    <ion-col size="12" class="ion-padding ion-no-padding-top ion-no-padding-bottom">
+                    <ion-col size="12">
                         <ion-row>
                             <ion-col size="2">
                             </ion-col>
@@ -40,212 +40,230 @@
                             <ion-col size="2">
                             </ion-col>
                             <ion-col size="6">
-                                <ion-label class="ion-card-amount">Rp.111111</ion-label>
+                                <ion-label class="ion-card-amount">{{ header.total_price }}</ion-label>
                             </ion-col>
                         </ion-row>
                     </ion-col>
                 </ion-row>
             </ion-col>
-
-
             <ion-list>
-                <ion-item>
-                    <ion-label>
-                        <h6>PR Number</h6>
-                        <p>{{ parent.BANFN }}</p>
-                    </ion-label>
-                </ion-item>
+                <ion-list-header>
+                    <ion-label class="ion-list-header">Details</ion-label>
+                </ion-list-header>
                 <ion-item>
                     <ion-label>
                         <h6>Header Note</h6>
-                        <p>{{ parent.HEADER }}</p>
+                        <p>value</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PR Type</h6>
-                        <p>{{ parent.BSART }}</p>
+                        <p>value</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Purchasing Group</h6>
+                        <p>value</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PR Creator</h6>
-                        <p>{{ parent.AFNAM }}</p>
+                        <p>value</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>Release Strategy</h6>
-                        <p>Paragraph</p>
+                        <h6>Created Date</h6>
+                        <p>value</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Created In</h6>
+                        <p>value</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Plant</h6>
-                        <p>Paragraph</p>
+                        <p>EBL Operational</p>
                     </ion-label>
                 </ion-item>
             </ion-list>
-            <ion-list v-if="child && child.length">
-                <ion-item v-for="(item, index) in child" :key="index">
+            <ion-list>
+                <ion-item>
                     <ion-label>
-                        <p>Item No.{{ index + 1 }}</p>
-                        <p>{{ item.TXZ01 }}</p>
-                        <ion-row>
-                            <ion-col size="2">
-                                <p>Qty</p>
-                            </ion-col>
-                            <ion-col size="1">
-                                <p>:</p>
-                            </ion-col>
-                            <ion-col size="8">
-                                <p>{{ item.MENGE }}</p>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col size="2">
-                                <p>Price</p>
-                            </ion-col>
-                            <ion-col size="1">
-                                <p>:</p>
-                            </ion-col>
-                            <ion-col size="8">
-                                <p>{{ item.PREIS }}</p>
-                            </ion-col>
-                        </ion-row>
-                        <ion-row>
-                            <ion-col size="2">
-                                <p>Total</p>
-                            </ion-col>
-                            <ion-col size="1">
-                                <p>:</p>
-                            </ion-col>
-                            <ion-col size="8">
-                                <p>{{ item.PREIS }}</p>
-                            </ion-col>
-                        </ion-row>
+                        <h6>Approval Process</h6>
+                    </ion-label>
+                </ion-item>
+                <ion-item v-for="(step, index) in approvalSteps" :key="index">
+                    <ion-label>
+                        <div class="progress-step">
+                            <div class="circle">{{ index + 1 }}</div>
+                            <div class="label">{{ step }}</div>
+                        </div>
                     </ion-label>
                 </ion-item>
             </ion-list>
-            <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-                <ion-fab-button @click="openActionSheet(parent.BANFN)">
-                    <ion-icon :icon="icons.openOutline"></ion-icon>
-                </ion-fab-button>
-                <!-- <ion-fab-list side="top">
-                    <ion-fab-button>
-                        <ion-icon :icon="icons.peopleOutline"></ion-icon>
-                    </ion-fab-button>
-                    <ion-fab-button>
-                        <ion-icon :icon="icons.peopleOutline"></ion-icon>
-                    </ion-fab-button>
-                    <ion-fab-button>
-                        <ion-icon :icon="icons.peopleOutline"></ion-icon>
-                    </ion-fab-button>
-                </ion-fab-list> -->
-            </ion-fab>
+            <ion-list>
+                <ion-list-header>
+                    <ion-label class="ion-list-header-item">Purchase Request Item</ion-label>
+                </ion-list-header>
+                <ion-grid class="ion-padding">
+                    <ion-row>
+                        <ion-col size="6">
+                            <h6 class="ion-title-item">Excavator</h6>
+                        </ion-col>
+                        <ion-col size="6" class="ion-text-end">
+                            <h6><ion-text class="ion-amount-item">Rp. 24.200.000</ion-text></h6>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="4">
+                            Quantity
+                        </ion-col>
+                        <ion-col size="8">
+                            2 Unit
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="4">
+                            Price
+                        </ion-col>
+                        <ion-col size="8">
+                            RP. 1111999999
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col>
+                            <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="6">
+                            <h6 class="ion-title-item">Grand Total</h6>
+                        </ion-col>
+                        <ion-col size="6" class="ion-text-end">
+                            <h6><ion-text class="ion-amount-item" slot="end">Rp. 24.200.000</ion-text></h6>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-list>
+
+
         </ion-content>
-        <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
-            class="my-custom-class">
-        </ion-action-sheet>
     </ion-page>
 </template>
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
-import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import ChipComponent from '@/components/ChipComponent.vue';
 
 // data
 const { proxy } = getCurrentInstance()
-const isLoading = ref(false);
 const icons = ref(proxy.$icons);
-const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
-const router = useRouter();
-const mainContentId = 'home-content';
-const isOpen = ref(false);
-const selectedId = ref('');
-const actionSheetButtons = ref([]);
-const testing = ref(true);
 
-// api 
-const logout = () => {
+const list_item = computed(() => prStore.prDetails);
+const header = computed(() => prStore.prHeader);
 
-    router.replace({ name: 'Login' });
-};
-// computed 
-const user = computed(() => loginStore.user);
-const child = computed(() => prStore.detailPr);
-const parent = computed(() => prStore.parentPr);
-// Another Method 
-const openActionSheet = (id) => {
-    console.log(id)
-    selectedId.value = id;
-    actionSheetButtons.value = [
-        {
-            text: 'Approve',
-            handler: () => handleAction('Approve'),
-            cssClass: 'approve-button',
-            icon: icons.value.checkmarkOutline,
-        },
-        {
-            text: 'Reject',
-            role: 'destructive',
-            handler: () => handleAction('Reject'),
-            cssClass: 'reject-button',
-            icon: icons.value.closeOutline,
-        },
-        {
-            text: 'Cancel',
-            role: 'cancel',
-            cssClass: 'cancel-button',
-            icon: icons.value.logOutOutline,
-        },
-    ];
-    setOpen(true);
-};
-const handleAction = async (action) => {
-    isLoading.value = true;
-    console.log(`Action ${action} for Id: ${selectedId.value}`);
-
-    let response;
-
-    switch (action) {
-        case 'Approve':
-            response = await prStore.approvePr(user.value.username, selectedId.value);
-            if (response) {
-                console.log(response)
-                proxy.$toast(response.message, response.status);
-                // proxy.$toast('Approve Done', 'success');
-            }
-            break;
-        case 'Reject':
-            response = await prStore.rejectPr(user.value.username, selectedId.value);
-            if (response) {
-                proxy.$toast('Reject Done', 'success');
-            }
-            break;
-        default:
-            console.warn(`Unknown action: ${action}`);
-            proxy.$toast('Failed, contact admin', 'danger');
-
-    }
-
-    if (response) {
-        setOpen(false);
-        isLoading.value = false;
-    } else {
-        console.error(`Failed to ${action.toLowerCase()} PR for Id: ${selectedId.value}`);
-    }
-};
-const setOpen = (state) => {
-    isOpen.value = state;
-};
+const approvalSteps = ref([
+    'Step 1: Review',
+    'Step 2: Approval',
+    'Step 3: Finalize'
+]);
 
 onMounted(async () => {
-    console.log(child.value)
-
+    console.log(header.value)
 });
 </script>
+
+<style scoped>
+.progress-step {
+    display: flex;
+    align-items: center;
+}
+
+.circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #3880ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
+
+.label {
+    font-size: 14px;
+}
+
+.custom-icon-cart {
+    color: #0070F2;
+    font-size: 32px;
+    background-color: #CFE5FF;
+    border-radius: 50%;
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-icon {
+    color: #0070F2;
+    font-size: 24px;
+}
+
+.ion-card-amount {
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: bold;
+    color: #626060;
+}
+
+.ion-card-label {
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #626060;
+}
+
+.ion-card-title {
+    font-size: 20px;
+    line-height: 18px;
+    font-weight: 600;
+    color: #0070F2;
+}
+
+.ion-list-header {
+    font-size: 20px;
+    line-height: 18px;
+    font-weight: 600;
+    color: #626060;
+}
+
+.ion-list-header-item {
+    font-size: 20px;
+    line-height: 18px;
+    font-weight: 600;
+    color: #0070F2;
+}
+
+.ion-amount-item {
+    color: #0070F2;
+    font-weight: bold;
+}
+
+.ion-title-item {
+    line-height: 18px;
+    font-weight: 600;
+    color: #626060;
+}
+</style>

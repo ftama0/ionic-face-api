@@ -10,15 +10,15 @@
                             @ionInput="handleSearch"></ion-searchbar>
                     </ion-col>
                     <ion-col size="8" class="ion-padding ion-align-self-center">
-                        <ion-label>134 purchase request found</ion-label>
+                        <ion-label>{{ vdata.total }} purchase request found</ion-label>
                     </ion-col>
                     <ion-col size="4" class="ion-padding ion-align-self-center">
-                        <ion-select aria-label="status" label="Filter" label-placement="floating" fill="outline"
-                            v-model="selectedStatus">
-                            <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="true">Active</ion-select-option>
-                            <ion-select-option value="false">Non Active</ion-select-option>
-                        </ion-select>
+                        <div class="filter-container">
+                            <ion-text>Filter</ion-text>
+                            <ion-button color="primary" fill="solid">
+                                <ion-icon slot="icon-only" :icon="icons.filterOutline"></ion-icon>
+                            </ion-button>
+                        </div>
                     </ion-col>
                     <ion-col size="12">
                         <div v-for="(item, index) in vdata" :key="index">
@@ -33,7 +33,7 @@
                                                     <div class="row">
                                                         <ion-col size="12">
                                                             <ion-label class="ion-card-title">
-                                                                {{ item.BANFN }}</ion-label>
+                                                                {{ item.banfn }}</ion-label>
                                                         </ion-col>
                                                     </div>
                                                     <ion-row>
@@ -45,13 +45,14 @@
                                                             ·
                                                         </ion-col>
                                                         <ion-col size="7">
-                                                            <ion-label class="ion-card-label">{{ item.BADAT
-                                                                }}</ion-label>
+                                                            <ion-label class="ion-card-label">
+                                                                {{ item.release_date }}
+                                                            </ion-label>
                                                         </ion-col>
                                                     </ion-row>
                                                 </ion-col>
                                                 <ion-col size="2">
-                                                    <ion-button fill="clear" @click="fetchDetailPr(item)">
+                                                    <ion-button fill="clear" @click="fetchReadPr(item)">
                                                         <ion-icon class="custom-icon"
                                                             :icon="icons.ellipsisVertical"></ion-icon>
                                                     </ion-button>
@@ -59,15 +60,18 @@
                                             </ion-row>
                                         </ion-col>
 
-                                        <ion-col size="12" class="ion-padding ion-no-padding-top ion-no-padding-bottom">
-                                            <ion-label class="ion-card-label">{{ item.HEADER }}</ion-label>
+                                        <ion-col size="12" class="ion-padding-horizontal">
+                                            <ion-label class="ion-card-label">{{ item.header }}</ion-label>
                                         </ion-col>
-                                        <ion-col size="6" class="ion-padding ion-text-start ion-align-self-center">
-                                            <ion-label class="ion-card-amount">Rp.
-                                                {{ formatCurrency(item.SUM_Total_Price) }}</ion-label>
+                                        <ion-col size="6"
+                                            class="ion-padding-horizontal ion-text-start ion-align-self-center">
+                                            <ion-label class="ion-card-amount">
+                                                {{ item.total_price }}
+                                                <!-- {{ formatCurrency(item.SUM_Total_Price) }} -->
+                                            </ion-label>
                                         </ion-col>
-                                        <ion-col size="6" class="ion-padding ion-text-end">
-                                            <ChipComponent :color="item.status == true ? 'success' : 'danger'"
+                                        <ion-col size="6" class="ion-padding-horizontal ion-text-end">
+                                            <ChipComponent :color="item.status == true ? 'success' : 'warning'"
                                                 :width="'150px'">
                                                 {{ item.status == true ? 'Active' : 'To Approve' }}
                                             </ChipComponent>
@@ -76,161 +80,107 @@
                                 </ion-card-content>
                             </ion-card>
                         </div>
-                        <ion-infinite-scroll threshold=" 10px" @ionInfinite="loadMore">
-                            <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
-                            </ion-infinite-scroll-content>
-                        </ion-infinite-scroll>
                     </ion-col>
                 </ion-row>
             </ion-grid>
+            <ion-infinite-scroll threshold=" 10px" @ionInfinite="loadMore">
+                <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+            <RefresherComponent @refresh="refreshData()" />
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
-        <!-- <ion-button id="open-loading">Show Loading</ion-button>
-        <ion-loading trigger="open-loading" :duration="3000" message="Dismissing after 3 seconds..." spinner="circles">
-        </ion-loading>
-        <ion-loading v-if="isLoading" message="Loading ..." spinner="circles"></ion-loading> -->
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         <FooterComponent />
     </ion-page>
 </template>
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
-import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import ChipComponent from '@/components/ChipComponent.vue';
 // data
 const { proxy } = getCurrentInstance()
-const isLoading = ref(false);
-const icons = ref(proxy.$icons);
-const loginStore = useLoginStore();
-const prStore = purchaseRequestStore();
 const router = useRouter();
+const prStore = purchaseRequestStore();
+
+const loading = ref(false);
+const icons = ref(proxy.$icons);
 const page = ref(1);
-const perPage = ref(5);
+const limit = ref(5);
 const search = ref('');
-const mainContentId = 'pr-content';
-/// State to manage Action Sheet
 const isOpen = ref(false);
-const selectedId = ref('');
+const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
+const selectedStatus = ref('');
+const mainContentId = 'pr-content';
 
-// Data dummy untuk daftar Purchase Request
-const dummyData = ref([
-    {
-        BANFN: 'PR001',
-        HEADER: 'Pembelian Alat Kantor',
-        total_item: 5,
-        BADAT: '2023-04-15',
-        SUM_Total_Price: 5000000
-    },
-    {
-        BANFN: 'PR002',
-        HEADER: 'Pembelian Bahan Baku',
-        total_item: 3,
-        BADAT: '2023-04-16',
-        SUM_Total_Price: 7500000
-    },
-    {
-        BANFN: 'PR003',
-        HEADER: 'Pembelian Peralatan IT',
-        total_item: 2,
-        BADAT: '2023-04-17',
-        SUM_Total_Price: 15000000
-    },
-    {
-        BANFN: 'PR004',
-        HEADER: 'Pembelian Furnitur',
-        total_item: 4,
-        BADAT: '2023-04-18',
-        SUM_Total_Price: 10000000
-    },
-    {
-        BANFN: 'PR005',
-        HEADER: 'Pembelian Alat Kebersihan',
-        total_item: 6,
-        BADAT: '2023-04-19',
-        SUM_Total_Price: 3000000
-    }
-]);
+const vdata = computed(() => prStore.prListFormatted);
 
-// Ganti computed property vdata untuk menggunakan data dummy
-const vdata = computed(() => dummyData.value);
-
-// Hapus atau komentari fungsi fetchListPr yang asli
-// const fetchListPr = async () => { ... };
-
-// Ganti dengan fungsi fetchListPr yang menggunakan data dummy
-const fetchListPr = async () => {
+const fetchAllPr = async (refresh = true) => {
+    loading.value = refresh;
     try {
-        isLoading.value = true;
-        // Simulasi delay jaringan
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // Tidak perlu melakukan apa-apa karena kita menggunakan data dummy
-        page.value++;
+        refresh ? page.value = 1 : page.value++;
+        await prStore.allPr(refresh, page.value, limit.value, search.value);
     } catch (error) {
-        console.error('Error fetching list PR:', error);
+        console.error('Error fetching Purchase Request:', error);
     } finally {
-        isLoading.value = false;
+        loading.value = false;
     }
 };
 
-const fetchDetailPr = async (item) => {
+const fetchReadPr = async (item, action = null) => {
+    loading.value = true;
     try {
-        isLoading.value = true;
-        // await prStore.fetchDetailPr(item.BANFN);
-        // await prStore.saveParentPr(item);
-        router.push({ name: 'PurchaseRequestListDetail' });
+        await prStore.readPr(item.banfn);
+        if (!action) {
+            prStore.prHeader = item;
+            await router.push({ name: 'PurchaseRequestListDetail' });
+        }
     } catch (error) {
-        console.error('API failed:', error);
-        proxy.$toast('Username or password is wrong', 'danger');
-    }
-    finally {
-        isLoading.value = false;
+        console.error('Error reading Purchase Request:', error);
+        proxy.$toast('Error Reading Purchase Request', 'danger');
+    } finally {
+        loading.value = false;
     }
 };
 
-// api 
-const handleRefresh = (event) => {
-    setTimeout(() => {
-        event.target.complete();
-    }, 2000);
+const refreshData = async () => {
+    await fetchAllPr(true);
+    selectedStatus.value = null;
 };
-// computed 
-const user = computed(() => loginStore.user);
-// another merthod 
+
 const loadMore = async (event) => {
-    await fetchListPr();
+    console.log('vdata', vdata.value)
+    if (vdata.value.length >= vdata.value.total) {
+        event.target.complete();
+        return;
+    }
+    await fetchAllPr(false);
     event.target.complete();
 };
-const handleSearch = debounce(() => {
-    page.value = 1;
-    prStore.daftarPr = [];
-    fetchListPr();
-}, 1000); // Set the debounce delay to 300ms or adjust as needed
-const formatCurrency = (price) => {
-    return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
-};
-// Method to open Action Sheet with specific item
-const openActionSheet = (id) => {
-    console.log(id)
-    selectedId.value = id;
+
+const handleSearch = debounce(() => fetchAllPr(true), 300);
+
+const openActionSheet = (item) => {
+    selectedItem.value = item;
     actionSheetButtons.value = [
         {
-            text: 'Approve',
-            handler: () => handleAction('Approve'),
+            text: 'Edit',
+            handler: () => handleAction('Edit'),
             cssClass: 'approve-button',
-            icon: icons.value.checkmarkOutline,
+            icon: icons.value.createOutline,
         },
         {
-            text: 'Reject',
+            text: 'Delete',
             role: 'destructive',
-            handler: () => handleAction('Reject'),
+            handler: () => handleAction('Delete'),
             cssClass: 'reject-button',
-            icon: icons.value.closeOutline,
+            icon: icons.value.trashOutline,
         },
         {
             text: 'Cancel',
@@ -241,50 +191,46 @@ const openActionSheet = (id) => {
     ];
     setOpen(true);
 };
-// Method to handle action button click in Action Sheet
+
 const handleAction = async (action) => {
-    isLoading.value = true;
-    console.log(`Action ${action} for Id: ${selectedId.value}`);
-
-    let response;
-
     switch (action) {
-        case 'Approve':
-            response = await prStore.approvePr(user.value.username, selectedId.value);
-            if (response) {
-                console.log(response)
-                proxy.$toast(response.message, response.status);
-                // proxy.$toast('Approve Done', 'success');
-            }
+        case 'Add':
+        case 'Edit':
+            await (action === 'Edit' && fetchReadUser(selectedItem.value, action));
+            await openModal(action);
             break;
-        case 'Reject':
-            response = await prStore.rejectPr(user.value.username, selectedId.value);
-            if (response) {
-                proxy.$toast('Reject Done', 'success');
-            }
+        case 'Delete':
+            await deleteUser(selectedItem.value);
             break;
         default:
             console.warn(`Unknown action: ${action}`);
             proxy.$toast('Failed, contact admin', 'danger');
-
-    }
-
-    if (response) {
-        setOpen(false);
-        isLoading.value = false;
-    } else {
-        console.error(`Failed to ${action.toLowerCase()} PR for Id: ${selectedId.value}`);
     }
 };
-// Method to set the open state of the Action Sheet
+
 const setOpen = (state) => {
     isOpen.value = state;
 };
-// mount 
-onMounted(async () => {
-    isLoading.value = true;
-    await fetchListPr();
-});
+
+const openModal = async (action) => {
+    const modal = await modalController.create({
+        component: Modal,
+        componentProps: { action },
+    });
+    modal.present();
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'confirm') {
+        proxy.$toast(data.message, 'success');
+    }
+};
+
+const filteredData = computed(() =>
+    selectedStatus.value
+        ? vdata.value.filter(item => item.status.toString() === selectedStatus.value)
+        : vdata.value
+);
+
+onMounted(fetchAllPr);
 </script>
 
 <style scoped>
@@ -383,5 +329,29 @@ ion-fab-button {
 .custom-icon {
     color: #0070F2;
     font-size: 24px;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.filter-container ion-text {
+    margin-right: 8px;
+    font-size: 14px;
+    color: #626060;
+}
+
+.filter-container ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+    height: 32px;
+}
+
+.filter-container ion-icon {
+    font-size: 18px;
 }
 </style>

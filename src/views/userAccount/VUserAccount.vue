@@ -73,7 +73,7 @@
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
-        <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         <FooterComponent />
     </ion-page>
 </template>

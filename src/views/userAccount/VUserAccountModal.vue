@@ -27,7 +27,7 @@
                     <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
                 </ion-col>
             </ion-row>
-            <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
+            <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         </template>
     </form-modal-component>
 </template>

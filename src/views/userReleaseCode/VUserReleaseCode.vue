@@ -35,19 +35,12 @@
                                         </ion-col>
                                         <ion-col size="12" class="ion-text-center ion-text-justify">
                                             <div class="chip__container">
-                                                <div v-for="(strategy, sIndex) in item.user_prpo.slice(0, 4)"
+                                                <template v-for="(strategy, sIndex) in item.user_prpo.slice(0, 4)"
                                                     :key="sIndex">
-                                                    <ChipComponent :id="'hover-trigger-' + index + '-' + sIndex"
-                                                        :width="widthButton">
-                                                        {{ strategy.frgco }}
-                                                    </ChipComponent>
-                                                    <ion-popover :trigger="'hover-trigger-' + index + '-' + sIndex"
-                                                        side="top" trigger-action="click" size="auto">
-                                                        <ion-content class="ion-padding">
-                                                            {{ strategy.frgct }}
-                                                        </ion-content>
-                                                    </ion-popover>
-                                                </div>
+                                                    <StrategyChip :strategy="strategy"
+                                                        :triggerId="`hover-trigger-${index}-${sIndex}`"
+                                                        :width="widthButton" />
+                                                </template>
                                                 <ChipComponent v-if="item.user_prpo.length > 4"
                                                     :id="`click-trigger-${index}-${item.uuid}`" :width="widthButton">
                                                     ....
@@ -57,22 +50,10 @@
                                                 trigger-action="click" size="auto">
                                                 <ion-content>
                                                     <div class="chip__container">
-                                                        <div v-for="(strategy, sIndex) in item.user_prpo" :key="sIndex">
-                                                            <div class="ion-no-padding">
-                                                                <ChipComponent
-                                                                    :id="'hover-trigger-' + index + '-' + sIndex + '-full'"
-                                                                    :width="widthButton">
-                                                                    {{ strategy.frgco }}
-                                                                </ChipComponent>
-                                                                <ion-popover
-                                                                    :trigger="'hover-trigger-' + index + '-' + sIndex + '-full'"
-                                                                    side="top" trigger-action="click" size="auto">
-                                                                    <ion-content class="ion-padding">
-                                                                        {{ strategy.frgct }}
-                                                                    </ion-content>
-                                                                </ion-popover>
-                                                            </div>
-                                                        </div>
+                                                        <StrategyChip v-for="(strategy, sIndex) in item.user_prpo"
+                                                            :key="sIndex" :strategy="strategy"
+                                                            :triggerId="`hover-trigger-${index}-${sIndex}-full`"
+                                                            :width="widthButton" />
                                                     </div>
                                                 </ion-content>
                                             </ion-popover>
@@ -104,7 +85,7 @@
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
-        <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         <FooterComponent />
     </ion-page>
 </template>
@@ -112,7 +93,7 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { releaseCodeStore } from '@/store/releaseCodeStore';
+import { userReleaseCodeStore } from '@/store/userReleaseCodeStore';
 import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
@@ -121,6 +102,7 @@ import { modalController } from '@ionic/vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import ChipComponent from '@/components/ChipComponent.vue';
 import LoadingComponent from '../../components/LoadingComponent.vue';
+import StrategyChip from '@/components/StrategyChip.vue';
 
 const props = defineProps({
     type: {
@@ -130,7 +112,7 @@ const props = defineProps({
 });
 // data
 const { proxy } = getCurrentInstance()
-const rcStore = releaseCodeStore();
+const rcStore = userReleaseCodeStore();
 const userAccount = userAccountStore();
 
 const loading = ref(false);
@@ -152,13 +134,11 @@ const title = computed(() => props.type === 'RH' ? 'PR' : 'PO');
 const vdata = computed(() => rcStore.userList);
 const route = useRoute();
 // Gunakan watch untuk memantau perubahan pada route.params.type
-watch(() => route.params.type, (newType) => {
-    // console.log('type.value', type.value)
-    // console.log('newType', newType)
-    if (newType && newType !== undefined) {
-        type.value = newType;
+watch(() => route.params.type, async (newType) => {
+    if (newType != type.value && newType !== undefined) {
+        // type.value = newType;
+        // await fetchAllUser(true);
         router.go(0);
-        // fetchAllUser(true);
     }
 });
 

@@ -4,8 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import { formatDatetime } from "@/utils/datetimeUtils";
 // import { useLoginStore } from './loginStore';
 
-export const releaseCodeStore = defineStore({
-  id: "releaseCode", // ID store
+export const userReleaseCodeStore = defineStore({
+  id: "userReleaseCode", // ID store
 
   state: () => ({
     userList: [],

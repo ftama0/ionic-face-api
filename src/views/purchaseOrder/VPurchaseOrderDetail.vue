@@ -1,5 +1,5 @@
 <template>
-    <ion-page id="home-content" v-bind="$attrs">
+    <ion-page id="detail-content" v-bind="$attrs">
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -13,25 +13,25 @@
                 <ion-item>
                     <ion-label>
                         <h6>PR Number</h6>
-                        <p>{{ parent.BANFN }}</p>
+                        <p>{{ parent.banfn }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Header Note</h6>
-                        <p>{{ parent.HEADER }}</p>
+                        <p>{{ parent.header }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PR Type</h6>
-                        <p>{{ parent.BSART }}</p>
+                        <p>{{ parent.bsart }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PR Creator</h6>
-                        <p>{{ parent.AFNAM }}</p>
+                        <p>{{ parent.afnam }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
@@ -51,7 +51,7 @@
                 <ion-item v-for="(item, index) in child" :key="index">
                     <ion-label>
                         <p>Item No.{{ index + 1 }}</p>
-                        <p>{{ item.TXZ01 }}</p>
+                        <p>{{ item.txz01 }}</p>
                         <ion-row>
                             <ion-col size="2">
                                 <p>Qty</p>
@@ -60,7 +60,7 @@
                                 <p>:</p>
                             </ion-col>
                             <ion-col size="8">
-                                <p>{{ item.MENGE }}</p>
+                                <p>{{ item.menge }}</p>
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -71,7 +71,7 @@
                                 <p>:</p>
                             </ion-col>
                             <ion-col size="8">
-                                <p>{{ item.PREIS }}</p>
+                                <p>{{ item.preis }}</p>
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -82,14 +82,14 @@
                                 <p>:</p>
                             </ion-col>
                             <ion-col size="8">
-                                <p>{{ item.PREIS }}</p>
+                                <p>{{ item.preis }}</p>
                             </ion-col>
                         </ion-row>
                     </ion-label>
                 </ion-item>
             </ion-list>
             <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-                <ion-fab-button @click="openActionSheet(parent.BANFN)">
+                <ion-fab-button @click="openActionSheet(parent.banfn)">
                     <ion-icon :icon="icons.openOutline"></ion-icon>
                 </ion-fab-button>
                 <!-- <ion-fab-list side="top">
@@ -118,12 +118,11 @@ import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 // data
 const { proxy } = getCurrentInstance()
-const isLoading = ref(false);
+const loading = ref(false);
 const icons = ref(proxy.$icons);
 const loginStore = useLoginStore();
 const prStore = purchaseRequestStore();
 const router = useRouter();
-const mainContentId = 'home-content';
 const isOpen = ref(false);
 const selectedId = ref('');
 const actionSheetButtons = ref([]);
@@ -133,9 +132,7 @@ const logout = () => {
     router.replace({ name: 'Login' });
 };
 // computed 
-const user = computed(() => loginStore.user);
-const child = computed(() => prStore.detailPr);
-const parent = computed(() => prStore.parentPr);
+const vdata = computed(() => userAccount.userDetails.data);
 // Another Method 
 const openActionSheet = (id) => {
     console.log(id)
@@ -164,7 +161,7 @@ const openActionSheet = (id) => {
     setOpen(true);
 };
 const handleAction = async (action) => {
-    isLoading.value = true;
+    loading.value = true;
     console.log(`Action ${action} for Id: ${selectedId.value}`);
 
     let response;
@@ -192,7 +189,7 @@ const handleAction = async (action) => {
 
     if (response) {
         setOpen(false);
-        isLoading.value = false;
+        loading.value = false;
     } else {
         console.error(`Failed to ${action.toLowerCase()} PR for Id: ${selectedId.value}`);
     }

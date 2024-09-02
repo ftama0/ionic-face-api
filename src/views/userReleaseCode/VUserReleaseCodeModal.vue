@@ -24,7 +24,7 @@
                     <br />
                 </ion-col>
             </ion-row>
-            <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
+            <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         </template>
     </form-modal-component>
 </template>
@@ -33,10 +33,10 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, watch, computed } from 'vue';
 import { userAccountStore } from '@/store/userAccountStore';
-import { releaseCodeStore } from '@/store/releaseCodeStore';
+import { userReleaseCodeStore } from '@/store/userReleaseCodeStore';
 import { modalController } from '@ionic/vue';
 const userAccount = userAccountStore();
-const rcStore = releaseCodeStore();
+const rcStore = userReleaseCodeStore();
 const props = defineProps({
     action: String,
     type: String,
