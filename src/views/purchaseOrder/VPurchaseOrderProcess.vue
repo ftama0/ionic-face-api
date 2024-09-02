@@ -5,7 +5,7 @@
                 <ion-buttons slot="start">
                     <ion-back-button></ion-back-button>
                 </ion-buttons>
-                <ion-title>Detail</ion-title>
+                <ion-title>Approval Process</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
@@ -21,15 +21,14 @@
                         </div>
                         <ion-row>
                             <ion-col size="6">
-                                <ion-label class="ion-card-label">{{ header.item_count }} Item</ion-label>
+                                <ion-label class="ion-card-label">{{ header.total_item }} Item</ion-label>
                             </ion-col>
                         </ion-row>
                     </ion-col>
                     <ion-col size="5">
-                        <ChipComponent :color="header.full_release_status == 'To Approve' ? 'warning'
-                            : header.full_release_status == 'Approved' ? 'success' : 'danger'" :width="'100px'">
-                            {{ header.full_release_status == 'To Approve' ? 'To Approve'
-                                : header.full_release_status == 'Approved' ? 'Approved' : 'Reject' }}
+                        <ChipComponent :color="header.full_release_status == true ? 'success' : 'danger'"
+                            :width="'100px'">
+                            {{ header.full_release_status == true ? 'Active' : 'To Approve' }}
                         </ChipComponent>
                     </ion-col>
                     <ion-col size="12">
@@ -110,7 +109,7 @@
                                 <h6 class="ion-title-item">{{ item.txz01 }}</h6>
                             </ion-col>
                             <ion-col size="6" class="ion-text-end">
-                                <h6><ion-text class="ion-amount-item">{{ item.item_amount }}</ion-text>
+                                <h6><ion-text class="ion-amount-item">{{ item.peinh }} x {{ item.menge }}</ion-text>
                                 </h6>
                             </ion-col>
                         </ion-row>
@@ -162,8 +161,8 @@ const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
 const poStore = purchaseOrderStore();
 
-const header = computed(() => poStore.poHeaderFormatted);
-const details = computed(() => poStore.poDetailsFormatted);
+const header = computed(() => poStore.poHeader);
+const details = computed(() => poStore.poDetails);
 
 const approvalSteps = ref([
     { name: header.value.apv1_name || null, status: header.value.apv1_status || null },
@@ -178,7 +177,6 @@ const approvalSteps = ref([
 
 onMounted(async () => {
     console.log(header.value)
-    console.log(details.value)
 });
 </script>
 

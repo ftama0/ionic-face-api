@@ -3,6 +3,15 @@
 import { defineStore } from "pinia";
 import { prService } from "@/services/apiService";
 
+const formatRupiah = (amount) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+};
+
+const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('id-ID', options);
+};
+
 export const purchaseRequestStore = defineStore({
     id: "purchaseRequest", // ID store
 
@@ -20,7 +29,9 @@ export const purchaseRequestStore = defineStore({
             const formattedList = state.prList.map(item => {
                 return {
                     ...item,
-                    total_price: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(item.total_price)
+                    total_price: formatRupiah(item.total_price),
+                    release_date: formatDate(item.release_date),
+                    header: item.header.split(' ').length > 10 ? item.header.split(' ').slice(0, 5).join(' ') + '...' : item.header
                 };
             });
             formattedList.total = state.prList.total;

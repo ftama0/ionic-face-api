@@ -86,54 +86,38 @@ export const prService = {
 };
 // purhcase Order
 export const poService = {
-  async fetchTotalPr(user) {
+  async allPo(page = 1, limit = 5, search = "") {
     try {
-      const res = await apiService.get(`/getDataTotalPR?user=${user}`);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async fetchListPr(user) {
-    try {
-      const res = await apiService.get(`/getDataPR?user=${user}`);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async fetchDetailPr(id) {
-    try {
-      const res = await apiService.get(`/getDetailPR?BANFN=${id}`);
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async approvePr(username, id) {
-    try {
-      const res = await apiService.post(
-        `/ApprovePR?BANFN=${id}&user=${username}`
+      const res = await apiService.get(
+        `/api/v1/po/?page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
     } catch (error) {
       throw error;
     }
   },
-  async rejectPr(username, id) {
+  async readPo(id) {
+    try {
+      const res = await apiService.get(`/api/v1/po/${id}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async approvePo(username, id) {
     try {
       const res = await apiService.post(
-        `/RejectPR?BANFN=${id}&user=${username}`
+        `/ApprovePO?BANFN=${id}&user=${username}`
       );
       return res.data;
     } catch (error) {
       throw error;
     }
   },
-  async fetchUserEss(page = 1, perPage = 5, search = "") {
+  async rejectPo(username, id) {
     try {
-      const res = await apiEss.get(
-        `/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`
+      const res = await apiService.post(
+        `/RejectPO?BANFN=${id}&user=${username}`
       );
       return res.data;
     } catch (error) {

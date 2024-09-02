@@ -282,39 +282,6 @@ ion-fab-button {
     --color: black;
 }
 
-.detail-button {
-    /* --background: #93e9be;
-    --background-hover: #9ce0be;
-    --background-activated: #88f4be;
-    --background-focused: #88f4be; */
-
-    --color: #0070F2;
-
-    --border-radius: 10px;
-    --border-color: #BCC3CA;
-    --border-style: solid;
-    --border-width: 1px;
-
-    /* --box-shadow: 0 2px 6px 0 rgb(0, 0, 0, 0.2); */
-
-    --ripple-color: deeppink;
-
-    --padding-top: 10px;
-    --padding-bottom: 10px;
-    font-size: 17px;
-    line-height: 18px;
-    font-weight: 600;
-}
-
-/* ion-action-sheet.my-custom-class {
-    --background: #EBF4F6;
-    --backdrop-opacity: 0.6;
-    --button-background-selected: #EBF4F6;
-    --button-color: #000000;
-    --button-color-activated: green;
-    --color: gray;
-    --ion-color-danger: #ff0000;
-} */
 .custom-icon-cart {
     color: #0070F2;
     font-size: 24px;
