@@ -1,6 +1,5 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import './assets/css/output.css';
 import router from "./router";
 import {
   IonicVue,
@@ -95,6 +94,7 @@ import "./theme/variables.css";
 // import axios from 'axios';
 import "./assets/css/main.css";
 import "./assets/css/main.scss";
+import './assets/css/output.css';
 import { createPinia } from "pinia";
 // plugins
 import ToastPlugin from "@/plugins/toastPlugin";

@@ -102,6 +102,19 @@ const routes = [
     component: () => import("@/views/userReleaseCode/VUserReleaseCode.vue"),
     props: true,
   },
+  // * maintan cost center
+  {
+    path: "/costCenter",
+    name: "costCenter",
+    component: () =>
+      import("@/views/maintainCostCenter/VMaintanCostCenterList.vue"),
+  },
+  {
+    path: "/costCenterDetail",
+    name: "costCenterDetail",
+    component: () =>
+      import("@/views/maintainCostCenter/VMaintainCostCenterDetail.vue"),
+  },
   // * maintan cost center pr
   {
     path: "/costCenterPr",
