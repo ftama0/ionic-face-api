@@ -650,14 +650,6 @@ video {
   position: relative;
 }
 
-.right-0 {
-  right: 0px;
-}
-
-.top-0 {
-  top: 0px;
-}
-
 .block {
   display: block;
 }
@@ -670,28 +662,12 @@ video {
   display: grid;
 }
 
-.h-32 {
-  height: 8rem;
-}
-
-.w-32 {
-  width: 8rem;
-}
-
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .border {
   border-width: 1px;
-}
-
-.pl-7 {
-  padding-left: 1.75rem;
-}
-
-.pt-7 {
-  padding-top: 1.75rem;
 }
 
 .pt-3 {
