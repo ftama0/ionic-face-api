@@ -16,7 +16,7 @@ export const apiServiceNoAuth = setupAxiosInstance({ checkToken: false });
 export const tokenService = {
   async refreshToken(formData) {
     try {
-      const res = await apiService.post("/api/v1/auth/token/refresh", formData);
+      const res = await apiServiceNoAuth.post("/api/v1/auth/token/refresh", formData);
       return res.data;
     } catch (error) {
       throw error;

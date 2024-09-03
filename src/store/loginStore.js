@@ -13,6 +13,9 @@ export const useLoginStore = defineStore({
     user: {},
     token: {},
   }),
+  persist: {
+    enabled: true,
+  },
   actions: {
     async login(username, password) {
       try {
@@ -41,9 +44,5 @@ export const useLoginStore = defineStore({
       localStorage.clear();
       this.$reset();
     },
-  },
-  // note : persist pinia
-  persist: {
-    enabled: true,
   },
 });
