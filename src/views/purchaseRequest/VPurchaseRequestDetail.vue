@@ -16,7 +16,7 @@
                     <ion-col size="5">
                         <div class="row">
                             <ion-col size="12">
-                                <ion-label class="ion-card-title">{{ header.banfn }}</ion-label>
+                                <ion-label class="ion-card-title">{{ header.pr_no }}</ion-label>
                             </ion-col>
                         </div>
                         <ion-row>
@@ -53,7 +53,7 @@
                 <ion-item>
                     <ion-label>
                         <h6>Header Note</h6>
-                        <p>value</p>
+                        <p>{{ header.header }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
@@ -94,16 +94,21 @@
                 </ion-item>
             </ion-list>
             <ion-list>
-                <ion-item>
-                    <ion-label>
-                        <h6>Approval Process</h6>
-                    </ion-label>
-                </ion-item>
-                <ion-item v-for="(step, index) in approvalSteps" :key="index">
+                <ion-list-header>
+                    <ion-label class="ion-list-header">Approval Process</ion-label>
+                </ion-list-header>
+                <ion-item v-for="(item, index) in stepApprovers" :key="index">
                     <ion-label>
                         <div class="progress-step">
                             <div class="circle">{{ index + 1 }}</div>
-                            <div class="label">{{ step }}</div>
+                            <div class="label">{{ item.name }}</div>
+                            <div class="status" style="margin-left: auto;">
+                                <ChipComponent :color="item.status === 'To Approve' ? 'warning' :
+                                    item.status === 'Approved' ? 'success' : 'danger'" :width="'100px'">
+                                    {{ item.status === 'To Approve' ? 'To Approve' :
+                                        item.status === 'Approved' ? 'Approved' : 'Reject' }}
+                                </ChipComponent>
+                            </div>
                         </div>
                     </ion-label>
                 </ion-item>
@@ -113,41 +118,44 @@
                     <ion-label class="ion-list-header-item">Purchase Request Item</ion-label>
                 </ion-list-header>
                 <ion-grid class="ion-padding">
-                    <ion-row>
-                        <ion-col size="6">
-                            <h6 class="ion-title-item">Excavator</h6>
-                        </ion-col>
-                        <ion-col size="6" class="ion-text-end">
-                            <h6><ion-text class="ion-amount-item">Rp. 24.200.000</ion-text></h6>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="4">
-                            Quantity
-                        </ion-col>
-                        <ion-col size="8">
-                            2 Unit
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="4">
-                            Price
-                        </ion-col>
-                        <ion-col size="8">
-                            RP. 1111999999
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col>
-                            <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
-                        </ion-col>
-                    </ion-row>
+                    <template v-for="(item, index) in items" :key="index">
+                        <ion-row>
+                            <ion-col size="6">
+                                <h6 class="ion-title-item">{{ item.txz01 }}</h6>
+                            </ion-col>
+                            <ion-col size="6" class="ion-text-end">
+                                <h6><ion-text class="ion-amount-item">{{ item.rlwrt }}</ion-text>
+                                </h6>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="4">
+                                Quantity
+                            </ion-col>
+                            <ion-col size="8">
+                                {{ item.menge }} {{ item.meins }}
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="4">
+                                Price
+                            </ion-col>
+                            <ion-col size="8">
+                                {{ item.rlwrt }}
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+                            </ion-col>
+                        </ion-row>
+                    </template>
                     <ion-row>
                         <ion-col size="6">
                             <h6 class="ion-title-item">Grand Total</h6>
                         </ion-col>
                         <ion-col size="6" class="ion-text-end">
-                            <h6><ion-text class="ion-amount-item" slot="end">Rp. 24.200.000</ion-text></h6>
+                            <h6><ion-text class="ion-amount-item" slot="end">{{ header.total_price }}</ion-text></h6>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -169,17 +177,15 @@ const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
 const prStore = purchaseRequestStore();
 
-const list_item = computed(() => prStore.prDetails);
-const header = computed(() => prStore.prHeader);
+const header = computed(() => prStore.poHeaderFormatted);
+const items = computed(() => prStore.prItemsFormatted);
+const stepApprovers = computed(() => prStore.prStepApprovers);
 
-const approvalSteps = ref([
-    'Step 1: Review',
-    'Step 2: Approval',
-    'Step 3: Finalize'
-]);
+
 
 onMounted(async () => {
     console.log(header.value)
+    console.log(stepApprovers.value)
 });
 </script>
 

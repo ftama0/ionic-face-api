@@ -16,11 +16,10 @@ export const purchaseRequestStore = defineStore({
     id: "purchaseRequest", // ID store
 
     state: () => ({
-        prTotal: null,
         prList: [],
         prHeader: [],
-        prDetails: [],
         prItems: [],
+        prStepApprovers: [],
     }),
     persist: {
         enabled: true,
@@ -38,6 +37,21 @@ export const purchaseRequestStore = defineStore({
             formattedList.total = state.prList.total;
             return formattedList;
         },
+        poHeaderFormatted: (state) => {
+            const formattedHeader = {
+                ...state.prHeader,
+                total_price: formatRupiah(state.prHeader.total_price),
+            };
+            return formattedHeader;
+        },
+        prItemsFormatted: (state) => {
+            const formattedHeader = state.prItems.map(item => ({
+                ...item,
+                rlwrt: formatRupiah(item.rlwrt),
+                badat: formatDate(item.badat),
+            }));
+            return formattedHeader;
+        },
     },
     actions: {
         async allPr(refresh, page = 1, limit = 5, search = "") {
@@ -54,8 +68,8 @@ export const purchaseRequestStore = defineStore({
             try {
                 const res = await prService.readPr(id);
                 this.prHeader = res.header;
-                this.prDetails = res.items;
-                this.prItems = res.step_approvers;
+                this.prItems = res.items;
+                this.prStepApprovers = res.step_approver;
             } catch (error) {
                 console.error("Store error:", error);
                 throw error;

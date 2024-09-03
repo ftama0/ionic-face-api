@@ -16,7 +16,6 @@ export const purchaseOrderStore = defineStore({
     id: "purchaseOrder", // ID store
 
     state: () => ({
-        poTotal: null,
         poList: [],
         poHeader: [],
         poDetails: [],

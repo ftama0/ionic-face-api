@@ -58,7 +58,7 @@ export const prService = {
   async readPr(id) {
     try {
       const res = await apiService.get(`/api/v1/pr/${id}`);
-      return res.data.data;
+      return res.data;
     } catch (error) {
       throw error;
     }

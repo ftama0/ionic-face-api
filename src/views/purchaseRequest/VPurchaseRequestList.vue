@@ -138,7 +138,6 @@ const fetchReadPr = async (item, action = null) => {
     try {
         await prStore.readPr(item.banfn);
         if (!action) {
-            prStore.prHeader = item;
             await router.push({ name: 'PurchaseRequestListDetail' });
         }
     } catch (error) {
