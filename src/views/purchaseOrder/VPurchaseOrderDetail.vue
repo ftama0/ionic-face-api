@@ -89,12 +89,18 @@
                         <h6>Approval Process</h6>
                     </ion-label>
                 </ion-item>
-                <ion-item v-for="(step, index) in approvalSteps" :key="index">
+                <ion-item v-for="(item, index) in items" :key="index">
                     <ion-label>
                         <div class="progress-step">
                             <div class="circle">{{ index + 1 }}</div>
-                            <div class="label">{{ step.name }}</div>
-                            <div class="status">{{ step.status }}</div>
+                            <div class="label">{{ item.name }}</div>
+                            <div class="status" style="margin-left: auto;">
+                                <ChipComponent :color="item.status === 'To Approve' ? 'warning' :
+                                    item.status === 'Approved' ? 'success' : 'danger'" :width="'100px'">
+                                    {{ item.status === 'To Approve' ? 'To Approve' :
+                                        item.status === 'Approved' ? 'Approved' : 'Reject' }}
+                                </ChipComponent>
+                            </div>
                         </div>
                     </ion-label>
                 </ion-item>
@@ -127,7 +133,7 @@
                                 Price
                             </ion-col>
                             <ion-col size="8">
-                                {{ item.peinh }}
+                                {{ item.item_amount }}
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -164,17 +170,8 @@ const poStore = purchaseOrderStore();
 
 const header = computed(() => poStore.poHeaderFormatted);
 const details = computed(() => poStore.poDetailsFormatted);
+const items = computed(() => poStore.poItems);
 
-const approvalSteps = ref([
-    { name: header.value.apv1_name || null, status: header.value.apv1_status || null },
-    { name: header.value.apv2_name || null, status: header.value.apv2_status || null },
-    { name: header.value.apv3_name || null, status: header.value.apv3_status || null },
-    { name: header.value.apv4_name || null, status: header.value.apv4_status || null },
-    { name: header.value.apv5_name || null, status: header.value.apv5_status || null },
-    { name: header.value.apv6_name || null, status: header.value.apv6_status || null },
-    { name: header.value.apv7_name || null, status: header.value.apv7_status || null },
-    { name: header.value.apv8_name || null, status: header.value.apv8_status || null }
-]);
 
 onMounted(async () => {
     console.log(header.value)

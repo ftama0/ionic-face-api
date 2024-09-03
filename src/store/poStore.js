@@ -18,8 +18,9 @@ export const purchaseOrderStore = defineStore({
     state: () => ({
         poTotal: null,
         poList: [],
-        poDetails: [],
         poHeader: [],
+        poDetails: [],
+        poItems: [],
     }),
     persist: {
         enabled: true,
@@ -45,7 +46,7 @@ export const purchaseOrderStore = defineStore({
         poDetailsFormatted: (state) => {
             const formattedHeader = state.poDetails.map(item => ({
                 ...item,
-                item_amount: formatRupiah(item.peinh * item.menge),
+                item_amount: formatRupiah(item.netwr),
                 peinh: formatRupiah(item.peinh)
             }));
             return formattedHeader;
@@ -67,6 +68,7 @@ export const purchaseOrderStore = defineStore({
                 const res = await poService.readPo(id);
                 this.poHeader = res.header;
                 this.poDetails = res.items;
+                this.poItems = res.step_approvers;
             } catch (error) {
                 console.error("Store error:", error);
                 throw error;

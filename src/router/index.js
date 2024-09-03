@@ -152,22 +152,22 @@ router.beforeEach((to, from, next) => {
 });
 
 //note : cek expired token
-router.beforeEach(async (to, from, next) => {
-  const publicPages = ["/login"]; // Halaman yang tidak memerlukan autentikasi
-  const authRequired = !publicPages.includes(to.path);
+// router.beforeEach(async (to, from, next) => {
+//   const publicPages = ["/login"]; // Halaman yang tidak memerlukan autentikasi
+//   const authRequired = !publicPages.includes(to.path);
 
-  const isAuthenticated = await checkTokenExpiration();
-  // console.log("isAuthenticated", isAuthenticated);
+//   const isAuthenticated = await checkTokenExpiration();
+//   // console.log("isAuthenticated", isAuthenticated);
 
-  if (authRequired && !isAuthenticated) {
-    // Jika halaman memerlukan autentikasi dan tidak ada token yang valid
-    next({ name: "Login" });
-  } else if (to.path === "/login" && isAuthenticated) {
-    console.log("Redirecting to Home");
-    next({ name: "Home" });
-  } else {
-    next();
-  }
-});
+//   if (authRequired && !isAuthenticated) {
+//     // Jika halaman memerlukan autentikasi dan tidak ada token yang valid
+//     next({ name: "Login" });
+//   } else if (to.path === "/login" && isAuthenticated) {
+//     console.log("Redirecting to Home");
+//     next({ name: "Home" });
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

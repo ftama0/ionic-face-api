@@ -18,8 +18,9 @@ export const purchaseRequestStore = defineStore({
     state: () => ({
         prTotal: null,
         prList: [],
-        prDetails: [],
         prHeader: [],
+        prDetails: [],
+        prItems: [],
     }),
     persist: {
         enabled: true,
@@ -52,7 +53,9 @@ export const purchaseRequestStore = defineStore({
         async readPr(id) {
             try {
                 const res = await prService.readPr(id);
-                this.prDetails = res;
+                this.prHeader = res.header;
+                this.prDetails = res.items;
+                this.prItems = res.step_approvers;
             } catch (error) {
                 console.error("Store error:", error);
                 throw error;
