@@ -54,6 +54,8 @@ import {
   IonProgressBar,
   IonPopover,
   IonCheckbox,
+  IonBackdrop,
+  IonListHeader
 } from "@ionic/vue";
 
 /* Core CSS required for Ionic components to work properly */
@@ -181,6 +183,8 @@ app.component("ion-toggle", IonToggle);
 app.component("ion-progress-bar", IonProgressBar);
 app.component("ion-popover", IonPopover);
 app.component("ion-checkbox", IonCheckbox);
+app.component("ion-backdrop", IonBackdrop);
+app.component("ion-list-header", IonListHeader);
 // custom component
 app.component("MenuComponent", MenuComponent);
 app.component("HeaderComponent", HeaderComponent);

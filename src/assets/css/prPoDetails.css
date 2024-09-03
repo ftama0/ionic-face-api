@@ -1,0 +1,82 @@
+.progress-step {
+  display: flex;
+  align-items: center;
+}
+
+.circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #3880ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.label {
+  font-size: 14px;
+}
+
+.custom-icon-cart {
+  color: #0070F2;
+  font-size: 32px;
+  background-color: #CFE5FF;
+  border-radius: 50%;
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-icon {
+  color: #0070F2;
+  font-size: 24px;
+}
+
+.ion-card-amount {
+  font-size: 17px;
+  line-height: 18px;
+  font-weight: bold;
+  color: #626060;
+}
+
+.ion-card-label {
+  font-size: 17px;
+  line-height: 18px;
+  font-weight: 400;
+  color: #626060;
+}
+
+.ion-card-title {
+  font-size: 20px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #0070F2;
+}
+
+.ion-list-header {
+  font-size: 20px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #626060;
+}
+
+.ion-list-header-item {
+  font-size: 20px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #0070F2;
+}
+
+.ion-amount-item {
+  color: #0070F2;
+  font-weight: bold;
+}
+
+.ion-title-item {
+  line-height: 18px;
+  font-weight: 600;
+  color: #626060;
+}

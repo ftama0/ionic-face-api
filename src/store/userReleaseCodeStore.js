@@ -4,8 +4,8 @@ import { jwtDecode } from "jwt-decode";
 import { formatDatetime } from "@/utils/datetimeUtils";
 // import { useLoginStore } from './loginStore';
 
-export const releaseCodeStore = defineStore({
-  id: "releaseCode", // ID store
+export const userReleaseCodeStore = defineStore({
+  id: "userReleaseCode", // ID store
 
   state: () => ({
     userList: [],
@@ -36,14 +36,9 @@ export const releaseCodeStore = defineStore({
           limit,
           search
         );
-        if (this.type !== type) {
-          this.userList = res.data;
-          this.userList.total = res.total;
-          this.type = type;
-        } else {
-          this.userList = refresh ? res.data : [...this.userList, ...res.data];
-          this.userList.total = res.total;
-        }
+        this.userList = refresh ? res.data : [...this.userList, ...res.data];
+        this.userList.total = res.total;
+        this.type = type;
       } catch (error) {
         console.error("Store error:", error);
         throw error;

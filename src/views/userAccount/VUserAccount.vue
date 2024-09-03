@@ -4,22 +4,24 @@
         <HeaderComponent :title="'User Account'" />
         <ion-content>
             <ion-grid>
-                <ion-row>
-                    <ion-col size="12">
-                        <ion-searchbar v-model="search" placeholder="Search User"
-                            @ionInput="handleSearch"></ion-searchbar>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col size="12" class="ion-padding">
-                        <ion-select aria-label="status" label="Status select" label-placement="floating"
-                            placeholder="Status" fill="outline" v-model="selectedStatus">
-                            <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="true">Active</ion-select-option>
-                            <ion-select-option value="false">Non Active</ion-select-option>
-                        </ion-select>
-                    </ion-col>
-                </ion-row>
+                <div class="sticky-top">
+                    <ion-row>
+                        <ion-col size="12">
+                            <ion-searchbar v-model="search" placeholder="Search User"
+                                @ionInput="handleSearch"></ion-searchbar>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="12" class="ion-padding">
+                            <ion-select aria-label="status" label="Status select" label-placement="floating"
+                                placeholder="Status" fill="outline" v-model="selectedStatus">
+                                <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
+                                <ion-select-option value="true">Active</ion-select-option>
+                                <ion-select-option value="false">Non Active</ion-select-option>
+                            </ion-select>
+                        </ion-col>
+                    </ion-row>
+                </div>
                 <ion-row>
                     <ion-col size="12">
                         <div v-for="(item, index) in filteredData" :key="index">
@@ -71,7 +73,7 @@
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
-        <LoadingComponent :isOpen="loading" :message="'Loading data...'" />
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         <FooterComponent />
     </ion-page>
 </template>

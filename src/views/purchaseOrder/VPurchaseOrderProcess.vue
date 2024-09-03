@@ -5,7 +5,7 @@
                 <ion-buttons slot="start">
                     <ion-back-button></ion-back-button>
                 </ion-buttons>
-                <ion-title>Detail</ion-title>
+                <ion-title>Approval Process</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
@@ -21,15 +21,14 @@
                         </div>
                         <ion-row>
                             <ion-col size="6">
-                                <ion-label class="ion-card-label">{{ header.item_count }} Item</ion-label>
+                                <ion-label class="ion-card-label">{{ header.total_item }} Item</ion-label>
                             </ion-col>
                         </ion-row>
                     </ion-col>
                     <ion-col size="5">
-                        <ChipComponent :color="header.full_release_status == 'To Approve' ? 'warning'
-                            : header.full_release_status == 'Approved' ? 'success' : 'danger'" :width="'100px'">
-                            {{ header.full_release_status == 'To Approve' ? 'To Approve'
-                                : header.full_release_status == 'Approved' ? 'Approved' : 'Reject' }}
+                        <ChipComponent :color="header.full_release_status == true ? 'success' : 'danger'"
+                            :width="'100px'">
+                            {{ header.full_release_status == true ? 'Active' : 'To Approve' }}
                         </ChipComponent>
                     </ion-col>
                     <ion-col size="12">
@@ -89,18 +88,12 @@
                         <h6>Approval Process</h6>
                     </ion-label>
                 </ion-item>
-                <ion-item v-for="(item, index) in items" :key="index">
+                <ion-item v-for="(step, index) in approvalSteps" :key="index">
                     <ion-label>
                         <div class="progress-step">
                             <div class="circle">{{ index + 1 }}</div>
-                            <div class="label">{{ item.name }}</div>
-                            <div class="status" style="margin-left: auto;">
-                                <ChipComponent :color="item.status === 'To Approve' ? 'warning' :
-                                    item.status === 'Approved' ? 'success' : 'danger'" :width="'100px'">
-                                    {{ item.status === 'To Approve' ? 'To Approve' :
-                                        item.status === 'Approved' ? 'Approved' : 'Reject' }}
-                                </ChipComponent>
-                            </div>
+                            <div class="label">{{ step.name }}</div>
+                            <div class="status">{{ step.status }}</div>
                         </div>
                     </ion-label>
                 </ion-item>
@@ -116,7 +109,7 @@
                                 <h6 class="ion-title-item">{{ item.txz01 }}</h6>
                             </ion-col>
                             <ion-col size="6" class="ion-text-end">
-                                <h6><ion-text class="ion-amount-item">{{ item.item_amount }}</ion-text>
+                                <h6><ion-text class="ion-amount-item">{{ item.peinh }} x {{ item.menge }}</ion-text>
                                 </h6>
                             </ion-col>
                         </ion-row>
@@ -133,7 +126,7 @@
                                 Price
                             </ion-col>
                             <ion-col size="8">
-                                {{ item.item_amount }}
+                                {{ item.peinh }}
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -168,14 +161,22 @@ const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
 const poStore = purchaseOrderStore();
 
-const header = computed(() => poStore.poHeaderFormatted);
-const details = computed(() => poStore.poDetailsFormatted);
-const items = computed(() => poStore.poItems);
+const header = computed(() => poStore.poHeader);
+const details = computed(() => poStore.poDetails);
 
+const approvalSteps = ref([
+    { name: header.value.apv1_name || null, status: header.value.apv1_status || null },
+    { name: header.value.apv2_name || null, status: header.value.apv2_status || null },
+    { name: header.value.apv3_name || null, status: header.value.apv3_status || null },
+    { name: header.value.apv4_name || null, status: header.value.apv4_status || null },
+    { name: header.value.apv5_name || null, status: header.value.apv5_status || null },
+    { name: header.value.apv6_name || null, status: header.value.apv6_status || null },
+    { name: header.value.apv7_name || null, status: header.value.apv7_status || null },
+    { name: header.value.apv8_name || null, status: header.value.apv8_status || null }
+]);
 
 onMounted(async () => {
     console.log(header.value)
-    console.log(details.value)
 });
 </script>
 

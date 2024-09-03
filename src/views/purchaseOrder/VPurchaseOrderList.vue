@@ -1,163 +1,187 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="pr-content" v-bind="$attrs">
-        <HeaderComponent :title="'Purchase Request Order'" />
+        <HeaderComponent :title="'Purchase Order List'" />
         <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-searchbar v-model="search" placeholder="Search PR Number"
+                        <ion-searchbar v-model="search" placeholder="Search PO Number"
                             @ionInput="handleSearch"></ion-searchbar>
+                    </ion-col>
+                    <ion-col size="8" class="ion-padding ion-align-self-center">
+                        <ion-label>{{ vdata.total }} purchase order found</ion-label>
+                    </ion-col>
+                    <ion-col size="4" class="ion-padding ion-align-self-center">
+                        <div class="filter-container">
+                            <ion-text>Filter</ion-text>
+                            <ion-button color="primary" fill="solid">
+                                <ion-icon slot="icon-only" :icon="icons.filterOutline"></ion-icon>
+                            </ion-button>
+                        </div>
                     </ion-col>
                     <ion-col size="12">
                         <div v-for="(item, index) in vdata" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
-                                <ion-card-header color="secondary">
-                                    <ion-text class="ion-card-title">{{ item.BANFN }}</ion-text>
-                                </ion-card-header>
                                 <ion-card-content>
-                                    <ion-row class="ion-padding-top">
+                                    <ion-row class="ion-margin-top">
                                         <ion-col size="12">
-                                            <ion-label class="ion-card-label">{{ item.HEADER }}</ion-label>
+                                            <ion-row>
+                                                <ion-col size="2"> <ion-icon class="custom-icon-cart"
+                                                        :icon="icons.cartOutline"></ion-icon></ion-col>
+                                                <ion-col size="8">
+                                                    <div class="row">
+                                                        <ion-col size="12">
+                                                            <ion-label class="ion-card-title">
+                                                                {{ item.po_no }}</ion-label>
+                                                        </ion-col>
+                                                    </div>
+                                                    <ion-row>
+                                                        <ion-col size="4">
+                                                            <ion-label class="ion-card-label">{{ item.item_count }}
+                                                                Item</ion-label>
+                                                        </ion-col>
+                                                        <ion-col size="1">
+                                                            ·
+                                                        </ion-col>
+                                                        <ion-col size="7">
+                                                            <ion-label class="ion-card-label">
+                                                                {{ item.release_date }}
+                                                            </ion-label>
+                                                        </ion-col>
+                                                    </ion-row>
+                                                </ion-col>
+                                                <ion-col size="2">
+                                                    <ion-button fill="clear" @click="fetchReadPo(item)">
+                                                        <ion-icon class="custom-icon"
+                                                            :icon="icons.ellipsisVertical"></ion-icon>
+                                                    </ion-button>
+                                                </ion-col>
+                                            </ion-row>
                                         </ion-col>
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label">{{ item.total_item }} Item</ion-label>
+
+                                        <ion-col size="12" class="ion-padding-horizontal">
+                                            <ion-label class="ion-card-label">{{ item.header }}</ion-label>
                                         </ion-col>
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label">{{ item.BADAT }}</ion-label>
+                                        <ion-col size="6"
+                                            class="ion-padding-horizontal ion-text-start ion-align-self-center">
+                                            <ion-label class="ion-card-amount">
+                                                {{ item.total_amount }}
+                                            </ion-label>
                                         </ion-col>
-                                        <ion-col size="12">
-                                            <ion-label class="ion-card-label ion-card-title">Rp.
-                                                {{ formatCurrency(item.SUM_Total_Price) }}</ion-label>
-                                        </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <!-- <ion-button size="default" shape="round" color="warning"
-                                                class="action-button" @click="openActionSheet(item.BANFN)">
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.openOutline"></ion-icon>
-                                                Action
-                                            </ion-button> -->
-                                        </ion-col>
-                                        <ion-col size="6" class="center-col">
-                                            <ion-button size="default" shape="round" color="dark" class="detail-button"
-                                                @click="fetchDetailPr(item)">
-                                                <!-- router-link="/purchaseRequestListDetail"> -->
-                                                <ion-icon aria-hidden="true" slot="start"
-                                                    :icon="icons.readerOutline"></ion-icon>
-                                                Detail
-                                            </ion-button>
+                                        <ion-col size="6" class="ion-padding-horizontal ion-text-end">
+                                            <ChipComponent :color="item.full_release_status == 'To Approve' ? 'warning'
+                                                : item.full_release_status == 'Approved' ? 'success' : 'danger'"
+                                                :width="'100px'">
+                                                {{ item.full_release_status == 'To Approve' ? 'To Approve'
+                                                    : item.full_release_status == 'Approved' ? 'Approved' : 'Reject' }}
+                                            </ChipComponent>
                                         </ion-col>
                                     </ion-row>
                                 </ion-card-content>
                             </ion-card>
                         </div>
-                        <ion-infinite-scroll threshold="10px" @ionInfinite="loadMore">
-                            <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
-                            </ion-infinite-scroll-content>
-                        </ion-infinite-scroll>
                     </ion-col>
                 </ion-row>
             </ion-grid>
+            <ion-infinite-scroll threshold=" 10px" @ionInfinite="loadMore">
+                <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+            <RefresherComponent @refresh="refreshData()" />
         </ion-content>
         <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
             class="my-custom-class">
         </ion-action-sheet>
-        <!-- <ion-button id="open-loading">Show Loading</ion-button>
-        <ion-loading trigger="open-loading" :duration="3000" message="Dismissing after 3 seconds..." spinner="circles">
-        </ion-loading>
-        <ion-loading v-if="isLoading" message="Loading ..." spinner="circles"></ion-loading> -->
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         <FooterComponent />
     </ion-page>
 </template>
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
-import { useLoginStore } from '@/store/loginStore';
-import { purchaseRequestStore } from '@/store/prStore';
+import { purchaseOrderStore } from '@/store/poStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
+import ChipComponent from '@/components/ChipComponent.vue';
+
 // data
 const { proxy } = getCurrentInstance()
-const isLoading = ref(false);
-const icons = ref(proxy.$icons);
-const loginStore = useLoginStore();
-const prStore = purchaseRequestStore();
 const router = useRouter();
+const poStore = purchaseOrderStore();
+
+const loading = ref(false);
+const icons = ref(proxy.$icons);
 const page = ref(1);
-const perPage = ref(5);
+const limit = ref(5);
 const search = ref('');
-const mainContentId = 'pr-content';
-/// State to manage Action Sheet
 const isOpen = ref(false);
-const selectedId = ref('');
+const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
+const selectedStatus = ref('');
+const mainContentId = 'pr-content';
 
-const fetchDetailPr = async (item) => {
+const vdata = computed(() => poStore.poListFormatted);
+
+const fetchAllPo = async (refresh = true) => {
+    loading.value = refresh;
     try {
-        isLoading.value = true;
-        await prStore.fetchDetailPr(item.BANFN);
-        await prStore.saveParentPr(item);
-        router.push({ name: 'PurchaseRequestListDetail' });
+        refresh ? page.value = 1 : page.value++;
+        await poStore.allPo(refresh, page.value, limit.value, search.value);
     } catch (error) {
-        console.error('API failed:', error);
-        proxy.$toast('Username or password is wrong', 'danger');
-    }
-    finally {
-        isLoading.value = false;
+        console.error('Error fetching Purchase Order :', error);
+    } finally {
+        loading.value = false;
     }
 };
 
-// api 
-const handleRefresh = (event) => {
-    setTimeout(() => {
-        event.target.complete();
-    }, 2000);
-};
-const fetchListPr = async () => {
+const fetchReadPo = async (item, action = null) => {
+    loading.value = true;
     try {
-        isLoading.value = true;
-        await prStore.fetchListPr(user.value.username);
-        page.value++;
+        await poStore.readPo(item.po_no);
+        if (!action) {
+            await router.push({ name: 'PurchaseOrderListDetail' });
+        }
     } catch (error) {
-        console.error('Error fetching list PR:', error);
-    }
-    finally {
-        isLoading.value = false;
+        console.error('Error reading Purchase Order :', error);
+        proxy.$toast('Error Reading Purchase Order ', 'danger');
+    } finally {
+        loading.value = false;
     }
 };
-// computed 
-const vdata = computed(() => prStore.daftarPr);
-const user = computed(() => loginStore.user);
-// another merthod 
+
+const refreshData = async () => {
+    await fetchAllPo(true);
+    selectedStatus.value = null;
+};
+
 const loadMore = async (event) => {
-    await fetchListPr();
+    console.log('vdata', vdata.value)
+    if (vdata.value.length >= vdata.value.total) {
+        event.target.complete();
+        return;
+    }
+    await fetchAllPo(false);
     event.target.complete();
 };
-const handleSearch = debounce(() => {
-    page.value = 1;
-    prStore.daftarPr = [];
-    fetchListPr();
-}, 1000); // Set the debounce delay to 300ms or adjust as needed
-const formatCurrency = (price) => {
-    return parseFloat(price).toLocaleString('id-ID', { maximumFractionDigits: 2 });
-};
-// Method to open Action Sheet with specific item
-const openActionSheet = (id) => {
-    console.log(id)
-    selectedId.value = id;
+
+const handleSearch = debounce(() => fetchAllPo(true), 300);
+
+const openActionSheet = (item) => {
+    selectedItem.value = item;
     actionSheetButtons.value = [
         {
-            text: 'Approve',
-            handler: () => handleAction('Approve'),
+            text: 'Edit',
+            handler: () => handleAction('Edit'),
             cssClass: 'approve-button',
-            icon: icons.value.checkmarkOutline,
+            icon: icons.value.createOutline,
         },
         {
-            text: 'Reject',
+            text: 'Delete',
             role: 'destructive',
-            handler: () => handleAction('Reject'),
+            handler: () => handleAction('Delete'),
             cssClass: 'reject-button',
-            icon: icons.value.closeOutline,
+            icon: icons.value.trashOutline,
         },
         {
             text: 'Cancel',
@@ -168,56 +192,68 @@ const openActionSheet = (id) => {
     ];
     setOpen(true);
 };
-// Method to handle action button click in Action Sheet
+
 const handleAction = async (action) => {
-    isLoading.value = true;
-    console.log(`Action ${action} for Id: ${selectedId.value}`);
-
-    let response;
-
     switch (action) {
-        case 'Approve':
-            response = await prStore.approvePr(user.value.username, selectedId.value);
-            if (response) {
-                console.log(response)
-                proxy.$toast(response.message, response.status);
-                // proxy.$toast('Approve Done', 'success');
-            }
+        case 'Add':
+        case 'Edit':
+            await (action === 'Edit' && fetchReadUser(selectedItem.value, action));
+            await openModal(action);
             break;
-        case 'Reject':
-            response = await prStore.rejectPr(user.value.username, selectedId.value);
-            if (response) {
-                proxy.$toast('Reject Done', 'success');
-            }
+        case 'Delete':
+            await deleteUser(selectedItem.value);
             break;
         default:
             console.warn(`Unknown action: ${action}`);
             proxy.$toast('Failed, contact admin', 'danger');
-
-    }
-
-    if (response) {
-        setOpen(false);
-        isLoading.value = false;
-    } else {
-        console.error(`Failed to ${action.toLowerCase()} PR for Id: ${selectedId.value}`);
     }
 };
-// Method to set the open state of the Action Sheet
+
 const setOpen = (state) => {
     isOpen.value = state;
 };
-// mount 
-onMounted(async () => {
-    isLoading.value = true;
-    await fetchListPr();
-});
+
+const openModal = async (action) => {
+    const modal = await modalController.create({
+        component: Modal,
+        componentProps: { action },
+    });
+    modal.present();
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'confirm') {
+        proxy.$toast(data.message, 'success');
+    }
+};
+
+const filteredData = computed(() =>
+    selectedStatus.value
+        ? vdata.value.filter(item => item.status.toString() === selectedStatus.value)
+        : vdata.value
+);
+
+onMounted(fetchAllPo);
 </script>
 
 <style scoped>
 .ion-card-title {
-    font-size: 18px;
+    font-size: 20px;
+    line-height: 18px;
     font-weight: 600;
+    color: #0070F2;
+}
+
+.ion-card-amount {
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: 700;
+    color: #626060;
+}
+
+.ion-card-label {
+    font-size: 17px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #626060;
 }
 
 .custom-item {
@@ -233,6 +269,11 @@ onMounted(async () => {
     align-items: center;
 }
 
+.center-col-1 {
+    display: flex;
+    align-items: center;
+}
+
 ion-fab-button {
     --background: #b7f399;
     --background-activated: #87d361;
@@ -242,13 +283,43 @@ ion-fab-button {
     --color: black;
 }
 
-/* ion-action-sheet.my-custom-class {
-    --background: #EBF4F6;
-    --backdrop-opacity: 0.6;
-    --button-background-selected: #EBF4F6;
-    --button-color: #000000;
-    --button-color-activated: green;
-    --color: gray;
-    --ion-color-danger: #ff0000;
-} */
+.custom-icon-cart {
+    color: #0070F2;
+    font-size: 24px;
+    background-color: #CFE5FF;
+    border-radius: 50%;
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-icon {
+    color: #0070F2;
+    font-size: 24px;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.filter-container ion-text {
+    margin-right: 8px;
+    font-size: 14px;
+    color: #626060;
+}
+
+.filter-container ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+    height: 32px;
+}
+
+.filter-container ion-icon {
+    font-size: 18px;
+}
 </style>

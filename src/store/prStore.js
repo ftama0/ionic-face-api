@@ -1,97 +1,107 @@
 // store/loginStore.js
 
-import { defineStore } from 'pinia';
-import { prService } from '@/services/apiService'; // Import loginService dari services
-import { getDeviceInfo, isMobilePlatform } from '@/plugins/devicePlugin';
-// import { useLoginStore } from './loginStore';
+import { defineStore } from "pinia";
+import { prService } from "@/services/apiService";
+
+const formatRupiah = (amount) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+};
+
+const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('id-ID', options);
+};
 
 export const purchaseRequestStore = defineStore({
-id: 'purchaseRequest', // ID store
+    id: "purchaseRequest", // ID store
 
-state: () => ({
-        totalPr:  null,
-        daftarPr:  [],
-        detailPr:  [],
-        parentPr:  [],
-        daftarEss: [],
-        listRc: [],
+    state: () => ({
+        prList: [],
+        prHeader: [],
+        prItems: [],
+        prStepApprovers: [],
     }),
-actions: {
-    async fetchTotalPr(username) {
-        try {
-            const res = await prService.fetchTotalPr(username);
-            this.totalPr = res;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
+    persist: {
+        enabled: true,
     },
-    async fetchListPr(username) {
-        try {
-            const res = await prService.fetchListPr(username);
-            this.daftarPr = res;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
-    },  
-    async fetchDetailPr(id) {
-        try {
-            const res = await prService.fetchDetailPr(id);
-            this.detailPr = res;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
-    },  
-    async saveParentPr(item) {
-        try {
-            this.parentPr = item;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
-    },  
-    async approvePr(username, id) {
-        try {
-            const res = await prService.approvePr(username, id);
-            await this.fetchListPr(username);
-            return res;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
-    },  
-    async rejectPr(username, id) {
-        try {
-            const res = await prService.rejectPr(username, id);
-            await this.fetchListPr(username);
-            return res;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
+    getters: {
+        prListFormatted: (state) => {
+            const formattedList = state.prList.map(item => {
+                return {
+                    ...item,
+                    total_price: formatRupiah(item.total_price),
+                    release_date: formatDate(item.release_date),
+                    header: item.header.split(' ').length > 10 ? item.header.split(' ').slice(0, 5).join(' ') + '...' : item.header
+                };
+            });
+            formattedList.total = state.prList.total;
+            return formattedList;
+        },
+        poHeaderFormatted: (state) => {
+            const formattedHeader = {
+                ...state.prHeader,
+                total_price: formatRupiah(state.prHeader.total_price),
+            };
+            return formattedHeader;
+        },
+        prItemsFormatted: (state) => {
+            const formattedHeader = state.prItems.map(item => ({
+                ...item,
+                rlwrt: formatRupiah(item.rlwrt),
+                badat: formatDate(item.badat),
+            }));
+            return formattedHeader;
+        },
     },
-    async fetchReleaseCode() {
-        try {
-            const res = await prService.fetchReleaseCode();
-            this.listRc = res.filter(code => code.FRGGR === 'OH');
-            console.log(this.listRc);
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
-    },  
-    async fetchUserEss(page, perPage, search = '') {
-        try {
-            const res = await prService.fetchUserEss(page, perPage, search);
-            this.daftarEss = [...this.daftarEss, ...res.dataku];
-            this.daftarEss.totalData = res.totalPage.total_records;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
-        }
+    actions: {
+        async allPr(refresh, page = 1, limit = 5, search = "") {
+            try {
+                const res = await prService.allPr(page, limit, search);
+                this.prList = refresh ? res.data : [...this.prList, ...res.data];
+                this.prList.total = res.total;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async readPr(id) {
+            try {
+                const res = await prService.readPr(id);
+                this.prHeader = res.header;
+                this.prItems = res.items;
+                this.prStepApprovers = res.step_approver;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async saveHeaderPr(item) {
+            try {
+                this.prHeader = item;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async approvePr(username, id) {
+            try {
+                const res = await prService.approvePr(username, id);
+                await this.fetchListPr(username);
+                return res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async rejectPr(username, id) {
+            try {
+                const res = await prService.rejectPr(username, id);
+                await this.fetchListPr(username);
+                return res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
     },
-},
-
 });

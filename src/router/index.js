@@ -44,15 +44,6 @@ const routes = [
     path: "/home",
     name: "Home",
     component: () => import("@/views/VHome.vue"),
-    beforeEnter: (to, from, next) => {
-      // Handle direct navigation to /home
-      if (to.name === "Home") {
-        next(); // Allow the page to load normally on refresh
-      } else {
-        // Replace history only if navigating from another route
-        next({ ...to, replace: true });
-      }
-    },
   },
   // * pr
   {
@@ -111,12 +102,6 @@ const routes = [
     component: () => import("@/views/userReleaseCode/VUserReleaseCode.vue"),
     props: true,
   },
-  {
-    path: "/userReleaseCodeDetail",
-    name: "UserReleaseCodeDetail",
-    component: () =>
-      import("@/views/userReleaseCode/VUserReleaseCodeDetail.vue"),
-  },
   // * maintan cost center pr
   {
     path: "/costCenterPr",
@@ -163,13 +148,10 @@ router.beforeEach(async (to, from, next) => {
   const authRequired = !publicPages.includes(to.path);
 
   const isAuthenticated = await checkTokenExpiration();
-  console.log("isAuthenticated", isAuthenticated);
 
   if (authRequired && !isAuthenticated) {
-    // Jika halaman memerlukan autentikasi dan tidak ada token yang valid
     next({ name: "Login" });
-  } else if (to.path === "/login" && isAuthenticated) {
-    console.log("Redirecting to Home");
+  } else if (to.name === "Login" && isAuthenticated) {
     next({ name: "Home" });
   } else {
     next();

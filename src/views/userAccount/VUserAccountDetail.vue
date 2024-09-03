@@ -1,5 +1,5 @@
 <template>
-    <ion-page id="home-content" v-bind="$attrs">
+    <ion-page id="detail-content" v-bind="$attrs">
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -78,12 +78,7 @@ import ChipComponent from '@/components/ChipComponent.vue';
 const { proxy } = getCurrentInstance()
 const userAccount = userAccountStore();
 const router = useRouter();
-// api 
-const logout = () => {
 
-    router.replace({ name: 'Login' });
-};
-// computed 
 const vdata = computed(() => userAccount.userDetails.data);
 // Another Method 
 onMounted(async () => {
