@@ -18,24 +18,31 @@
                     <ion-col size="12">
                         <div v-for="(item, index) in data" :key="index">
                             <ion-card>
-                                <ion-card-header router-link="/costCenterPoDetail">
+                                <ion-card-header>
                                     <ion-card-title>{{ item.fullname }}</ion-card-title>
                                 </ion-card-header>
-                                <ion-card-content router-link="/costCenterPoDetail">
-                                    {{ item.user_csks[0].kostl }}
-                                    <br>
-                                    {{ item.user_csks[0].ltext }}
-
-
+                                <ion-card-content>
+                                    <ion-row>
+                                        <ion-col size="6" class="ion-text-left">
+                                            <ButtonComponent :icon="icons.openOutline" :item="item"
+                                                :class="actionButton" @action-click="openActionSheet">
+                                                Action
+                                            </ButtonComponent>
+                                        </ion-col>
+                                        <ion-col size="6" class="ion-text-right">
+                                            <ButtonComponent :icon="icons.readerOutline" :item="item"
+                                                :class="detailButton" router-link="/costCenterPoDetail">
+                                                Detail
+                                            </ButtonComponent>
+                                        </ion-col>
+                                    </ion-row>
                                 </ion-card-content>
-                                <div class="button-container">
-                                    <ion-button size="default" @click="handleAction('Edit')">
-                                        <ion-icon aria-hidden="true" slot="start" :icon="icons.openOutline"></ion-icon>
-                                        Edit
-                                    </ion-button>
-                                </div>
                             </ion-card>
                         </div>
+                        <ion-infinite-scroll threshold="10px" @ionInfinite="loadMore">
+                            <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
+                            </ion-infinite-scroll-content>
+                        </ion-infinite-scroll>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -44,7 +51,12 @@
                     <ion-icon :icon="icons.addOutline"></ion-icon>
                 </ion-fab-button>
             </ion-fab>
+            <RefresherComponent @refresh="refreshData()" />
         </ion-content>
+        <ion-action-sheet :is-open="isOpen" header="Actions" :buttons="actionSheetButtons" @didDismiss="setOpen(false)"
+            class="my-custom-class">
+        </ion-action-sheet>
+        <LoadingComponent :isOpen="isLoading" :message="'Loading data...'" />
         <FooterComponent />
     </ion-page>
 </template>
@@ -52,9 +64,10 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import Modal from './VMaintainCostCenterModal.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 import { costCenterStore } from '@/store/costCenterStore';
 import { modalController } from '@ionic/vue';
-import { star } from 'ionicons/icons';
+import LoadingComponent from '../../components/LoadingComponent.vue';
 
 const { proxy } = getCurrentInstance()
 const csStore = costCenterStore();
@@ -64,45 +77,24 @@ const icons = ref(proxy.$icons);
 const page = ref(1);
 const limit = ref(80);
 const search = ref('');
+const actionButton = ref('action-button');
+const detailButton = ref('detail-button');
+const isOpen = ref(false);
+const selectedItem = ref(null);
+const actionSheetButtons = ref([]);
+const selectedStatus = ref('');
+const selectedId = ref('');
 const mainContentId = 'cost-center-po-content';
 
-const isOpen = ref(false);
-const selectedId = ref('');
+const data = computed(() => csStore.dataList);
 
-const data = computed(() => csStore.userList);
-const items = ref([
-    {
-        id: 1,
-        name: 'Item 1',
-        description: 'Description of Item 1',
-    },
-    {
-        id: 2,
-        name: 'Item 2',
-        description: 'Description of Item 2',
-    },
-    {
-        id: 3,
-        name: 'Item 3',
-        description: 'Description of Item 3',
-    },
-    {
-        id: 4,
-        name: 'Item 4',
-        description: 'Description of Item 4',
-    },
-    {
-        id: 5,
-        name: 'Item 5',
-        description: 'Description of Item 5',
-    },
-]);
-
-const fetchAllUser = async (refresh = true) => {
+const fetchAllData = async (refresh = true) => {
     isLoading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await csStore.allUserCostCenter(page.value, limit.value, search.value, refresh);
+        await csStore.allDataCostCenter(page.value, limit.value, search.value, refresh);
+
+        console.log(data.value);
         
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -112,10 +104,47 @@ const fetchAllUser = async (refresh = true) => {
 };
 
 
-
-
 const handleSearch = () => { }
 
+const refreshData = async () => {
+    await fetchAllData(true);
+    selectedStatus.value = null;
+};
+
+const loadMore = async (event) => {
+    if (data.value.length >= data.value.total) {
+        event.target.complete();
+        return;
+    }
+    await fetchAllData(false);
+    event.target.complete();
+};
+
+const openActionSheet = (item) => {
+    selectedItem.value = item;
+    actionSheetButtons.value = [
+        {
+            text: 'Edit',
+            handler: () => handleAction('Edit'),
+            cssClass: 'approve-button',
+            icon: icons.value.createOutline,
+        },
+        {
+            text: 'Delete',
+            role: 'destructive',
+            handler: () => handleAction('Delete'),
+            cssClass: 'reject-button',
+            icon: icons.value.trashOutline,
+        },
+        {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'cancel-button',
+            icon: icons.value.logOutOutline,
+        },
+    ];
+    setOpen(true);
+};
 
 const handleAction = async (action) => {
     isLoading.value = true;
@@ -131,8 +160,11 @@ const handleAction = async (action) => {
         default:
             console.warn(`Unknown action: ${action}`);
             proxy.$toast('Failed, contact admin', 'danger');
-
     }
+};
+
+const setOpen = (state) => {
+    isOpen.value = state;
 };
 
 const openModal = async (action) => {
@@ -158,7 +190,7 @@ const openModal = async (action) => {
 
 // mount 
 onMounted(async () => {
-    await fetchAllUser();
+    await fetchAllData();
 });
 
 </script>

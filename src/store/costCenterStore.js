@@ -8,23 +8,23 @@ export const costCenterStore = defineStore({
     id: 'costCenter',
 
     state: () => ({
-        userList: [],
+        dataList: [],
         costCenterList: [],
-        userDetails: [],
+        dataDetails: [],
     }),
     persist: {
         enabled: true,
     },
     actions: {
-        async allUserCostCenter(page = 1, limit = 5, search = "", refresh) {
+        async allDataCostCenter(page = 1, limit = 5, search = "", refresh) {
             try {
-                const res = await costCenterService.allUserCostCenter(
+                const res = await costCenterService.allDataCostCenter(
                     page,
                     limit,
                     search
                 );
-                this.userList = refresh ? res.data : [...this.userList, ...res.data];
-                this.userList.total = res.total;
+                this.dataList = refresh ? res.data : [...this.dataList, ...res.data];
+                this.dataList.total = res.total;
             } catch (error) {
                 console.error("Store error:", error);
                 throw error;

@@ -17,12 +17,12 @@
                 <ion-col size="12">
                     <p>User Account</p>
                 </ion-col>
-                <ion-col size="12">
-                    <ion-select aria-label="status" label="Choose User Account" label-placement="floating"
-                        placeholder="User Account" fill="outline">
-                        <ion-select-option value="User Account 1">User Account 1</ion-select-option>
-                        <ion-select-option value="User Account 2">User Account 2</ion-select-option>
-                        <ion-select-option value="User Account 3">User Account 3</ion-select-option>
+                <ion-col size="12" class="ion-padding-top">
+                    <ion-select aria-label="status" label="Select User" label-placement="floating"
+                        placeholder="Select User" fill="outline">
+                        <ion-select-option v-for="user in listUser" :key="user.uuid" :value="user.uuid">
+                            {{ user.fullname }}
+                        </ion-select-option>
                     </ion-select>
                 </ion-col>
                 <ion-col size="12">
@@ -72,8 +72,13 @@
 <script setup>
 import { ref, onMounted, computed, watch, getCurrentInstance } from 'vue';
 import { modalController } from '@ionic/vue';
+import { userAccountStore } from '@/store/userAccountStore';
 import { useRouter } from 'vue-router';
 import { Keyboard } from '@capacitor/keyboard';
+
+
+const userAccount = userAccountStore();
+const listUser = computed(() => userAccount.userList);
 const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
 const vdata = ref({
