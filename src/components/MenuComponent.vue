@@ -9,35 +9,35 @@
             <ion-content>
                 <ion-list>
                     <ion-menu-toggle>
-                        <ion-item router-link="/home" @click="isDropdownOpen = false">
+                        <ion-item @click="$router.replace({ name: 'Home' }); isDropdownOpen = false">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.homeOutline"></ion-icon>
                             <ion-label class="ion-padding">Home</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseRequestList" @click="isDropdownOpen = false">
+                        <ion-item @click="$router.push({ name: 'PurchaseRequestList', params: { type: 'user' } })">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.bagHandleOutline"></ion-icon>
                             <ion-label class="ion-padding">Purchase Request List</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseOrderList" @click="isDropdownOpen = false">
+                        <ion-item @click="$router.push({ name: 'PurchaseOrderList', params: { type: 'user' } })">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.bagCheckOutline"></ion-icon>
                             <ion-label class="ion-padding">Purchase Order List</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseRequestApproval" @click="isDropdownOpen = false">
+                        <ion-item @click="$router.push({ name: 'PurchaseRequestList', params: { type: 'approval' } })">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.cartOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Request</ion-label>
                         </ion-item>
                     </ion-menu-toggle>
                     <ion-menu-toggle>
-                        <ion-item router-link="/purchaseOrderApproval" @click="isDropdownOpen = false">
+                        <ion-item @click="$router.push({ name: 'PurchaseOrderList', params: { type: 'approval' } })">
                             <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                 :icon="icons.basketOutline"></ion-icon>
                             <ion-label class="ion-padding">Approval Purchase Order</ion-label>

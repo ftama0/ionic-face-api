@@ -47,36 +47,27 @@ const routes = [
   },
   // * pr
   {
-    path: "/purchaseRequestList",
+    path: "/purchaseRequestList/:type",
     name: "PurchaseRequestList",
     component: () => import("@/views/purchaseRequest/VPurchaseRequestList.vue"),
+    props: true,
   },
   {
-    path: "/purchaseRequestApproval",
-    name: "PurchaseRequestApproval",
-    component: () =>
-      import("@/views/purchaseRequest/VPurchaseRequestApproval.vue"),
-  },
-  {
-    path: "/purchaseRequestListDetail",
-    name: "PurchaseRequestListDetail",
-    component: () =>
-      import("@/views/purchaseRequest/VPurchaseRequestDetail.vue"),
+    path: "/purchaseRequestDetail/:typeMenu",
+    name: "PurchaseRequestDetail",
+    component: () => import("@/views/purchaseRequest/VPurchaseRequestDetail.vue"),
+    props: true,
   },
   // * po
   {
-    path: "/purchaseOrderList",
+    path: "/purchaseOrderList/:type",
     name: "PurchaseOrderList",
     component: () => import("@/views/purchaseOrder/VPurchaseOrderList.vue"),
+    props: true,
   },
   {
-    path: "/purchaseOrderApproval",
-    name: "PurchaseOrderApproval",
-    component: () => import("@/views/purchaseOrder/VPurchaseOrderApproval.vue"),
-  },
-  {
-    path: "/purchaseOrderListDetail",
-    name: "PurchaseOrderListDetail",
+    path: "/purchaseOrderDetail",
+    name: "PurchaseOrderDetail",
     component: () => import("@/views/purchaseOrder/VPurchaseOrderDetail.vue"),
   },
   // * user account

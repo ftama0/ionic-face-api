@@ -45,10 +45,20 @@ export const loginService = {
 };
 // purhcase Request
 export const prService = {
-  async allPr(page = 1, limit = 5, search = "") {
+  async allPrList(page = 1, limit = 5, search = "") {
     try {
       const res = await apiService.get(
         `/api/v1/pr/?page=${page}&limit=${limit}&search=${search}`
+      );
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async allPrApproval(page = 1, limit = 5, search = "") {
+    try {
+      const res = await apiService.get(
+        `/api/v1/approval-pr/?page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
     } catch (error) {
@@ -86,7 +96,7 @@ export const prService = {
 };
 // purhcase Order
 export const poService = {
-  async allPo(page = 1, limit = 5, search = "") {
+  async allPoList(page = 1, limit = 5, search = "") {
     try {
       const res = await apiService.get(
         `/api/v1/po/?page=${page}&limit=${limit}&search=${search}`

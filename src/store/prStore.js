@@ -54,9 +54,10 @@ export const purchaseRequestStore = defineStore({
         },
     },
     actions: {
-        async allPr(refresh, page = 1, limit = 5, search = "") {
+        async allPr(refresh, page = 1, limit = 5, search = "", type = "") {
             try {
-                const res = await prService.allPr(page, limit, search);
+                const serviceMethod = type === "user" ? prService.allPrList : prService.allPrApproval;
+                let res = await serviceMethod(page, limit, search);
                 this.prList = refresh ? res.data : [...this.prList, ...res.data];
                 this.prList.total = res.total;
             } catch (error) {

@@ -21,65 +21,10 @@
                         </div>
                     </ion-col>
                     <ion-col size="12">
-                        <div v-for="(item, index) in vdata" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
-                                <ion-card-content>
-                                    <ion-row class="ion-margin-top">
-                                        <ion-col size="12">
-                                            <ion-row>
-                                                <ion-col size="2"> <ion-icon class="custom-icon-cart"
-                                                        :icon="icons.cartOutline"></ion-icon></ion-col>
-                                                <ion-col size="8">
-                                                    <div class="row">
-                                                        <ion-col size="12">
-                                                            <ion-label class="ion-card-title">
-                                                                {{ item.banfn }}</ion-label>
-                                                        </ion-col>
-                                                    </div>
-                                                    <ion-row>
-                                                        <ion-col size="4">
-                                                            <ion-label class="ion-card-label">{{ item.total_item }}
-                                                                Item</ion-label>
-                                                        </ion-col>
-                                                        <ion-col size="1">
-                                                            ·
-                                                        </ion-col>
-                                                        <ion-col size="7">
-                                                            <ion-label class="ion-card-label">
-                                                                {{ item.release_date }}
-                                                            </ion-label>
-                                                        </ion-col>
-                                                    </ion-row>
-                                                </ion-col>
-                                                <ion-col size="2">
-                                                    <ion-button fill="clear" @click="fetchReadPr(item)">
-                                                        <ion-icon class="custom-icon"
-                                                            :icon="icons.ellipsisVertical"></ion-icon>
-                                                    </ion-button>
-                                                </ion-col>
-                                            </ion-row>
-                                        </ion-col>
-
-                                        <ion-col size="12" class="ion-padding-horizontal">
-                                            <ion-label class="ion-card-label">{{ item.header }}</ion-label>
-                                        </ion-col>
-                                        <ion-col size="6"
-                                            class="ion-padding-horizontal ion-text-start ion-align-self-center">
-                                            <ion-label class="ion-card-amount">
-                                                {{ item.total_price }}
-                                                <!-- {{ formatCurrency(item.SUM_Total_Price) }} -->
-                                            </ion-label>
-                                        </ion-col>
-                                        <ion-col size="6" class="ion-padding-horizontal ion-text-end">
-                                            <ChipComponent :color="item.status == true ? 'success' : 'warning'"
-                                                :width="'150px'">
-                                                {{ item.status == true ? 'Active' : 'To Approve' }}
-                                            </ChipComponent>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-card-content>
-                            </ion-card>
-                        </div>
+                        <cardUser v-if="typeMenu === 'user'" v-for="(item, index) in vdata" :key="index" :item="item"
+                            :icons="icons" @readPr="fetchReadPr" />
+                        <cardApproval v-if="typeMenu === 'approval'" v-for="(item, index) in vdata" :key="index"
+                            :item="item" :icons="icons" @readPr="fetchReadPr" />
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -98,12 +43,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, getCurrentInstance, computed } from 'vue';
+import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
-import ChipComponent from '@/components/ChipComponent.vue';
+import cardUser from '@/components/CardPrListUserComponent.vue';
+import cardApproval from '@/components/CardPrListApprovalComponent.vue';
+import { useRoute } from 'vue-router';
+
+const props = defineProps({
+    type: {
+        type: String,
+        required: true
+    }
+});
 // data
+const typeMenu = ref(props.type);
 const { proxy } = getCurrentInstance()
 const router = useRouter();
 const prStore = purchaseRequestStore();
@@ -118,6 +73,13 @@ const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
 const selectedStatus = ref('');
 const mainContentId = 'pr-content';
+const route = useRoute();
+
+watch(() => route.params.type, async (newType) => {
+    if (newType != typeMenu.value && newType !== undefined) {
+        router.go(0);
+    }
+});
 
 const vdata = computed(() => prStore.prListFormatted);
 
@@ -125,7 +87,7 @@ const fetchAllPr = async (refresh = true) => {
     loading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await prStore.allPr(refresh, page.value, limit.value, search.value);
+        await prStore.allPr(refresh, page.value, limit.value, search.value, typeMenu.value);
     } catch (error) {
         console.error('Error fetching Purchase Request:', error);
     } finally {
@@ -138,7 +100,10 @@ const fetchReadPr = async (item, action = null) => {
     try {
         await prStore.readPr(item.banfn);
         if (!action) {
-            await router.push({ name: 'PurchaseRequestListDetail' });
+            await router.push({
+                name: 'PurchaseRequestDetail',
+                params: { typeMenu: typeMenu.value }
+            });
         }
     } catch (error) {
         console.error('Error reading Purchase Request:', error);

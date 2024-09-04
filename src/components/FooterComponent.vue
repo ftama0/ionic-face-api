@@ -1,7 +1,7 @@
 <template>
 
     <ion-fab slot="fixed" vertical="bottom" horizontal="center">
-        <ion-fab-button router-link="/home">
+        <ion-fab-button @click="$router.replace({ name: 'Home' })">
             <ion-icon :icon="icons.homeOutline"></ion-icon>
         </ion-fab-button>
     </ion-fab>

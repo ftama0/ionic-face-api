@@ -27,7 +27,7 @@ export const useLoginStore = defineStore({
         const decode_at = jwtDecode(res.access_token);
         const decode_rt = jwtDecode(res.refresh_token);
         const expired_at = decode_at.exp * 1000;
-        const expired_rt = decode_rt ? decode_rt.exp * 1000 : 0;
+        const expired_rt = decode_rt.exp * 1000;
         this.token = {
           ...res,
           expired_at,
