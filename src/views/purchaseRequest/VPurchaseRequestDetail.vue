@@ -194,9 +194,9 @@ const prStore = purchaseRequestStore();
 const header = computed(() => prStore.poHeaderFormatted);
 const items = computed(() => prStore.prItemsFormatted);
 const stepApprovers = computed(() => prStore.prStepApprovers);
+const loading = ref(false);
 const approveButton = ref('approve-buttons');
 const rejectButton = ref('reject-buttons');
-const loading = ref(false);
 
 const props = defineProps({
     typeMenu: {

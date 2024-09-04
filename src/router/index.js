@@ -66,9 +66,10 @@ const routes = [
     props: true,
   },
   {
-    path: "/purchaseOrderDetail",
+    path: "/purchaseOrderDetail/:typeMenu",
     name: "PurchaseOrderDetail",
     component: () => import("@/views/purchaseOrder/VPurchaseOrderDetail.vue"),
+    props: true,
   },
   // * user account
   {

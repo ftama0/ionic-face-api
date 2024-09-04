@@ -155,7 +155,10 @@ const fetchReadPo = async (item, action = null) => {
     try {
         await poStore.readPo(item.po_no);
         if (!action) {
-            await router.push({ name: 'PurchaseOrderDetail' });
+            await router.push({
+                name: 'PurchaseOrderDetail',
+                params: { typeMenu: typeMenu.value }
+            });
         }
     } catch (error) {
         console.error('Error reading Purchase Order :', error);

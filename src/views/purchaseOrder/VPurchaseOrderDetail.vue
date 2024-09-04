@@ -150,11 +150,24 @@
                             <h6><ion-text class="ion-amount-item" slot="end">{{ header.total_amount }}</ion-text></h6>
                         </ion-col>
                     </ion-row>
+                    <ion-row v-if="props.typeMenu == 'approval'">
+                        <ion-col size="12">
+                            <ButtonComponent expand="block" shape="round" :class="approveButton"
+                                @action-click="actionButton('approve')">
+                                Action
+                            </ButtonComponent>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ButtonComponent expand="block" shape="round" :class="rejectButton"
+                                @action-click="actionButton('reject')">
+                                Reject
+                            </ButtonComponent>
+                        </ion-col>
+                    </ion-row>
                 </ion-grid>
             </ion-list>
-
-
         </ion-content>
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
     </ion-page>
 </template>
 
@@ -162,7 +175,7 @@
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { purchaseOrderStore } from '@/store/poStore';
 import ChipComponent from '@/components/ChipComponent.vue';
-
+import ButtonComponent from '@/components/ButtonComponent.vue';
 // data
 const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
@@ -171,7 +184,28 @@ const poStore = purchaseOrderStore();
 const header = computed(() => poStore.poHeaderFormatted);
 const details = computed(() => poStore.poDetailsFormatted);
 const items = computed(() => poStore.poItems);
+const loading = ref(false);
+const approveButton = ref('approve-buttons');
+const rejectButton = ref('reject-buttons');
 
+const props = defineProps({
+    typeMenu: {
+        type: String,
+        required: true
+    }
+});
+
+const actionButton = async (action) => {
+    loading.value = true;
+    try {
+        console.log(action);
+        // await prStore.approvePr();
+    } catch (error) {
+        console.error('Error approve/reject:', error);
+    } finally {
+        loading.value = false;
+    }
+};
 
 onMounted(async () => {
     console.log(header.value)
