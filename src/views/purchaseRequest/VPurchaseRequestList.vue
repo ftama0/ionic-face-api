@@ -87,7 +87,7 @@ const fetchAllPr = async (refresh = true) => {
     loading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await prStore.allPr(refresh, page.value, limit.value, search.value, typeMenu.value);
+        await prStore.allPr(refresh, typeMenu.value, page.value, limit.value, search.value);
     } catch (error) {
         console.error('Error fetching Purchase Request:', error);
     } finally {

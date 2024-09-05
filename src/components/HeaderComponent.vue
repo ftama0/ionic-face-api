@@ -5,6 +5,11 @@
                 <ion-menu-button></ion-menu-button>
             </ion-buttons>
             <ion-title>{{ title }}</ion-title>
+            <ion-buttons slot="end">
+                <ion-button @click="$router.push({ name: 'Notification' })">
+                    <ion-icon :icon="notificationsOutline"></ion-icon>
+                </ion-button>
+            </ion-buttons>
         </ion-toolbar>
     </ion-header>
 </template>
@@ -21,6 +26,7 @@
 
 <script setup>
 import { getCurrentInstance, ref } from 'vue';
+import { notificationsOutline } from 'ionicons/icons';
 
 const props = defineProps({
     title: String,

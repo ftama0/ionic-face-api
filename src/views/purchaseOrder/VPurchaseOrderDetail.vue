@@ -154,7 +154,7 @@
                         <ion-col size="12">
                             <ButtonComponent expand="block" shape="round" :class="approveButton"
                                 @action-click="actionButton('approve')">
-                                Action
+                                Approve
                             </ButtonComponent>
                         </ion-col>
                         <ion-col size="12">

@@ -26,10 +26,8 @@
                         </ion-row>
                     </ion-col>
                     <ion-col size="5">
-                        <ChipComponent :color="header.full_release_status == 'To Approve' ? 'warning'
-                            : header.full_release_status == 'Approved' ? 'success' : 'danger'" :width="'100px'">
-                            {{ header.full_release_status == 'To Approve' ? 'To Approve'
-                                : header.full_release_status == 'Approved' ? 'Approved' : 'Reject' }}
+                        <ChipComponent :color="header.status == true ? 'success' : 'danger'" :width="'100px'">
+                            {{ header.status == true ? 'Active' : 'To Approve' }}
                         </ChipComponent>
                     </ion-col>
                     <ion-col size="12">
@@ -163,18 +161,16 @@
                     <ion-row v-if="props.typeMenu == 'approval'">
                         <ion-col size="12">
                             <ButtonComponent expand="block" shape="round" :class="approveButton"
-                                @action-click="showAlert('approve')">
-                                Approve
+                                @action-click="actionButton('approve')">
+                                Action
                             </ButtonComponent>
                         </ion-col>
                         <ion-col size="12">
                             <ButtonComponent expand="block" shape="round" :class="rejectButton"
-                                @action-click="showAlert('reject')">
+                                @action-click="actionButton('reject')">
                                 Reject
                             </ButtonComponent>
                         </ion-col>
-                        <AlertComponent :is-open="isAlertOpen" :header="alertHeader" :current-action="currentAction"
-                            @dismiss="handleAlertDismiss" />
                     </ion-row>
                 </ion-grid>
             </ion-list>
@@ -189,10 +185,8 @@ import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import ChipComponent from '@/components/ChipComponent.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
-import AlertComponent from '@/components/AlertComponent.vue';
-import ModalReject from '@/components/ModalRejectComponent.vue';
-import { modalController } from '@ionic/vue';
 
+// data
 const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
 const prStore = purchaseRequestStore();
@@ -203,7 +197,6 @@ const stepApprovers = computed(() => prStore.prStepApprovers);
 const loading = ref(false);
 const approveButton = ref('approve-buttons');
 const rejectButton = ref('reject-buttons');
-const router = useRouter();
 
 const props = defineProps({
     typeMenu: {
@@ -212,68 +205,13 @@ const props = defineProps({
     }
 });
 
-const isAlertOpen = ref(false);
-const alertHeader = ref('');
-const currentAction = ref('');
-
-const showAlert = async (action) => {
-    alertHeader.value = action === 'approve'
-        ? 'Are you Sure Want to Approve this document ?'
-        : 'Are you Sure Want to Reject this document ?';
-    isAlertOpen.value = true;
-    currentAction.value = action;
-};
-
-const handleAlertDismiss = (detail) => {
-    isAlertOpen.value = false;
-    if (detail.role === 'confirm') {
-        submitButton(detail.action);
-    }
-};
-
-const openModal = async (action) => {
-    const modal = await modalController.create({
-        component: ModalReject,
-        componentProps: { action },
-    });
-    modal.present();
-    const { data, role } = await modal.onWillDismiss();
-    console.log('data', data);
-    console.log('role', role);
-    if (role === 'confirm' && data) {
-        submitData(currentAction.value, data);
-        proxy.$toast('Purchase Request Rejected', 'success');
-    }
-};
-
-const submitButton = async (action) => {
+const actionButton = async (action) => {
     loading.value = true;
     try {
-        if (action === 'approve') {
-            submitData(action);
-        } else if (action === 'reject') {
-            // openModal(action)
-            submitData(action);
-        }
+        console.log(action);
+        // await prStore.approvePr();
     } catch (error) {
-        console.error(`Error ${action}:`, error);
-    } finally {
-        loading.value = false;
-    }
-};
-const submitData = async (action, data = null) => {
-    loading.value = true;
-    try {
-        const res = await prStore.approvePr(header.value.pr_no, action);
-        if (action === 'approve') {
-            proxy.$toast(res.message, 'success');
-        } else if (action === 'reject') {
-            proxy.$toast(res.message, 'danger');
-        }
-        await prStore.allPr(true, props.typeMenu);
-        router.replace({ name: 'PurchaseRequestList', params: { type: props.typeMenu } });
-    } catch (error) {
-        console.error(`Error ${action}:`, error);
+        console.error('Error approve/reject:', error);
     } finally {
         loading.value = false;
     }

@@ -73,20 +73,10 @@ export const prService = {
       throw error;
     }
   },
-  async approvePr(username, id) {
+  async approvePr(id, status_type) {
     try {
       const res = await apiService.post(
-        `/ApprovePR?BANFN=${id}&user=${username}`
-      );
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  async rejectPr(username, id) {
-    try {
-      const res = await apiService.post(
-        `/RejectPR?BANFN=${id}&user=${username}`
+        `/api/v1/approval-pr/process/${id}/${status_type}`
       );
       return res.data;
     } catch (error) {

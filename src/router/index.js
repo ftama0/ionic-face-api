@@ -45,7 +45,7 @@ const routes = [
     name: "Home",
     component: () => import("@/views/VHome.vue"),
   },
-  // * pr
+  //note : pr
   {
     path: "/purchaseRequestList/:type",
     name: "PurchaseRequestList",
@@ -58,7 +58,7 @@ const routes = [
     component: () => import("@/views/purchaseRequest/VPurchaseRequestDetail.vue"),
     props: true,
   },
-  // * po
+  //note : po
   {
     path: "/purchaseOrderList/:type",
     name: "PurchaseOrderList",
@@ -71,7 +71,7 @@ const routes = [
     component: () => import("@/views/purchaseOrder/VPurchaseOrderDetail.vue"),
     props: true,
   },
-  // * user account
+  //note : user account
   {
     path: "/userManagement",
     name: "UserManagement",
@@ -87,14 +87,14 @@ const routes = [
     name: "UserAccountDetail",
     component: () => import("@/views/userAccount/VUserAccountDetail.vue"),
   },
-  // * user release code
+  //note : user release code
   {
     path: "/userReleaseCode/:type",
     name: "UserReleaseCode",
     component: () => import("@/views/userReleaseCode/VUserReleaseCode.vue"),
     props: true,
   },
-  // * maintan cost center pr
+  //note : maintan cost center pr
   {
     path: "/costCenterPr",
     name: "costCenterPr",
@@ -107,7 +107,7 @@ const routes = [
     component: () =>
       import("@/views/maintainCostCenterPr/VMaintainCostCenterPrDetail.vue"),
   },
-  // * maintan cost center po
+  //note : maintan cost center po
   {
     path: "/costCenterPo",
     name: "costCenterPo",
@@ -119,6 +119,12 @@ const routes = [
     name: "costCenterPoDetail",
     component: () =>
       import("@/views/maintainCostCenterPo/VMaintainCostCenterPoDetail.vue"),
+  },
+  //note : maintan cost center po
+  {
+    path: "/notification",
+    name: "Notification",
+    component: () => import("@/views/notification/VNotification.vue"),
   },
 ];
 
