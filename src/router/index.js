@@ -102,31 +102,18 @@ const routes = [
     component: () => import("@/views/userReleaseCode/VUserReleaseCode.vue"),
     props: true,
   },
-  // * maintan cost center pr
+  // * maintan cost center
   {
-    path: "/costCenterPr",
-    name: "costCenterPr",
+    path: "/costCenter",
+    name: "costCenter",
     component: () =>
-      import("@/views/maintainCostCenterPr/VMaintanCostCenterPrList.vue"),
+      import("@/views/maintainCostCenter/VMaintanCostCenterList.vue"),
   },
   {
-    path: "/costCenterPrDetail",
-    name: "costCenterPrDetail",
+    path: "/costCenterDetail",
+    name: "costCenterDetail",
     component: () =>
-      import("@/views/maintainCostCenterPr/VMaintainCostCenterPrDetail.vue"),
-  },
-  // * maintan cost center po
-  {
-    path: "/costCenterPo",
-    name: "costCenterPo",
-    component: () =>
-      import("@/views/maintainCostCenterPo/VMaintanCostCenterPoList.vue"),
-  },
-  {
-    path: "/costCenterPoDetail",
-    name: "costCenterPoDetail",
-    component: () =>
-      import("@/views/maintainCostCenterPo/VMaintainCostCenterPoDetail.vue"),
+      import("@/views/maintainCostCenter/VMaintainCostCenterDetail.vue"),
   },
 ];
 
