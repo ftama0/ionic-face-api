@@ -16,15 +16,17 @@
                         </ion-select>
                     </ion-col>
                     <ion-col size="12">
-                        <div v-for="(item, index) in items" :key="index">
+                        <div v-for="(item, index) in data" :key="index">
                             <ion-card>
                                 <ion-card-header router-link="/costCenterPoDetail">
-                                    <ion-card-title>{{ item.name }}</ion-card-title>
+                                    <ion-card-title>{{ item.fullname }}</ion-card-title>
                                 </ion-card-header>
                                 <ion-card-content router-link="/costCenterPoDetail">
-                                    {{ item.description }}
+                                    {{ item.user_csks[0].kostl }}
                                     <br>
-                                    {{ item.description }}
+                                    {{ item.user_csks[0].ltext }}
+
+
                                 </ion-card-content>
                                 <div class="button-container">
                                     <ion-button size="default" @click="handleAction('Edit')">
@@ -50,19 +52,24 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import Modal from './VMaintainCostCenterPoModal.vue';
+import { costCenterStore } from '@/store/costCenterStore';
 import { modalController } from '@ionic/vue';
 import { star } from 'ionicons/icons';
 
 const { proxy } = getCurrentInstance()
+const csStore = costCenterStore();
+
 const isLoading = ref(false);
 const icons = ref(proxy.$icons);
-const mainContentId = 'cost-center-po-content';
+const page = ref(1);
+const limit = ref(80);
 const search = ref('');
+const mainContentId = 'cost-center-po-content';
 
 const isOpen = ref(false);
 const selectedId = ref('');
 
-
+const data = computed(() => csStore.userList);
 const items = ref([
     {
         id: 1,
@@ -91,11 +98,25 @@ const items = ref([
     },
 ]);
 
+const fetchAllUser = async (refresh = true) => {
+    isLoading.value = refresh;
+    try {
+        refresh ? page.value = 1 : page.value++;
+        await csStore.allUserCostCenter(page.value, limit.value, search.value, refresh);
+        
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+
+
 
 const handleSearch = () => { }
 
 
-// Method to handle action button click in Action Sheet
 const handleAction = async (action) => {
     isLoading.value = true;
 
@@ -134,6 +155,11 @@ const openModal = async (action) => {
         proxy.$toast('Add User Account Successfully', 'success');
     }
 };
+
+// mount 
+onMounted(async () => {
+    await fetchAllUser();
+});
 
 </script>
 

@@ -20,7 +20,12 @@
             <ion-label class="label__header">User Release Code PO</ion-label>
           </ion-item>
 
-          <ion-item button detail="true" router-link="/costCenterPr">
+          <ion-item button detail="true" router-link="/costCenter">
+            <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
+            <ion-label class="label__header">Maintain Cost Center</ion-label>
+          </ion-item>
+
+          <!-- <ion-item button detail="true" router-link="/costCenterPr">
             <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
             <ion-label class="label__header">Maintain Cost Center PR</ion-label>
           </ion-item>
@@ -28,7 +33,7 @@
           <ion-item button detail="true" router-link="/costCenterPo">
             <ion-icon class="custom__icon1" :icon="icons.idCardOutline" slot="start"></ion-icon>
             <ion-label class="label__header">Maintain Cost Center PO</ion-label>
-          </ion-item>
+          </ion-item> -->
 
         </ion-card-content>
       </ion-card>

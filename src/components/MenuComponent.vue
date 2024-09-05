@@ -71,7 +71,15 @@
                                 <ion-label class="ion-padding">User Release PO</ion-label>
                             </ion-item>
                         </ion-menu-toggle>
+
                         <ion-menu-toggle>
+                            <ion-item router-link="/costCenter" @click="isDropdownOpen = false">
+                                <ion-icon aria-hidden="true" class="custom-icon" slot="start"
+                                    :icon="icons.idCardOutline"></ion-icon>
+                                <ion-label class="ion-padding">Maintain Cost Center</ion-label>
+                            </ion-item>
+                        </ion-menu-toggle>
+                        <!-- <ion-menu-toggle>
                             <ion-item router-link="/costCenterPr" @click="isDropdownOpen = false">
                                 <ion-icon aria-hidden="true" class="custom-icon" slot="start"
                                     :icon="icons.idCardOutline"></ion-icon>
@@ -84,7 +92,7 @@
                                     :icon="icons.idCardOutline"></ion-icon>
                                 <ion-label class="ion-padding">Maintain Cost Center PO</ion-label>
                             </ion-item>
-                        </ion-menu-toggle>
+                        </ion-menu-toggle> -->
                     </ion-list>
                 </ion-list>
             </ion-content>

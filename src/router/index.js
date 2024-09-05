@@ -94,17 +94,22 @@ const routes = [
     component: () => import("@/views/userReleaseCode/VUserReleaseCode.vue"),
     props: true,
   },
+<<<<<<< HEAD
   //note : maintan cost center pr
+=======
+  // * maintan cost center
+>>>>>>> development
   {
-    path: "/costCenterPr",
-    name: "costCenterPr",
+    path: "/costCenter",
+    name: "costCenter",
     component: () =>
-      import("@/views/maintainCostCenterPr/VMaintanCostCenterPrList.vue"),
+      import("@/views/maintainCostCenter/VMaintanCostCenterList.vue"),
   },
   {
-    path: "/costCenterPrDetail",
-    name: "costCenterPrDetail",
+    path: "/costCenterDetail",
+    name: "costCenterDetail",
     component: () =>
+<<<<<<< HEAD
       import("@/views/maintainCostCenterPr/VMaintainCostCenterPrDetail.vue"),
   },
   //note : maintan cost center po
@@ -119,6 +124,9 @@ const routes = [
     name: "costCenterPoDetail",
     component: () =>
       import("@/views/maintainCostCenterPo/VMaintainCostCenterPoDetail.vue"),
+=======
+      import("@/views/maintainCostCenter/VMaintainCostCenterDetail.vue"),
+>>>>>>> development
   },
   //note : maintan cost center po
   {
