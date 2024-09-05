@@ -1,5 +1,5 @@
 <template>
-    <ion-page id="cost-center-po-detail" v-bind="$attrs">
+    <ion-page id="cost-center-detail" v-bind="$attrs">
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -10,15 +10,38 @@
         </ion-header>
         <ion-content>
             <ion-list>
-
-                <div v-for="(item, index) in items" :key="index">
-                    <ion-item>
-                        <ion-label>
-                            <h6>{{ item.title }}</h6>
-                            <p>{{ item.value }}</p>
-                        </ion-label>
-                    </ion-item>
-                </div>
+                <ion-item>
+                    <ion-label>
+                        <p class="detail__header">User Account</p>
+                        <p class="detail__sub" >
+                            {{ data.username }}
+                        </p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <p class="detail__header">Client</p>
+                        <p class="detail__sub" v-for="(user, index) in data.user_csks" :key="index">
+                            {{ user.mandt }}
+                        </p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <p class="detail__header">Company Code</p>
+                        <p class="detail__sub" v-for="(user, index) in data.user_csks" :key="index">
+                            {{ user.bukrs }}
+                        </p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <p class="detail__header">Cost Center</p>
+                        <p class="detail__sub" v-for="(user, index) in data.user_csks" :key="index">
+                            {{ user.kostl }}
+                        </p>
+                    </ion-label>
+                </ion-item>
             </ion-list>
         </ion-content>
 
@@ -27,35 +50,18 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
-const { proxy } = getCurrentInstance()
-const icons = ref(proxy.$icons);
-const mainContentId = 'cost-center-po-detail';
+import { costCenterStore } from '@/store/costCenterStore';
 
-const items = ref([
-    {
-        id: 1,
-        title: 'Client',
-        value: '840',
-    },
-    {
-        id: 2,
-        title: 'Company Code',
-        value: 'HR30',
-    },
-    {
-        id: 3,
-        title: 'User Account',
-        value: 'Darla Corwin',
-    },
-    {
-        id: 4,
-        title: 'Release Code',
-        value: 'General Manager',
-    },
-    {
-        id: 5,
-        title: 'Cost Center',
-        value: '35KJ58',
-    },
-]);
+const mainContentId = 'cost-center-detail';
+
+const { proxy } = getCurrentInstance()
+const csStore = costCenterStore();
+
+const data = computed(() => csStore.dataDetails.data);
+
+
+
+onMounted(async () => {
+    console.log(data.value)
+});
 </script>

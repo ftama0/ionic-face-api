@@ -31,7 +31,7 @@
                                         </ion-col>
                                         <ion-col size="6" class="ion-text-right">
                                             <ButtonComponent :icon="icons.readerOutline" :item="item"
-                                                :class="detailButton" router-link="/costCenterPoDetail">
+                                                :class="detailButton" @action-click="fetchDataDetail">
                                                 Detail
                                             </ButtonComponent>
                                         </ion-col>
@@ -67,9 +67,12 @@ import Modal from './VMaintainCostCenterModal.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { costCenterStore } from '@/store/costCenterStore';
 import { modalController } from '@ionic/vue';
+import { useRouter } from 'vue-router';
 import LoadingComponent from '../../components/LoadingComponent.vue';
+const mainContentId = 'cost-center-po-content';
 
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance();
+const router = useRouter();
 const csStore = costCenterStore();
 
 const isLoading = ref(false);
@@ -84,7 +87,6 @@ const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
 const selectedStatus = ref('');
 const selectedId = ref('');
-const mainContentId = 'cost-center-po-content';
 
 const data = computed(() => csStore.dataList);
 
@@ -92,12 +94,40 @@ const fetchAllData = async (refresh = true) => {
     isLoading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await csStore.allDataCostCenter(page.value, limit.value, search.value, refresh);
-
-        console.log(data.value);
-        
+        await csStore.allDataCostCenter(page.value, limit.value, search.value, refresh); 
+        console.log(data.value);       
     } catch (error) {
         console.error('Error fetching users:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+const fetchDataDetail = async (item, action = null) => {
+    isLoading.value = true;
+    try {
+        await csStore.costCenterDetail(item.uuid);
+        if (!action) {
+            await router.push({ name: 'costCenterDetail' });
+        }
+    } catch (error) {
+        console.error('Error fetching data detail:', error);
+        proxy.$toast('Error fetching data detail', 'danger');
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+const deleteData = async (item) => {
+    isLoading.value = true;
+    try {
+        await csStore.deleteCostCenter(item.uuid);
+        await fetchAllData(true);
+        proxy.$toast('Deleted Successfully', 'success');
+        setOpen(false);
+    } catch (error) {
+        console.error('Error deleting data:', error);
+        proxy.$toast('Error Deleting Data', 'danger');
     } finally {
         isLoading.value = false;
     }
@@ -148,14 +178,18 @@ const openActionSheet = (item) => {
 
 const handleAction = async (action) => {
     isLoading.value = true;
-
+    
     let response;
     switch (action) {
         case 'Add':
             await openModal(action);
             break;
         case 'Edit':
+            await fetchDataDetail(selectedItem.value, action);
             await openModal(action);
+            break;
+        case 'Delete':
+            await deleteData(selectedItem.value);
             break;
         default:
             console.warn(`Unknown action: ${action}`);
@@ -168,7 +202,6 @@ const setOpen = (state) => {
 };
 
 const openModal = async (action) => {
-    console.log('open modal');
     const modal = await modalController.create({
         component: Modal,
         componentProps: {

@@ -115,32 +115,6 @@ const routes = [
     component: () =>
       import("@/views/maintainCostCenter/VMaintainCostCenterDetail.vue"),
   },
-  // * maintan cost center pr
-  {
-    path: "/costCenterPr",
-    name: "costCenterPr",
-    component: () =>
-      import("@/views/maintainCostCenterPr/VMaintanCostCenterPrList.vue"),
-  },
-  {
-    path: "/costCenterPrDetail",
-    name: "costCenterPrDetail",
-    component: () =>
-      import("@/views/maintainCostCenterPr/VMaintainCostCenterPrDetail.vue"),
-  },
-  // * maintan cost center po
-  {
-    path: "/costCenterPo",
-    name: "costCenterPo",
-    component: () =>
-      import("@/views/maintainCostCenterPo/VMaintanCostCenterPoList.vue"),
-  },
-  {
-    path: "/costCenterPoDetail",
-    name: "costCenterPoDetail",
-    component: () =>
-      import("@/views/maintainCostCenterPo/VMaintainCostCenterPoDetail.vue"),
-  },
 ];
 
 const router = createRouter({

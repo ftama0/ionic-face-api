@@ -244,4 +244,60 @@ export const costCenterService = {
       throw error;
     }
   },
+  async costCenterDetail(uuid) {
+    try {
+      const res = await apiService.get(`/api/v1/users-csks/${uuid}`);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async createCostCenter(data) {
+    try {
+      const res = await apiService.post("/api/v1/users-csks/", data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async updateCostCenter(data) {
+    try {
+      const res = await apiService.put("/api/v1/users-csks/", data);
+      return res.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async deleteCostCenter(uuid) {
+    try {
+      const res = await apiService.delete(`/api/v1/users-csks/?uuid=${uuid}`);
+      return res.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getClient() {
+    try {
+      const res = await apiService.get("/api/v1/client/");
+      return res.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getCompany(client_id) {
+    try {
+      const res = await apiService.get(`/api/v1/company/?client_id=${client_id}`);
+      return res.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  async getCostCenters(company_code, client_id) {
+    try {
+      const res = await apiService.get(`/api/v1/csks/?bukrs=${company_code}&mandt=${client_id}`);
+      return res.data.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

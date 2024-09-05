@@ -9,8 +9,10 @@ export const costCenterStore = defineStore({
 
     state: () => ({
         dataList: [],
-        costCenterList: [],
         dataDetails: [],
+        dataClient: [],
+        dataCompany: [],
+        dataCostCenters: [],
     }),
     persist: {
         enabled: true,
@@ -23,8 +25,72 @@ export const costCenterStore = defineStore({
                     limit,
                     search
                 );
+
                 this.dataList = refresh ? res.data : [...this.dataList, ...res.data];
                 this.dataList.total = res.total;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async costCenterDetail(uuid) {
+            try {
+                const res = await costCenterService.costCenterDetail(uuid);
+                this.dataDetails = res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async createCostCenter(data) {
+            try {
+                const res = await costCenterService.createCostCenter(data.value);
+                return res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async updateCostCenter(data) {
+            try {
+                const res = await costCenterService.updateCostCenter(data.value);
+                return res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async deleteCostCenter(uuid) {
+            try {
+                const res = await costCenterService.deleteCostCenter(uuid);
+                return res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async getClient() {
+            try {
+                const res = await costCenterService.getClient();
+                this.dataClient = res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async getCompany(client_id) {
+            try {
+                const res = await costCenterService.getCompany(client_id);
+                this.dataCompany = res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async getCostCenters(company_code, client_id) {
+            try {
+                const res = await costCenterService.getCostCenters(company_code, client_id);
+                this.dataCostCenters = res;
             } catch (error) {
                 console.error("Store error:", error);
                 throw error;
