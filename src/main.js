@@ -55,7 +55,9 @@ import {
   IonPopover,
   IonCheckbox,
   IonBackdrop,
-  IonListHeader
+  IonListHeader,
+  IonNote,
+  IonTextarea
 } from "@ionic/vue";
 
 /* Core CSS required for Ionic components to work properly */
@@ -186,6 +188,8 @@ app.component("ion-popover", IonPopover);
 app.component("ion-checkbox", IonCheckbox);
 app.component("ion-backdrop", IonBackdrop);
 app.component("ion-list-header", IonListHeader);
+app.component("ion-note", IonNote);
+app.component("ion-textarea", IonTextarea);
 // custom component
 app.component("MenuComponent", MenuComponent);
 app.component("HeaderComponent", HeaderComponent);

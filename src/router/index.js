@@ -45,41 +45,33 @@ const routes = [
     name: "Home",
     component: () => import("@/views/VHome.vue"),
   },
-  // * pr
+  //note : pr
   {
-    path: "/purchaseRequestList",
+    path: "/purchaseRequestList/:type",
     name: "PurchaseRequestList",
     component: () => import("@/views/purchaseRequest/VPurchaseRequestList.vue"),
+    props: true,
   },
   {
-    path: "/purchaseRequestApproval",
-    name: "PurchaseRequestApproval",
-    component: () =>
-      import("@/views/purchaseRequest/VPurchaseRequestApproval.vue"),
+    path: "/purchaseRequestDetail/:typeMenu",
+    name: "PurchaseRequestDetail",
+    component: () => import("@/views/purchaseRequest/VPurchaseRequestDetail.vue"),
+    props: true,
   },
+  //note : po
   {
-    path: "/purchaseRequestListDetail",
-    name: "PurchaseRequestListDetail",
-    component: () =>
-      import("@/views/purchaseRequest/VPurchaseRequestDetail.vue"),
-  },
-  // * po
-  {
-    path: "/purchaseOrderList",
+    path: "/purchaseOrderList/:type",
     name: "PurchaseOrderList",
     component: () => import("@/views/purchaseOrder/VPurchaseOrderList.vue"),
+    props: true,
   },
   {
-    path: "/purchaseOrderApproval",
-    name: "PurchaseOrderApproval",
-    component: () => import("@/views/purchaseOrder/VPurchaseOrderApproval.vue"),
-  },
-  {
-    path: "/purchaseOrderListDetail",
-    name: "PurchaseOrderListDetail",
+    path: "/purchaseOrderDetail/:typeMenu",
+    name: "PurchaseOrderDetail",
     component: () => import("@/views/purchaseOrder/VPurchaseOrderDetail.vue"),
+    props: true,
   },
-  // * user account
+  //note : user account
   {
     path: "/userManagement",
     name: "UserManagement",
@@ -95,7 +87,7 @@ const routes = [
     name: "UserAccountDetail",
     component: () => import("@/views/userAccount/VUserAccountDetail.vue"),
   },
-  // * user release code
+  //note : user release code
   {
     path: "/userReleaseCode/:type",
     name: "UserReleaseCode",
@@ -114,6 +106,12 @@ const routes = [
     name: "costCenterDetail",
     component: () =>
       import("@/views/maintainCostCenter/VMaintainCostCenterDetail.vue"),
+  },
+  //note : maintan cost center po
+  {
+    path: "/notification",
+    name: "Notification",
+    component: () => import("@/views/notification/VNotification.vue"),
   },
 ];
 

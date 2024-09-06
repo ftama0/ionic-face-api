@@ -54,9 +54,10 @@ export const purchaseRequestStore = defineStore({
         },
     },
     actions: {
-        async allPr(refresh, page = 1, limit = 5, search = "") {
+        async allPr(refresh, type = "", page = 1, limit = 5, search = "") {
             try {
-                const res = await prService.allPr(page, limit, search);
+                const serviceMethod = type === "user" ? prService.allPrList : prService.allPrApproval;
+                let res = await serviceMethod(page, limit, search);
                 this.prList = refresh ? res.data : [...this.prList, ...res.data];
                 this.prList.total = res.total;
             } catch (error) {
@@ -83,20 +84,9 @@ export const purchaseRequestStore = defineStore({
                 throw error;
             }
         },
-        async approvePr(username, id) {
+        async approvePr(id, status_type) {
             try {
-                const res = await prService.approvePr(username, id);
-                await this.fetchListPr(username);
-                return res;
-            } catch (error) {
-                console.error("Store error:", error);
-                throw error;
-            }
-        },
-        async rejectPr(username, id) {
-            try {
-                const res = await prService.rejectPr(username, id);
-                await this.fetchListPr(username);
+                const res = await prService.approvePr(id, status_type);
                 return res;
             } catch (error) {
                 console.error("Store error:", error);

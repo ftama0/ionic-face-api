@@ -24,7 +24,6 @@ const props = defineProps({
     },
     icon: {
         type: String,
-        required: true,
     },
     shape: {
         type: String,
@@ -32,7 +31,6 @@ const props = defineProps({
     },
     item: {
         type: Object,
-        required: true,
     },
 });
 
@@ -48,7 +46,9 @@ onMounted(async () => {
 
 <style scoped>
 .action-button,
-.detail-button {
+.detail-button,
+.approve-buttons,
+.reject-buttons {
     --border-radius: 10px;
     --border-style: solid;
     --border-width: 1px;
@@ -71,6 +71,20 @@ onMounted(async () => {
 .detail-button {
     --color: #0070F2;
     --border-color: #BCC3CA;
+    --ripple-color: deeppink;
+}
+
+.approve-buttons {
+    --color: #ffffff;
+    --background: #27733A;
+    --border-color: #27733A;
+    --ripple-color: deeppink;
+}
+
+.reject-buttons {
+    --color: #ffffff;
+    --background: #AA0808;
+    --border-color: #AA0808;
     --ripple-color: deeppink;
 }
 </style>

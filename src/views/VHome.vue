@@ -26,41 +26,45 @@
                     <ion-col size="12" class="ion-no-padding">
                         <ion-text class="main-menu-title">Main Menu</ion-text>
                     </ion-col>
-                    <ion-col size="6" class="ion-col ion-no-padding">
+                    <ion-col size="6" class="ion-col ion-no-padding" v-if="user.role_id == 1 || user.role_id == 3">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseRequestList">
+                            <ion-card-content
+                                @click="$router.push({ name: 'PurchaseRequestList', params: { type: 'user' } })">
                                 <ion-icon class="custom__icon1" :icon="icons.bagHandleOutline"></ion-icon>
                                 <span class="button-text">Purchase Request List</span>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col ion-no-padding">
+                    <ion-col size="6" class="ion-col ion-no-padding" v-if="user.role_id == 1 || user.role_id == 3">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseOrderList">
+                            <ion-card-content
+                                @click="$router.push({ name: 'PurchaseOrderList', params: { type: 'user' } })">
                                 <ion-icon class="custom__icon1" :icon="icons.bagCheckOutline"></ion-icon>
                                 <span class="button-text">Purchase Order List</span>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col ion-no-padding">
+                    <ion-col size="6" class="ion-col ion-no-padding" v-if="user.role_id == 1 || user.role_id == 2">
                         <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseRequestApproval">
+                            <ion-card-content
+                                @click="$router.push({ name: 'PurchaseRequestList', params: { type: 'approval' } })">
                                 <ion-icon class="custom__icon1" :icon="icons.cartOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Request</span>
                                 <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col ion-no-padding">
-                        <ion-card class="ion-card">
-                            <ion-card-content router-link="/purchaseOrderApproval">
+                    <ion-col size="6" class="ion-col ion-no-padding" v-if="user.role_id == 1 || user.role_id == 2">
+                        <ion-card class=" ion-card">
+                            <ion-card-content
+                                @click="$router.push({ name: 'PurchaseOrderList', params: { type: 'approval' } })">
                                 <ion-icon class="custom__icon1" :icon="icons.basketOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Order</span>
                                 <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
-                    <ion-col size="6" class="ion-col ion-no-padding">
+                    <ion-col size="6" class="ion-col ion-no-padding" v-if="user.role_id == 1">
                         <ion-card class="ion-card">
                             <ion-card-content router-link="/userManagement">
                                 <ion-icon class="custom__icon1" :icon="icons.peopleOutline"></ion-icon>

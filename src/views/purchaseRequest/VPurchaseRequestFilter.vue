@@ -5,7 +5,7 @@
                 <ion-buttons slot="start">
                     <ion-back-button></ion-back-button>
                 </ion-buttons>
-                <ion-title>Approval Process</ion-title>
+                <ion-title>Detail</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
@@ -16,7 +16,7 @@
                     <ion-col size="5">
                         <div class="row">
                             <ion-col size="12">
-                                <ion-label class="ion-card-title">{{ header.po_no }}</ion-label>
+                                <ion-label class="ion-card-title">{{ header.pr_no }}</ion-label>
                             </ion-col>
                         </div>
                         <ion-row>
@@ -26,9 +26,8 @@
                         </ion-row>
                     </ion-col>
                     <ion-col size="5">
-                        <ChipComponent :color="header.full_release_status == true ? 'success' : 'danger'"
-                            :width="'100px'">
-                            {{ header.full_release_status == true ? 'Active' : 'To Approve' }}
+                        <ChipComponent :color="header.status == true ? 'success' : 'danger'" :width="'100px'">
+                            {{ header.status == true ? 'Active' : 'To Approve' }}
                         </ChipComponent>
                     </ion-col>
                     <ion-col size="12">
@@ -41,7 +40,7 @@
                             <ion-col size="2">
                             </ion-col>
                             <ion-col size="6">
-                                <ion-label class="ion-card-amount">{{ header.total_amount }}</ion-label>
+                                <ion-label class="ion-card-amount">{{ header.total_price }}</ion-label>
                             </ion-col>
                         </ion-row>
                     </ion-col>
@@ -59,41 +58,57 @@
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>PO Type</h6>
-                        <p>{{ header.po_type }}</p>
-                    </ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-label>
-                        <h6>Vendor</h6>
-                        <p>{{ header.vendor }}</p>
+                        <h6>PR Type</h6>
+                        <p>value</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Purchasing Group</h6>
-                        <p>Belum Ada</p>
+                        <p>value</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
-                        <h6>PO Creator</h6>
-                        <p>Belum Ada</p>
+                        <h6>PR Creator</h6>
+                        <p>value</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Created Date</h6>
+                        <p>value</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Created In</h6>
+                        <p>value</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Plant</h6>
+                        <p>EBL Operational</p>
                     </ion-label>
                 </ion-item>
             </ion-list>
             <ion-list>
-                <ion-item>
-                    <ion-label>
-                        <h6>Approval Process</h6>
-                    </ion-label>
-                </ion-item>
-                <ion-item v-for="(step, index) in approvalSteps" :key="index">
+                <ion-list-header>
+                    <ion-label class="ion-list-header">Approval Process</ion-label>
+                </ion-list-header>
+                <ion-item v-for="(item, index) in stepApprovers" :key="index">
                     <ion-label>
                         <div class="progress-step">
                             <div class="circle">{{ index + 1 }}</div>
-                            <div class="label">{{ step.name }}</div>
-                            <div class="status">{{ step.status }}</div>
+                            <div class="label">{{ item.name }}</div>
+                            <div class="status" style="margin-left: auto;">
+                                <ChipComponent :color="item.status === 'To Approve' ? 'warning' :
+                                    item.status === 'Approved' ? 'success' : 'danger'" :width="'100px'">
+                                    {{ item.status === 'To Approve' ? 'To Approve' :
+                                        item.status === 'Approved' ? 'Approved' : 'Reject' }}
+                                </ChipComponent>
+                            </div>
                         </div>
                     </ion-label>
                 </ion-item>
@@ -103,13 +118,13 @@
                     <ion-label class="ion-list-header-item">Purchase Request Item</ion-label>
                 </ion-list-header>
                 <ion-grid class="ion-padding">
-                    <template v-for="(item, index) in details" :key="index">
+                    <template v-for="(item, index) in items" :key="index">
                         <ion-row>
                             <ion-col size="6">
                                 <h6 class="ion-title-item">{{ item.txz01 }}</h6>
                             </ion-col>
                             <ion-col size="6" class="ion-text-end">
-                                <h6><ion-text class="ion-amount-item">{{ item.peinh }} x {{ item.menge }}</ion-text>
+                                <h6><ion-text class="ion-amount-item">{{ item.rlwrt }}</ion-text>
                                 </h6>
                             </ion-col>
                         </ion-row>
@@ -126,7 +141,7 @@
                                 Price
                             </ion-col>
                             <ion-col size="8">
-                                {{ item.peinh }}
+                                {{ item.rlwrt }}
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -140,43 +155,71 @@
                             <h6 class="ion-title-item">Grand Total</h6>
                         </ion-col>
                         <ion-col size="6" class="ion-text-end">
-                            <h6><ion-text class="ion-amount-item" slot="end">{{ header.total_amount }}</ion-text></h6>
+                            <h6><ion-text class="ion-amount-item" slot="end">{{ header.total_price }}</ion-text></h6>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row v-if="props.typeMenu == 'approval'">
+                        <ion-col size="12">
+                            <ButtonComponent expand="block" shape="round" :class="approveButton"
+                                @action-click="actionButton('approve')">
+                                Action
+                            </ButtonComponent>
+                        </ion-col>
+                        <ion-col size="12">
+                            <ButtonComponent expand="block" shape="round" :class="rejectButton"
+                                @action-click="actionButton('reject')">
+                                Reject
+                            </ButtonComponent>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
             </ion-list>
-
-
         </ion-content>
+        <LoadingComponent :isOpen="loading" :message="'Loading...'" />
     </ion-page>
 </template>
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
-import { purchaseOrderStore } from '@/store/poStore';
+import { purchaseRequestStore } from '@/store/prStore';
+import { useRouter } from 'vue-router';
 import ChipComponent from '@/components/ChipComponent.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 
 // data
 const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
-const poStore = purchaseOrderStore();
+const prStore = purchaseRequestStore();
 
-const header = computed(() => poStore.poHeader);
-const details = computed(() => poStore.poDetails);
+const header = computed(() => prStore.poHeaderFormatted);
+const items = computed(() => prStore.prItemsFormatted);
+const stepApprovers = computed(() => prStore.prStepApprovers);
+const loading = ref(false);
+const approveButton = ref('approve-buttons');
+const rejectButton = ref('reject-buttons');
 
-const approvalSteps = ref([
-    { name: header.value.apv1_name || null, status: header.value.apv1_status || null },
-    { name: header.value.apv2_name || null, status: header.value.apv2_status || null },
-    { name: header.value.apv3_name || null, status: header.value.apv3_status || null },
-    { name: header.value.apv4_name || null, status: header.value.apv4_status || null },
-    { name: header.value.apv5_name || null, status: header.value.apv5_status || null },
-    { name: header.value.apv6_name || null, status: header.value.apv6_status || null },
-    { name: header.value.apv7_name || null, status: header.value.apv7_status || null },
-    { name: header.value.apv8_name || null, status: header.value.apv8_status || null }
-]);
+const props = defineProps({
+    typeMenu: {
+        type: String,
+        required: true
+    }
+});
+
+const actionButton = async (action) => {
+    loading.value = true;
+    try {
+        console.log(action);
+        // await prStore.approvePr();
+    } catch (error) {
+        console.error('Error approve/reject:', error);
+    } finally {
+        loading.value = false;
+    }
+};
 
 onMounted(async () => {
     console.log(header.value)
+    console.log(stepApprovers.value)
 });
 </script>
 

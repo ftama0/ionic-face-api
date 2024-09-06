@@ -99,13 +99,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, getCurrentInstance, computed } from 'vue';
+import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
 import { purchaseOrderStore } from '@/store/poStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import ChipComponent from '@/components/ChipComponent.vue';
+import { useRoute } from 'vue-router';
 
+const props = defineProps({
+    type: {
+        type: String,
+        required: true
+    }
+});
 // data
+const typeMenu = ref(props.type);
 const { proxy } = getCurrentInstance()
 const router = useRouter();
 const poStore = purchaseOrderStore();
@@ -120,6 +128,13 @@ const selectedItem = ref(null);
 const actionSheetButtons = ref([]);
 const selectedStatus = ref('');
 const mainContentId = 'pr-content';
+const route = useRoute();
+
+watch(() => route.params.type, async (newType) => {
+    if (newType != typeMenu.value && newType !== undefined) {
+        router.go(0);
+    }
+});
 
 const vdata = computed(() => poStore.poListFormatted);
 
@@ -127,7 +142,7 @@ const fetchAllPo = async (refresh = true) => {
     loading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await poStore.allPo(refresh, page.value, limit.value, search.value);
+        await poStore.allPo(refresh, page.value, limit.value, search.value, typeMenu.value);
     } catch (error) {
         console.error('Error fetching Purchase Order :', error);
     } finally {
@@ -140,7 +155,10 @@ const fetchReadPo = async (item, action = null) => {
     try {
         await poStore.readPo(item.po_no);
         if (!action) {
-            await router.push({ name: 'PurchaseOrderListDetail' });
+            await router.push({
+                name: 'PurchaseOrderDetail',
+                params: { typeMenu: typeMenu.value }
+            });
         }
     } catch (error) {
         console.error('Error reading Purchase Order :', error);
