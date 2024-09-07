@@ -18,8 +18,8 @@ export const purchaseOrderStore = defineStore({
     state: () => ({
         poList: [],
         poHeader: [],
-        poDetails: [],
         poItems: [],
+        poStepApprovers: [],
     }),
     persist: {
         enabled: true,
@@ -42,8 +42,8 @@ export const purchaseOrderStore = defineStore({
             };
             return formattedHeader;
         },
-        poDetailsFormatted: (state) => {
-            const formattedHeader = state.poDetails.map(item => ({
+        poItemsFormatted: (state) => {
+            const formattedHeader = state.poItems.map(item => ({
                 ...item,
                 item_amount: formatRupiah(item.netwr),
                 peinh: formatRupiah(item.peinh)
@@ -52,9 +52,9 @@ export const purchaseOrderStore = defineStore({
         },
     },
     actions: {
-        async allPo(refresh, page = 1, limit = 5, search = "", type = "") {
+        async allPo(refresh, type = "", page = 1, limit = 5, search = "") {
             try {
-                const serviceMethod = type === "user" ? poService.allPoList : poService.allPoList;
+                const serviceMethod = type === "user" ? poService.allPoList : poService.allPoApproval;
                 let res = await serviceMethod(page, limit, search);
                 this.poList = refresh ? res.data : [...this.poList, ...res.data];
                 this.poList.total = res.total;
@@ -67,8 +67,8 @@ export const purchaseOrderStore = defineStore({
             try {
                 const res = await poService.readPo(id);
                 this.poHeader = res.header;
-                this.poDetails = res.items;
-                this.poItems = res.step_approvers;
+                this.poItems = res.items;
+                this.poStepApprovers = res.step_approvers;
             } catch (error) {
                 console.error("Store error:", error);
                 throw error;
@@ -82,20 +82,9 @@ export const purchaseOrderStore = defineStore({
                 throw error;
             }
         },
-        async approvePo(username, id) {
+        async approvePo(id, status_type) {
             try {
-                const res = await poService.approvePo(username, id);
-                await this.fetchListPo(username);
-                return res;
-            } catch (error) {
-                console.error("Store error:", error);
-                throw error;
-            }
-        },
-        async rejectPo(username, id) {
-            try {
-                const res = await poService.rejectPo(username, id);
-                await this.fetchListPo(username);
+                const res = await poService.approvePo(id, status_type);
                 return res;
             } catch (error) {
                 console.error("Store error:", error);

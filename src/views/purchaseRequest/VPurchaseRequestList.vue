@@ -1,7 +1,7 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="pr-content" v-bind="$attrs">
-        <HeaderComponent :title="'Purchase Request List'" />
+        <HeaderComponent :title="props.type === 'user' ? 'Purchase Request List' : 'Purchase Request Approval'" />
         <ion-content>
             <ion-grid>
                 <ion-row>
@@ -47,8 +47,8 @@ import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
-import cardUser from '@/components/CardPrListUserComponent.vue';
-import cardApproval from '@/components/CardPrListApprovalComponent.vue';
+import cardUser from '@/components/purchaseRequest/CardPrListComponent.vue';
+import cardApproval from '@/components/purchaseRequest/CardPrApprovalComponent.vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
@@ -119,7 +119,7 @@ const refreshData = async () => {
 };
 
 const loadMore = async (event) => {
-    console.log('vdata', vdata.value)
+    // console.log('vdata', vdata.value)
     if (vdata.value.length >= vdata.value.total) {
         event.target.complete();
         return;
@@ -130,47 +130,7 @@ const loadMore = async (event) => {
 
 const handleSearch = debounce(() => fetchAllPr(true), 300);
 
-const openActionSheet = (item) => {
-    selectedItem.value = item;
-    actionSheetButtons.value = [
-        {
-            text: 'Edit',
-            handler: () => handleAction('Edit'),
-            cssClass: 'approve-button',
-            icon: icons.value.createOutline,
-        },
-        {
-            text: 'Delete',
-            role: 'destructive',
-            handler: () => handleAction('Delete'),
-            cssClass: 'reject-button',
-            icon: icons.value.trashOutline,
-        },
-        {
-            text: 'Cancel',
-            role: 'cancel',
-            cssClass: 'cancel-button',
-            icon: icons.value.logOutOutline,
-        },
-    ];
-    setOpen(true);
-};
 
-const handleAction = async (action) => {
-    switch (action) {
-        case 'Add':
-        case 'Edit':
-            await (action === 'Edit' && fetchReadUser(selectedItem.value, action));
-            await openModal(action);
-            break;
-        case 'Delete':
-            await deleteUser(selectedItem.value);
-            break;
-        default:
-            console.warn(`Unknown action: ${action}`);
-            proxy.$toast('Failed, contact admin', 'danger');
-    }
-};
 
 const setOpen = (state) => {
     isOpen.value = state;
@@ -199,24 +159,25 @@ onMounted(fetchAllPr);
 
 <style scoped>
 .ion-card-title {
-    font-size: 20px;
-    line-height: 18px;
+    font-size: clamp(16px, 4vw, 20px);
+    line-height: 1.2;
     font-weight: 600;
     color: #0070F2;
 }
 
-.ion-card-amount {
-    font-size: 17px;
-    line-height: 18px;
-    font-weight: 700;
+.ion-card-amount,
+.ion-card-label {
+    font-size: clamp(14px, 3.5vw, 17px);
+    line-height: 1.2;
     color: #626060;
 }
 
+.ion-card-amount {
+    font-weight: 700;
+}
+
 .ion-card-label {
-    font-size: 17px;
-    line-height: 18px;
     font-weight: 400;
-    color: #626060;
 }
 
 .custom-item {
@@ -270,7 +231,7 @@ ion-fab-button {
 
 .filter-container ion-text {
     margin-right: 8px;
-    font-size: 14px;
+    font-size: clamp(12px, 3vw, 14px);
     color: #626060;
 }
 
@@ -284,5 +245,20 @@ ion-fab-button {
 
 .filter-container ion-icon {
     font-size: 18px;
+}
+
+@media screen and (min-width: 768px) {
+    .ion-card-title {
+        font-size: clamp(18px, 2.5vw, 24px);
+    }
+
+    .ion-card-amount,
+    .ion-card-label {
+        font-size: clamp(16px, 2vw, 20px);
+    }
+
+    .filter-container ion-text {
+        font-size: clamp(14px, 1.8vw, 16px);
+    }
 }
 </style>
