@@ -6,9 +6,9 @@
                     <ion-label class="ion-list-header">Status Persetujuan</ion-label>
                 </ion-list-header>
                 <ion-radio-group v-model="selectedStatus">
-                    <ion-item button @click="selectedStatus = 'to Approve'">
+                    <ion-item button @click="selectedStatus = 'To Approve'">
                         <ion-label>Untuk Disetujui</ion-label>
-                        <ion-radio slot="start" value="to Approve"></ion-radio>
+                        <ion-radio slot="start" value="To Approve"></ion-radio>
                     </ion-item>
                     <ion-item button @click="selectedStatus = 'Approved'">
                         <ion-label>Disetujui</ion-label>
@@ -100,7 +100,7 @@ const modalConfig = ref({
 let comment = ref('');
 
 // Data dummy untuk filter
-const selectedStatus = ref('to Approve');
+const selectedStatus = ref('To Approve');
 const selectedPeriod = ref('monthly');
 const selectedAmount = ref('');
 const selectedCompany = ref('');

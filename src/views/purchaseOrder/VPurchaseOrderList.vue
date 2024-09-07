@@ -148,7 +148,8 @@ const openModal = async (action) => {
     const { data, role } = await modal.onWillDismiss();
     if (role === 'confirm') {
         await fetchAllPo(true, data);
-        proxy.$toast(data.message, 'success');
+        // proxy.$toast(data.message, 'success');
+        proxy.$toast('Apply Filter Successfully', 'success');
     }
 };
 
