@@ -10,12 +10,12 @@
                         <ion-col size="8">
                             <div class="row">
                                 <ion-col size="12">
-                                    <ion-label class="ion-card-title">{{ item.banfn }}</ion-label>
+                                    <ion-label class="ion-card-title">{{ item.po_no }}</ion-label>
                                 </ion-col>
                             </div>
                             <ion-row>
                                 <ion-col size="4">
-                                    <ion-label class="ion-card-label">{{ item.total_item }} Item</ion-label>
+                                    <ion-label class="ion-card-label">Belum </ion-label>
                                 </ion-col>
                                 <ion-col size="1">·</ion-col>
                                 <ion-col size="7">
@@ -24,24 +24,20 @@
                             </ion-row>
                         </ion-col>
                         <ion-col size="2">
-                            <ion-button fill="clear" @click="$emit('readPr', item)">
+                            <ion-button fill="clear" @click="$emit('readPo', item)">
                                 <ion-icon class="custom-icon" :icon="icons.ellipsisVertical"></ion-icon>
                             </ion-button>
                         </ion-col>
                     </ion-row>
                     <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
                 </ion-col>
-
                 <ion-col size="12" class="ion-padding-horizontal">
                     <ion-label class="ion-card-label">{{ item.header }}</ion-label>
                 </ion-col>
-                <ion-col size="6" class="ion-padding-horizontal ion-text-start ion-align-self-center">
-                    <ion-label class="ion-card-amount">{{ item.total_price }}</ion-label>
-                </ion-col>
-                <ion-col size="6" class="ion-padding-horizontal ion-text-end">
-                    <ChipComponent :color="item.status ? 'success' : 'warning'" :width="'150px'">
-                        {{ item.status ? 'Active' : 'To Approve' }}
-                    </ChipComponent>
+                <ion-col size="12" class="ion-padding-horizontal ion-text-start ion-align-self-center">
+                    <ion-label class="ion-card-amount">{{ item.total_amount }}</ion-label>
+                    <br>
+                    <ion-label>{{ item.item_count }} Item</ion-label>
                 </ion-col>
             </ion-row>
         </ion-card-content>
@@ -64,7 +60,7 @@ const props = defineProps({
     },
 });
 
-defineEmits(['readPr']);
+defineEmits(['readPo']);
 </script>
 
 <style scoped></style>

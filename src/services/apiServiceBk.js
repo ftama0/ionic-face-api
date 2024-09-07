@@ -44,96 +44,85 @@ export const loginService = {
   },
 };
 // purhcase Request
-const retryRequest = async (requestFunction, maxRetries = 3) => {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      return await requestFunction();
-    } catch (error) {
-      if (error.code === 'ERR_SSL_PROTOCOL_ERROR' && attempt < maxRetries) {
-        console.warn(`Percobaan ke-${attempt} gagal, mencoba lagi...`);
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Tunggu 1 detik sebelum mencoba lagi
-      } else {
-        throw error;
-      }
-    }
-  }
-};
-
 export const prService = {
   async allPrList(page = 1, limit = 5, search = "") {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(
         `/api/v1/pr/?page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async allPrApproval(page = 1, limit = 5, search = "") {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(
         `/api/v1/approval-pr/?page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async readPr(id) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(`/api/v1/pr/${id}`);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async approvePr(id, status_type) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.post(
         `/api/v1/approval-pr/process/${id}/${status_type}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 };
 // purhcase Order
 export const poService = {
-  async allPoList(page = 1, limit = 5, search = "", filter = {}) {
-    return retryRequest(async () => {
-      let queryParams = `page=${page}&limit=${limit}&search=${search}`;
-      // Periksa apakah filter adalah objek yang valid
-      if (filter && typeof filter === 'object' && !Array.isArray(filter)) {
-        // Periksa filter dan tambahkan ke queryParams jika ada nilai
-        for (const [key, value] of Object.entries(filter)) {
-          if (value !== undefined && value !== null && value !== '') {
-            queryParams += `&${key}=${encodeURIComponent(value)}`;
-          }
-        }
-      } else {
-        console.warn('Filter bukan objek yang valid. Mengabaikan filter.');
-      }
-
-      console.log('INI URL', `/api/v1/po/?${queryParams}`);
-      const res = await apiService.get(`/api/v1/po/?${queryParams}`);
+  async allPoList(page = 1, limit = 5, search = "") {
+    try {
+      const res = await apiService.get(
+        `/api/v1/po/?page=${page}&limit=${limit}&search=${search}`
+      );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async allPoApproval(page = 1, limit = 5, search = "") {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(
         `/api/v1/approval-po/?page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async readPo(id) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(`/api/v1/po/${id}`);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async approvePo(id, status_type) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.post(
         `/api/v1/approval-po/process/${id}/${status_type}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 };
 
@@ -141,136 +130,174 @@ export const poService = {
 // user account
 export const userAccountService = {
   async allUser(page = 1, limit = 5, search = "") {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(
         `/api/v1/users/?page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async createUser(data) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.post("/api/v1/users/", data);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async readUser(uuid) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(`/api/v1/users/${uuid}`);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async updateUser(data) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.put(`/api/v1/users/${data.uuid}`, data);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async deleteUser(uuid) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.delete(`/api/v1/users/${uuid}`);
       return res.data.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async fetchUserEss(page = 1, perPage = 5, search = "") {
-    return retryRequest(async () => {
+    try {
       const res = await apiEss.get(
         `/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 };
 // user release pr
 export const releaseCodeService = {
   async allUserReleaseCode(type, page = 1, limit = 5, search = "") {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(
         `/api/v1/users-release/?type=${type}&page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async readReleaseCode(type) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(`/api/v1/release-code/?type=${type}`);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async createUserReleaseCode(data) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.post(
         `/api/v1/users-release/?type=${data.type}`,
         data
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async updateUserReleaseCode(data) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.put(`/api/v1/users-release/`, data);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async deleteUserReleaseCode(data) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.delete(
         `/api/v1/users-release/?uuid=${data.uuid}&type=${data.type}`
       );
       return res.data.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 };
 // cost center
 export const costCenterService = {
   async allDataCostCenter(page = 1, limit = 5, search = "") {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(
         `/api/v1/users-csks/?page=${page}&limit=${limit}&search=${search}`
       );
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async costCenterDetail(uuid) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(`/api/v1/users-csks/${uuid}`);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async createCostCenter(data) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.post("/api/v1/users-csks/", data);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async updateCostCenter(data) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.put("/api/v1/users-csks/", data);
       return res.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async deleteCostCenter(uuid) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.delete(`/api/v1/users-csks/?uuid=${uuid}`);
       return res.data.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async getClient() {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get("/api/v1/client/");
       return res.data.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async getCompany(client_id) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(`/api/v1/company/?client_id=${client_id}`);
       return res.data.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
   async getCostCenters(company_code, client_id) {
-    return retryRequest(async () => {
+    try {
       const res = await apiService.get(`/api/v1/csks/?bukrs=${company_code}&mandt=${client_id}`);
       return res.data.data;
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 };

@@ -84,12 +84,10 @@
                 </ion-item>
             </ion-list>
             <ion-list>
-                <ion-item>
-                    <ion-label>
-                        <h6>Approval Process</h6>
-                    </ion-label>
-                </ion-item>
-                <ion-item v-for="(item, index) in items" :key="index">
+                <ion-list-header>
+                    <ion-label class="ion-list-header">Approval Process</ion-label>
+                </ion-list-header>
+                <ion-item v-for="(item, index) in stepApprovers" :key="index">
                     <ion-label>
                         <div class="progress-step">
                             <div class="circle">{{ index + 1 }}</div>
@@ -107,10 +105,10 @@
             </ion-list>
             <ion-list>
                 <ion-list-header>
-                    <ion-label class="ion-list-header-item">Purchase Request Item</ion-label>
+                    <ion-label class="ion-list-header-item">Purchase Order Item</ion-label>
                 </ion-list-header>
                 <ion-grid class="ion-padding">
-                    <template v-for="(item, index) in details" :key="index">
+                    <template v-for="(item, index) in items" :key="index">
                         <ion-row>
                             <ion-col size="6">
                                 <h6 class="ion-title-item">{{ item.txz01 }}</h6>
@@ -153,16 +151,18 @@
                     <ion-row v-if="props.typeMenu == 'approval'">
                         <ion-col size="12">
                             <ButtonComponent expand="block" shape="round" :class="approveButton"
-                                @action-click="actionButton('approve')">
+                                @action-click="showAlert('approve')">
                                 Approve
                             </ButtonComponent>
                         </ion-col>
                         <ion-col size="12">
                             <ButtonComponent expand="block" shape="round" :class="rejectButton"
-                                @action-click="actionButton('reject')">
+                                @action-click="showAlert('reject')">
                                 Reject
                             </ButtonComponent>
                         </ion-col>
+                        <AlertComponent :is-open="isAlertOpen" :header="alertHeader" :current-action="currentAction"
+                            @dismiss="handleAlertDismiss" />
                     </ion-row>
                 </ion-grid>
             </ion-list>
@@ -174,19 +174,24 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { purchaseOrderStore } from '@/store/poStore';
+import { useRouter } from 'vue-router';
 import ChipComponent from '@/components/ChipComponent.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
+import AlertComponent from '@/components/AlertComponent.vue';
+import ModalReject from '@/components/ModalRejectComponent.vue';
+import { modalController } from '@ionic/vue';
 // data
 const { proxy } = getCurrentInstance()
 const icons = ref(proxy.$icons);
 const poStore = purchaseOrderStore();
 
 const header = computed(() => poStore.poHeaderFormatted);
-const details = computed(() => poStore.poDetailsFormatted);
-const items = computed(() => poStore.poItems);
+const items = computed(() => poStore.poItemsFormatted);
+const stepApprovers = computed(() => poStore.poStepApprovers);
 const loading = ref(false);
 const approveButton = ref('approve-buttons');
 const rejectButton = ref('reject-buttons');
+const router = useRouter();
 
 const props = defineProps({
     typeMenu: {
@@ -199,7 +204,7 @@ const actionButton = async (action) => {
     loading.value = true;
     try {
         console.log(action);
-        // await prStore.approvePr();
+        // await poStore.approvePo();
     } catch (error) {
         console.error('Error approve/reject:', error);
     } finally {
@@ -207,9 +212,77 @@ const actionButton = async (action) => {
     }
 };
 
+const isAlertOpen = ref(false);
+const alertHeader = ref('');
+const currentAction = ref('');
+
+const showAlert = async (action) => {
+    alertHeader.value = action === 'approve'
+        ? 'Are you Sure Want to Approve this document ?'
+        : 'Are you Sure Want to Reject this document ?';
+    isAlertOpen.value = true;
+    currentAction.value = action;
+};
+
+const handleAlertDismiss = (detail) => {
+    isAlertOpen.value = false;
+    if (detail.role === 'confirm') {
+        submitButton(detail.action);
+    }
+};
+
+const openModal = async (action) => {
+    const modal = await modalController.create({
+        component: ModalReject,
+        componentProps: { action },
+    });
+    modal.present();
+    const { data, role } = await modal.onWillDismiss();
+    console.log('data', data);
+    console.log('role', role);
+    if (role === 'confirm' && data) {
+        submitData(currentAction.value, data);
+        proxy.$toast('Purchase Order Rejected', 'success');
+    }
+};
+
+const submitButton = async (action) => {
+    loading.value = true;
+    try {
+        if (action === 'approve') {
+            submitData(action);
+        } else if (action === 'reject') {
+            // openModal(action)
+            submitData(action);
+        }
+    } catch (error) {
+        console.error(`Error ${action}:`, error);
+    } finally {
+        loading.value = false;
+    }
+};
+const submitData = async (action, data = null) => {
+    loading.value = true;
+    try {
+        const res = await poStore.approvePo(header.value.po_no, action);
+        if (action === 'approve') {
+            proxy.$toast(res.message, 'success');
+        } else if (action === 'reject') {
+            proxy.$toast(res.message, 'danger');
+        }
+        await poStore.allPo(true, props.typeMenu);
+        router.replace({ name: 'PurchaseOrderList', params: { type: props.typeMenu } });
+    } catch (error) {
+        console.error(`Error ${action}:`, error);
+    } finally {
+        loading.value = false;
+    }
+};
+
+
 onMounted(async () => {
     console.log(header.value)
-    console.log(details.value)
+    console.log(stepApprovers.value)
 });
 </script>
 

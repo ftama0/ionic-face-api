@@ -1,7 +1,7 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="pr-content" v-bind="$attrs">
-        <HeaderComponent :title="'Purchase Order List'" />
+        <HeaderComponent :title="props.type === 'user' ? 'Purchase Order List' : 'Purchase Order Approval'" />
         <ion-content>
             <ion-grid>
                 <ion-row>
@@ -15,72 +15,16 @@
                     <ion-col size="4" class="ion-padding ion-align-self-center">
                         <div class="filter-container">
                             <ion-text>Filter</ion-text>
-                            <ion-button color="primary" fill="solid">
+                            <ion-button color="primary" fill="solid" @click="openModal(typeMenu)">
                                 <ion-icon slot="icon-only" :icon="icons.filterOutline"></ion-icon>
                             </ion-button>
                         </div>
                     </ion-col>
                     <ion-col size="12">
-                        <div v-for="(item, index) in vdata" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
-                                <ion-card-content>
-                                    <ion-row class="ion-margin-top">
-                                        <ion-col size="12">
-                                            <ion-row>
-                                                <ion-col size="2"> <ion-icon class="custom-icon-cart"
-                                                        :icon="icons.cartOutline"></ion-icon></ion-col>
-                                                <ion-col size="8">
-                                                    <div class="row">
-                                                        <ion-col size="12">
-                                                            <ion-label class="ion-card-title">
-                                                                {{ item.po_no }}</ion-label>
-                                                        </ion-col>
-                                                    </div>
-                                                    <ion-row>
-                                                        <ion-col size="4">
-                                                            <ion-label class="ion-card-label">{{ item.item_count }}
-                                                                Item</ion-label>
-                                                        </ion-col>
-                                                        <ion-col size="1">
-                                                            ·
-                                                        </ion-col>
-                                                        <ion-col size="7">
-                                                            <ion-label class="ion-card-label">
-                                                                {{ item.release_date }}
-                                                            </ion-label>
-                                                        </ion-col>
-                                                    </ion-row>
-                                                </ion-col>
-                                                <ion-col size="2">
-                                                    <ion-button fill="clear" @click="fetchReadPo(item)">
-                                                        <ion-icon class="custom-icon"
-                                                            :icon="icons.ellipsisVertical"></ion-icon>
-                                                    </ion-button>
-                                                </ion-col>
-                                            </ion-row>
-                                        </ion-col>
-
-                                        <ion-col size="12" class="ion-padding-horizontal">
-                                            <ion-label class="ion-card-label">{{ item.header }}</ion-label>
-                                        </ion-col>
-                                        <ion-col size="6"
-                                            class="ion-padding-horizontal ion-text-start ion-align-self-center">
-                                            <ion-label class="ion-card-amount">
-                                                {{ item.total_amount }}
-                                            </ion-label>
-                                        </ion-col>
-                                        <ion-col size="6" class="ion-padding-horizontal ion-text-end">
-                                            <ChipComponent :color="item.full_release_status == 'To Approve' ? 'warning'
-                                                : item.full_release_status == 'Approved' ? 'success' : 'danger'"
-                                                :width="'100px'">
-                                                {{ item.full_release_status == 'To Approve' ? 'To Approve'
-                                                    : item.full_release_status == 'Approved' ? 'Approved' : 'Reject' }}
-                                            </ChipComponent>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-card-content>
-                            </ion-card>
-                        </div>
+                        <cardUser v-if="typeMenu === 'user'" v-for="(item, index) in vdata" :key="index" :item="item"
+                            :icons="icons" @readPo="fetchReadPo" />
+                        <cardApproval v-if="typeMenu === 'approval'" v-for="(item, index) in vdata" :key="index"
+                            :item="item" :icons="icons" @readPo="fetchReadPo" />
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -103,8 +47,11 @@ import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
 import { purchaseOrderStore } from '@/store/poStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
-import ChipComponent from '@/components/ChipComponent.vue';
+import cardUser from '@/components/purchaseOrder/CardPoListComponent.vue';
+import cardApproval from '@/components/purchaseOrder/CardPoApprovalComponent.vue';
 import { useRoute } from 'vue-router';
+import ModalFilter from './VPurchaseOrderFilter.vue';
+import { modalController } from '@ionic/vue';
 
 const props = defineProps({
     type: {
@@ -138,11 +85,12 @@ watch(() => route.params.type, async (newType) => {
 
 const vdata = computed(() => poStore.poListFormatted);
 
-const fetchAllPo = async (refresh = true) => {
+const fetchAllPo = async (refresh = true, filter = {}) => {
+    console.log('filter', filter)
     loading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await poStore.allPo(refresh, page.value, limit.value, search.value, typeMenu.value);
+        await poStore.allPo(refresh, typeMenu.value, page.value, limit.value, search.value, filter);
     } catch (error) {
         console.error('Error fetching Purchase Order :', error);
     } finally {
@@ -153,7 +101,7 @@ const fetchAllPo = async (refresh = true) => {
 const fetchReadPo = async (item, action = null) => {
     loading.value = true;
     try {
-        await poStore.readPo(item.po_no);
+        await poStore.readPo(item.po_no || item.ebeln);
         if (!action) {
             await router.push({
                 name: 'PurchaseOrderDetail',
@@ -174,7 +122,8 @@ const refreshData = async () => {
 };
 
 const loadMore = async (event) => {
-    console.log('vdata', vdata.value)
+    // console.log('vdata', vdata.value);
+    // console.log('vdata.value.total', vdata.value.total);
     if (vdata.value.length >= vdata.value.total) {
         event.target.complete();
         return;
@@ -185,47 +134,6 @@ const loadMore = async (event) => {
 
 const handleSearch = debounce(() => fetchAllPo(true), 300);
 
-const openActionSheet = (item) => {
-    selectedItem.value = item;
-    actionSheetButtons.value = [
-        {
-            text: 'Edit',
-            handler: () => handleAction('Edit'),
-            cssClass: 'approve-button',
-            icon: icons.value.createOutline,
-        },
-        {
-            text: 'Delete',
-            role: 'destructive',
-            handler: () => handleAction('Delete'),
-            cssClass: 'reject-button',
-            icon: icons.value.trashOutline,
-        },
-        {
-            text: 'Cancel',
-            role: 'cancel',
-            cssClass: 'cancel-button',
-            icon: icons.value.logOutOutline,
-        },
-    ];
-    setOpen(true);
-};
-
-const handleAction = async (action) => {
-    switch (action) {
-        case 'Add':
-        case 'Edit':
-            await (action === 'Edit' && fetchReadUser(selectedItem.value, action));
-            await openModal(action);
-            break;
-        case 'Delete':
-            await deleteUser(selectedItem.value);
-            break;
-        default:
-            console.warn(`Unknown action: ${action}`);
-            proxy.$toast('Failed, contact admin', 'danger');
-    }
-};
 
 const setOpen = (state) => {
     isOpen.value = state;
@@ -233,21 +141,18 @@ const setOpen = (state) => {
 
 const openModal = async (action) => {
     const modal = await modalController.create({
-        component: Modal,
+        component: ModalFilter,
         componentProps: { action },
     });
     modal.present();
     const { data, role } = await modal.onWillDismiss();
     if (role === 'confirm') {
-        proxy.$toast(data.message, 'success');
+        await fetchAllPo(true, data);
+        // proxy.$toast(data.message, 'success');
+        proxy.$toast('Apply Filter Successfully', 'success');
     }
 };
 
-const filteredData = computed(() =>
-    selectedStatus.value
-        ? vdata.value.filter(item => item.status.toString() === selectedStatus.value)
-        : vdata.value
-);
 
 onMounted(fetchAllPo);
 </script>
