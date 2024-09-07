@@ -93,11 +93,23 @@ export const prService = {
 };
 // purhcase Order
 export const poService = {
-  async allPoList(page = 1, limit = 5, search = "") {
+  async allPoList(page = 1, limit = 5, search = "", filter = {}) {
     return retryRequest(async () => {
-      const res = await apiService.get(
-        `/api/v1/po/?page=${page}&limit=${limit}&search=${search}`
-      );
+      let queryParams = `page=${page}&limit=${limit}&search=${search}`;
+      // Periksa apakah filter adalah objek yang valid
+      if (filter && typeof filter === 'object' && !Array.isArray(filter)) {
+        // Periksa filter dan tambahkan ke queryParams jika ada nilai
+        for (const [key, value] of Object.entries(filter)) {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams += `&${key}=${encodeURIComponent(value)}`;
+          }
+        }
+      } else {
+        console.warn('Filter bukan objek yang valid. Mengabaikan filter.');
+      }
+
+      console.log('INI URL', `/api/v1/po/?${queryParams}`);
+      const res = await apiService.get(`/api/v1/po/?${queryParams}`);
       return res.data;
     });
   },

@@ -52,11 +52,11 @@ export const purchaseOrderStore = defineStore({
         },
     },
     actions: {
-        async allPo(refresh, type = "", page = 1, limit = 5, search = "") {
+        async allPo(refresh, type = "", page = 1, limit = 5, search = "", filter = {}) {
             try {
                 const serviceMethod = type === "user" ? poService.allPoList : poService.allPoApproval;
-                let res = await serviceMethod(page, limit, search);
-                this.poList = refresh ? res.data : [...this.poList, ...res.data];
+                let res = await serviceMethod(page, limit, search, filter);
+                this.poList = refresh ? res.data : [...this.allPo, ...res.data];
                 this.poList.total = res.total;
             } catch (error) {
                 console.error("Store error:", error);

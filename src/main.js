@@ -1,65 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import {
-  IonicVue,
-  IonPage,
-  IonHeader,
-  IonContent,
-  IonFooter,
-  IonTitle,
-  IonToolbar,
-  IonButton,
-  IonInput,
-  IonLabel,
-  IonList,
-  IonItem,
-  IonIcon,
-  IonCol,
-  IonRow,
-  IonGrid,
-  IonCard,
-  IonInputPasswordToggle,
-  IonAlert,
-  IonLoading,
-  IonToast,
-  IonCardContent,
-  IonBadge,
-  IonMenu,
-  IonButtons,
-  IonMenuButton,
-  IonMenuToggle,
-  IonFab,
-  IonFabButton,
-  IonSearchbar,
-  IonText,
-  IonCardTitle,
-  IonCardHeader,
-  IonTabs,
-  IonTabBar,
-  IonTabButton,
-  IonRouterOutlet,
-  IonRefresher,
-  IonRefresherContent,
-  IonInfiniteScroll,
-  IonInfiniteScrollContent,
-  IonActionSheet,
-  IonAvatar,
-  IonBackButton,
-  IonFabList,
-  IonChip,
-  IonSelect,
-  IonSelectOption,
-  IonToggle,
-  IonProgressBar,
-  IonPopover,
-  IonCheckbox,
-  IonBackdrop,
-  IonListHeader,
-  IonNote,
-  IonTextarea
-} from "@ionic/vue";
-
+import { IonicVue } from "@ionic/vue";
+import { ionicComponents } from './plugins/ionicComponents';
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css";
 
@@ -135,61 +78,10 @@ const app = createApp(App)
   .use(AppUpdatePlugin);
 
 // component global
-app.component("ion-content", IonContent);
-app.component("ion-header", IonHeader);
-app.component("ion-footer", IonFooter);
-app.component("ion-label", IonLabel);
-app.component("ion-list", IonList);
-app.component("ion-page", IonPage);
-app.component("ion-title", IonTitle);
-app.component("ion-toolbar", IonToolbar);
-app.component("ion-button", IonButton);
-app.component("ion-input", IonInput);
-app.component("ion-item", IonItem);
-app.component("ion-icon", IonIcon);
-app.component("ion-grid", IonGrid);
-app.component("ion-row", IonRow);
-app.component("ion-col", IonCol);
-app.component("ion-card", IonCard);
-app.component("ion-card-content", IonCardContent);
-app.component("ion-input-password-toggle", IonInputPasswordToggle);
-app.component("ion-alert", IonAlert);
-app.component("ion-loading", IonLoading);
-app.component("ion-toast", IonToast);
-app.component("ion-badge", IonBadge);
-app.component("ion-menu", IonMenu);
-app.component("ion-buttons", IonButtons);
-app.component("ion-menu-button", IonMenuButton);
-app.component("ion-menu-toggle", IonMenuToggle);
-app.component("ion-fab", IonFab);
-app.component("ion-fab-button", IonFabButton);
-app.component("ion-searchbar", IonSearchbar);
-app.component("ion-text", IonText);
-app.component("ion-card-title", IonCardTitle);
-app.component("ion-card-header", IonCardHeader);
-app.component("ion-tabs", IonTabs);
-app.component("ion-tab-bar", IonTabBar);
-app.component("ion-tab-button", IonTabButton);
-app.component("ion-router-outlet", IonRouterOutlet);
-app.component("ion-refresher", IonRefresher);
-app.component("ion-refresher-content", IonRefresherContent);
-app.component("ion-action-sheet", IonActionSheet);
-app.component("ion-infinite-scroll", IonInfiniteScroll);
-app.component("ion-infinite-scroll-content", IonInfiniteScrollContent);
-app.component("ion-avatar", IonAvatar);
-app.component("ion-back-button", IonBackButton);
-app.component("ion-fab-list", IonFabList);
-app.component("ion-chip", IonChip);
-app.component("ion-select", IonSelect);
-app.component("ion-select-option", IonSelectOption);
-app.component("ion-toggle", IonToggle);
-app.component("ion-progress-bar", IonProgressBar);
-app.component("ion-popover", IonPopover);
-app.component("ion-checkbox", IonCheckbox);
-app.component("ion-backdrop", IonBackdrop);
-app.component("ion-list-header", IonListHeader);
-app.component("ion-note", IonNote);
-app.component("ion-textarea", IonTextarea);
+// Daftarkan komponen Ionic secara global
+Object.entries(ionicComponents).forEach(([name, component]) => {
+  app.component(name, component);
+});
 // custom component
 app.component("MenuComponent", MenuComponent);
 app.component("HeaderComponent", HeaderComponent);
