@@ -9,45 +9,43 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <ion-col size="12">
-                <ion-row class="ion-padding">
-                    <ion-col size="2"> <ion-icon class="custom-icon-cart"
-                            :icon="icons.cartOutline"></ion-icon></ion-col>
-                    <ion-col size="5">
-                        <div class="row">
-                            <ion-col size="12">
-                                <ion-label class="ion-card-title">{{ header.po_no }}</ion-label>
-                            </ion-col>
-                        </div>
-                        <ion-row>
-                            <ion-col size="6">
-                                <ion-label class="ion-card-label">{{ header.item_count }} Item</ion-label>
-                            </ion-col>
-                        </ion-row>
-                    </ion-col>
-                    <ion-col size="5">
-                        <ChipComponent :color="header.full_release_status == 'To Approve' ? 'warning'
-                            : header.full_release_status == 'Approved' ? 'success' : 'danger'" :width="'100px'">
-                            {{ header.full_release_status == 'To Approve' ? 'To Approve'
-                                : header.full_release_status == 'Approved' ? 'Approved' : 'Reject' }}
-                        </ChipComponent>
-                    </ion-col>
-                    <ion-col size="12">
-                        <ion-row>
-                            <ion-col size="2">
-                            </ion-col>
-                            <ion-col size="10">
-                                <ion-label class="ion-card-label">Total Amount</ion-label>
-                            </ion-col>
-                            <ion-col size="2">
-                            </ion-col>
-                            <ion-col size="6">
-                                <ion-label class="ion-card-amount">{{ header.total_amount }}</ion-label>
-                            </ion-col>
-                        </ion-row>
-                    </ion-col>
-                </ion-row>
-            </ion-col>
+            <ion-row class="ion-padding ion-margin-top">
+                <ion-col size="2"> <ion-icon class="custom-icon-cart" :icon="icons.cartOutline"></ion-icon></ion-col>
+                <ion-col size="6">
+                    <div class="row">
+                        <ion-col size="12">
+                            <ion-label class="ion-card-title">{{ header.po_no }}</ion-label>
+                        </ion-col>
+                    </div>
+                    <ion-row>
+                        <ion-col size="6">
+                            <ion-label class="ion-card-label">{{ header.item_count }} Item</ion-label>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+                <ion-col size="4" class="ion-text-center ion-align-self-center">
+                    <ChipComponent :color="header.full_release_status == 'To Approve' ? 'warning'
+                        : header.full_release_status == 'Approved' ? 'success' : 'danger'" :width="'100px'">
+                        {{ header.full_release_status == 'To Approve' ? 'To Approve'
+                            : header.full_release_status == 'Approved' ? 'Approved' : 'Reject' }}
+                    </ChipComponent>
+                </ion-col>
+                <ion-col size="12">
+                    <ion-row>
+                        <ion-col size="2">
+                        </ion-col>
+                        <ion-col size="10">
+                            <ion-label class="ion-card-label">Total Amount</ion-label>
+                        </ion-col>
+                        <ion-col size="2">
+                        </ion-col>
+                        <ion-col size="6">
+                            <ion-label class="ion-card-amount">{{ header.total_amount }}</ion-label>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+            <hr style="border-top: 1px solid #ccc; margin: 10px 0; width: 90%; margin-left: auto; margin-right: auto;">
             <ion-list>
                 <ion-list-header>
                     <ion-label class="ion-list-header">Details</ion-label>
@@ -343,7 +341,7 @@ onMounted(async () => {
 }
 
 .ion-card-amount {
-    font-size: 17px;
+    font-size: 20px;
     line-height: 18px;
     font-weight: bold;
     color: #626060;
