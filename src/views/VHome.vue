@@ -6,7 +6,7 @@
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
+                        <ion-card ref="userCard" class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
                             <!-- <ion-card ref="userCard" class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;"> -->
                             <ion-card-content class="ion-text-center">
                                 <ion-row class="center-content ">
@@ -144,6 +144,10 @@ const handleHardwareBackButton = (event) => {
     });
 };
 
+const preventSwipeBack = (event) => {
+    event.preventDefault();
+};
+
 onMounted(async () => {
     await fetchTotalPr();
     if (userCard.value) {
@@ -156,11 +160,13 @@ onMounted(async () => {
 
         gesture.enable();
         document.addEventListener('ionBackButton', handleHardwareBackButton);
+        document.addEventListener('ionSwipeStart', preventSwipeBack);
     }
 });
 
 onBeforeUnmount(() => {
     document.removeEventListener('ionBackButton', handleHardwareBackButton);
+    document.removeEventListener('ionSwipeStart', preventSwipeBack);
 });
 </script>
 

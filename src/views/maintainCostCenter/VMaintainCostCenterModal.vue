@@ -1,108 +1,68 @@
 <template>
     <form-modal-component :config="modalConfig" :submitForm="submitForm" @closeModal="handleCloseModal">
         <template #content class="content-modal">
-            <ion-row class="ion-padding">
-                <ion-col size="12">
-                    <p>User Account</p>
-                </ion-col>
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-select 
-                        aria-label="user_account" 
-                        label="Select User" 
-                        label-placement="floating"
-                        placeholder="Select User" 
-                        fill="outline" 
-                        v-model="dataForm.user_account"
-                        :disabled="!!dataForm.user_account"
-                    >
+            <ion-list>
+                <ion-item>
+                    <ion-label position="stacked">User Account</ion-label>
+                    <ion-select aria-label="user_account" label="select user" placeholder="User"
+                        v-model="dataForm.user_account" :disabled="props.typeModal == 'Edit'">
                         <ion-select-option v-for="user in listUser" :key="user.uuid" :value="user.uuid">
                             {{ user.fullname }}
                         </ion-select-option>
                     </ion-select>
-                </ion-col>
-                <ion-col size="12">
-                    <p>Client</p>
-                </ion-col>
-                <ion-col size="12">
-                    <ion-select 
-                        aria-label="client" 
-                        label="Choose Client" 
-                        label-placement="floating"
-                        placeholder="Client" 
-                        fill="outline"  
-                        v-model="dataForm.client_id"
-                        @ionChange="handleClientChange"
-                    >
-                        <ion-select-option 
-                            v-for="client in dataClient" 
-                            :key="client.client_code" 
-                            :value="client.client_code"
-                        >
+                </ion-item>
+
+                <ion-item>
+                    <ion-label position="stacked">Client</ion-label>
+                    <ion-select aria-label="client" label="select client" placeholder="Client"
+                        v-model="dataForm.client_id" @ionChange="handleClientChange">
+                        <ion-select-option v-for="client in dataClient" :key="client.client_code"
+                            :value="client.client_code">
                             {{ client.client_code }}
                         </ion-select-option>
                     </ion-select>
-                </ion-col>
-                <ion-col size="12">
-                    <p>Company Code</p>
-                </ion-col>
-                <ion-col size="12">
-                    <ion-select 
-                        aria-label="company" 
-                        label="Choose Company Code" 
-                        label-placement="floating"
-                        placeholder="Company Code" 
-                        fill="outline"
-                        v-model="dataForm.company_code"
-                        @ionChange="handleCompanyChange"
-                    >
-                        <ion-select-option 
-                            v-for="company in dataCompany" 
-                            :key="company.company_name" 
-                            :value="company.company_name"
-                        >
+                </ion-item>
+
+                <ion-item>
+                    <ion-label position="stacked">Company Code</ion-label>
+                    <ion-select aria-label="company" label="select company" placeholder="Company"
+                        v-model="dataForm.company_code" @ionChange="handleCompanyChange" fill="outline">
+                        <ion-select-option v-for="company in dataCompany" :key="company.company_name"
+                            :value="company.company_code">
                             {{ company.company_name }}
                         </ion-select-option>
                     </ion-select>
-                </ion-col>
-                <ion-col size="12">
-                    <p>Cost Center</p>
-                </ion-col>
-                <ion-col size="12">
-                    <ion-select 
-                        aria-label="cost center" 
-                        label="Choose Cost Center" 
-                        label-placement="floating"
-                        placeholder="Cost Center" 
-                        fill="outline"
-                        v-model="dataForm.cost_center"
-                    >
-                        <ion-select-option 
-                            v-for="costCenter in dataCostCenters" 
-                            :key="costCenter.kostl" 
-                            :value="costCenter.id"
-                        >
+                </ion-item>
+
+                <ion-item>
+                    <ion-label position="stacked">Cost Center</ion-label>
+                    <ion-select aria-label="cost center" label="select cost center" placeholder="Cost Center"
+                        v-model="dataForm.cost_center">
+                        <ion-select-option v-for="costCenter in dataCostCenters" :key="costCenter.kostl"
+                            :value="costCenter.id">
                             {{ costCenter.kostl }}
                         </ion-select-option>
                     </ion-select>
-                </ion-col>
+                </ion-item>
 
-                <div class="pt-3">
+                <ion-item>
                     <ion-button size="default" @click="handleAddCostCenter">
                         Add Cost Center
                     </ion-button>
-                </div>
-                <ion-col size="12">
-                    <ion-list :inset="true" v-if="addedCostCenters.length > 0">
-                        <ion-item v-for="(costCenter, index) in addedCostCenters" :key="index">
-                            <ion-label>{{ costCenter.kostl }} - {{ costCenter.bukrs }}({{ costCenter.mandt }})</ion-label>
-                            <ion-button color="danger" size="small" slot="end" @click="handleDeleteCostCenter(index)">
-                                X
-                            </ion-button>
-                        </ion-item>
-                    </ion-list>
+                </ion-item>
 
-                </ion-col>
-            </ion-row>
+            </ion-list>
+            <div v-if="addedCostCenters.length > 0">
+                <ion-list :inset="true">
+                    <ion-item v-for="(costCenter, index) in addedCostCenters" :key="index">
+                        <ion-label>{{ costCenter.kostl }} - {{ costCenter.bukrs }}
+                            ({{ costCenter.mandt }})</ion-label>
+                        <ion-button color="danger" size="small" slot="end" @click="handleDeleteCostCenter(index)">
+                            X
+                        </ion-button>
+                    </ion-item>
+                </ion-list>
+            </div>
             <LoadingComponent :isOpen="isLoading" :message="'Loading...'" />
         </template>
     </form-modal-component>
@@ -186,6 +146,7 @@ const handleClientChange = async (event) => {
 const handleCompanyChange = async (event) => {
     const client_id = dataForm.value.client_id;
     const selectedCompany = event.target.value;
+    console.log(selectedCompany);
     dataCostCenters.value = [];
     await fetchDataCostCenter(selectedCompany, client_id)
 };
@@ -209,7 +170,7 @@ const handleDeleteCostCenter = async (index) => {
 };
 
 const submitForm = async () => {
-    
+
     isLoading.value = true;
     try {
         let res = '';
@@ -222,18 +183,18 @@ const submitForm = async () => {
             if (dataFormForSubmit.value.csks_id.length > 0 && dataFormForSubmit.value.uuid !== undefined) {
                 res = await csStore.updateCostCenter(dataFormForSubmit);
                 await handleCloseModal(res, 'confirm');
-                await csStore.allDataCostCenter(true);
+            } else {
+                proxy.$toast('Pastikan sudah mengisi data user account dan cost center', 'danger');
             }
-            proxy.$toast('Pastikan sudah mengisi data user account dan cost center', 'danger');
         } else {
             dataFormForSubmit.value.csks_id = idCostCenters.value
             dataFormForSubmit.value.uuid = dataForm.value.user_account
             if (dataFormForSubmit.value.csks_id.length > 0 && dataFormForSubmit.value.uuid !== undefined) {
                 res = await csStore.createCostCenter(dataFormForSubmit);
                 await handleCloseModal(res, 'confirm');
-                await csStore.allDataCostCenter(true);
+            } else {
+                proxy.$toast('Pastikan sudah mengisi data user account dan cost center', 'danger');
             }
-            proxy.$toast('Pastikan sudah mengisi data user account dan cost center', 'danger');
         }
     } catch (error) {
         console.error('Save Data:', error);

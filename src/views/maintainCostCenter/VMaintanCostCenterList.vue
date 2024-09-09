@@ -77,7 +77,7 @@ const csStore = costCenterStore();
 const isLoading = ref(false);
 const icons = ref(proxy.$icons);
 const page = ref(1);
-const limit = ref(80);
+const limit = ref(5);
 const search = ref('');
 const actionButton = ref('action-button');
 const detailButton = ref('detail-button');
@@ -217,7 +217,8 @@ const openModal = async (action) => {
 
     if (role === 'confirm') {
         console.log(data);
-        proxy.$toast('Add User Account Successfully', 'success');
+        await fetchAllData(true);
+        proxy.$toast('Maintain Cost Center Successfully', 'success');
     }
 };
 

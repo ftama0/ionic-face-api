@@ -5,20 +5,20 @@
                 <ion-buttons slot="start">
                     <ion-back-button></ion-back-button>
                 </ion-buttons>
-                <ion-title>Account Detail</ion-title>
+                <ion-title>Maintain Cost Center</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <ion-list>
+            <ion-list class="ion-margin-top">
+                <ion-item class="detail__header">User Account</ion-item>
                 <ion-item>
                     <ion-label>
-                        <p class="detail__header">User Account</p>
-                        <p class="detail__sub" >
-                            {{ data.username }}
+                        <p class="detail__sub">
+                            {{ data.fullname }} ( {{ data.username }} )
                         </p>
                     </ion-label>
                 </ion-item>
-                <ion-item>
+                <!-- <ion-item>
                     <ion-label>
                         <p class="detail__header">Client</p>
                         <p class="detail__sub" v-for="(user, index) in data.user_csks" :key="index">
@@ -33,12 +33,12 @@
                             {{ user.bukrs }}
                         </p>
                     </ion-label>
-                </ion-item>
-                <ion-item>
+                </ion-item> -->
+                <ion-item class="detail__header">Cost Center</ion-item>
+                <ion-item v-for="(user, index) in data.user_csks" :key="index">
                     <ion-label>
-                        <p class="detail__header">Cost Center</p>
-                        <p class="detail__sub" v-for="(user, index) in data.user_csks" :key="index">
-                            {{ user.kostl }}
+                        <p class="detail__sub">
+                            {{ user.ltext }} ( {{ user.kostl }} )
                         </p>
                     </ion-label>
                 </ion-item>
@@ -65,3 +65,5 @@ onMounted(async () => {
     console.log(data.value)
 });
 </script>
+
+<style></style>

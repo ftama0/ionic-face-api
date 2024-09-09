@@ -74,7 +74,7 @@ const submitForm = async () => {
     try {
         console.log('masuk', vdata.value)
         await loginStore.login(vdata.value.username, vdata.value.password);
-        router.push({ name: 'Home' });
+        router.replace({ name: 'Home' });
     } catch (error) {
         console.error('API failed:', error);
         proxy.$toast('Username or password is wrong', 'danger');
