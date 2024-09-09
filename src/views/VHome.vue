@@ -1,6 +1,6 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
-    <ion-page id="home-content" v-bind="$attrs">
+    <ion-page id="home-content" v-bind="$attrs" :swipe-back="false">
         <HeaderComponent :title="'Home'" />
         <ion-content>
             <ion-grid>
@@ -82,7 +82,7 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed, onBeforeUnmount } from 'vue';
-import { createGesture } from '@ionic/vue';
+import { createGesture, useIonRouter } from '@ionic/vue';
 import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
@@ -95,6 +95,8 @@ const prStore = purchaseRequestStore();
 const router = useRouter();
 const mainContentId = 'home-content';
 const userCard = ref(null);
+const ionRouter = useIonRouter();
+
 // api 
 const fetchTotalPr = async () => {
     try {
@@ -131,18 +133,20 @@ const onEnd = (detail) => {
         userCard.value.$el.style.transform = 'translateX(0)';
     }
 };
-// const handleHardwareBackButton = (event) => {
-//     event.detail.register(10, () => {
-//         // Prevent default action (which would be navigating back)
-//         // You can optionally show a confirmation dialog here
-//     });
-// };
+
+const handleHardwareBackButton = (event) => {
+    event.detail.register(10, () => {
+        // Mencegah aksi default (yang akan menavigasi kembali)
+        event.preventDefault();
+        // Opsional: Tampilkan dialog konfirmasi atau lakukan aksi lain
+        // Misalnya, tampilkan toast atau alert
+        proxy.$toast('Gunakan menu untuk navigasi', 'warning');
+    });
+};
+
 onMounted(async () => {
-    // await initialize();
     await fetchTotalPr();
-    // proxy.$toast('Hello dare', 'danger');
     if (userCard.value) {
-        // console.log('userCard', userCard.value)
         const gesture = createGesture({
             el: userCard.value.$el,
             gestureName: 'swipe-to-dismiss',
@@ -151,13 +155,13 @@ onMounted(async () => {
         });
 
         gesture.enable();
-        // document.addEventListener('ionBackButton', handleHardwareBackButton);
+        document.addEventListener('ionBackButton', handleHardwareBackButton);
     }
 });
-// onBeforeUnmount(() => {
-//     // Remove the event listener when the component is unmounted
-//     document.removeEventListener('ionBackButton', handleHardwareBackButton);
-// });
+
+onBeforeUnmount(() => {
+    document.removeEventListener('ionBackButton', handleHardwareBackButton);
+});
 </script>
 
 <style scoped>

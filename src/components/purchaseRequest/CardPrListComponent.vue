@@ -34,10 +34,10 @@
             <ion-col size="12" class="ion-padding-horizontal">
                 <ion-label class="ion-card-label">{{ item.header }}</ion-label>
             </ion-col>
-            <ion-col size="6" class="ion-padding-horizontal ion-text-start ion-align-self-center">
+            <ion-col size="8" class="ion-padding-horizontal ion-text-start ion-align-self-center">
                 <ion-label class="ion-card-amount">{{ item.total_price }}</ion-label>
             </ion-col>
-            <ion-col size="6" class="ion-padding-horizontal ion-text-end">
+            <ion-col size="4">
                 <ChipComponent :color="item.status == 'To Approve' ? 'warning'
                     : item.status == 'Approved' ? 'success' : 'danger'" :width="'100px'">
                     {{ item.status == 'To Approve' ? 'To Approve'
