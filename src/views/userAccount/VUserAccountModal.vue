@@ -1,36 +1,36 @@
-<template>
-    <form-modal-component :config="modalConfig" :submitForm="SubmitForm" @closeModal="handleCloseModal">
-        <template #content class="content-modal">
-            <ion-row class="ion-padding">
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Username" type="text" fill="outline"
-                        label="Username" :clear-input="true" v-model="vdata.username" required></ion-input>
-                </ion-col>
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Fullname" type="text" fill="outline"
-                        label="Full Name" :clear-input="true" v-model="vdata.fullname" required></ion-input>
-                </ion-col>
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-input label-placement="stacked" placeholder="Enter Email" type="email" fill="outline"
-                        label="Email" :clear-input="true" v-model="vdata.email" required></ion-input>
-                </ion-col>
-                <ion-col size="12" class="ion-padding-top">
-                    <ion-select aria-label="status" label="Select Role" label-placement="floating" placeholder="Status"
-                        fill="outline" v-model="vdata.role">
-                        <ion-select-option :value="1">Admin</ion-select-option>
-                        <ion-select-option :value="2">Approver</ion-select-option>
-                        <ion-select-option :value="3">User</ion-select-option>
-                    </ion-select>
-                </ion-col>
-                <ion-col size="12" class="ion-padding status-container">
-                    <ion-label>Status</ion-label>
-                    <ion-toggle :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
-                </ion-col>
-            </ion-row>
-            <LoadingComponent :isOpen="loading" :message="'Loading...'" />
-        </template>
-    </form-modal-component>
-</template>
+    <template>
+        <form-modal-component :config="modalConfig" :submitForm="SubmitForm" @closeModal="handleCloseModal">
+            <template #content class="content-modal">
+                <ion-list>
+                    <ion-item class="ion-margin-bottom ion-margin-top">
+                        <ion-input label-placement="stacked" placeholder="Enter Username" type="text" fill="outline"
+                            label="Username" :clear-input="true" v-model="vdata.username" required></ion-input>
+                    </ion-item>
+                    <ion-item class="ion-margin-bottom">
+                        <ion-input label-placement="stacked" placeholder="Enter Fullname" type="text" fill="outline"
+                            label="Full Name" :clear-input="true" v-model="vdata.fullname" required></ion-input>
+                    </ion-item>
+                    <ion-item class="ion-margin-bottom">
+                        <ion-input label-placement="stacked" placeholder="Enter Email" type="email" fill="outline"
+                            label="Email" :clear-input="true" v-model="vdata.email" required></ion-input>
+                    </ion-item>
+                    <ion-item class="ion-margin-bottom">
+                        <ion-select aria-label="status" label="Select Role" label-placement="floating"
+                            placeholder="Status" fill="outline" v-model="vdata.role">
+                            <ion-select-option :value="1">Admin</ion-select-option>
+                            <ion-select-option :value="2">Approver</ion-select-option>
+                            <ion-select-option :value="3">User</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                    <ion-item class="ion-margin-bottom">
+                        <ion-label>Status</ion-label>
+                        <ion-toggle slot="end" :checked="vdata.status" @ionChange="toggleStatus"></ion-toggle>
+                    </ion-item>
+                </ion-list>
+                <LoadingComponent :isOpen="loading" :message="'Loading...'" />
+            </template>
+        </form-modal-component>
+    </template>
 
 
 <script setup>

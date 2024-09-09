@@ -55,43 +55,43 @@
                 <ion-item>
                     <ion-label>
                         <h6>Header Note</h6>
-                        <p>{{ header.header }}</p>
+                        <p>{{ header.header ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PR Type</h6>
-                        <p>value</p>
+                        <p>{{ header.pr_type ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Purchasing Group</h6>
-                        <p>value</p>
+                        <p>{{ header.pr_group ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PR Creator</h6>
-                        <p>value</p>
+                        <p>{{ header.pr_creator ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Created Date</h6>
-                        <p>value</p>
+                        <p>{{ header.pr_date ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Created In</h6>
-                        <p>value</p>
+                        <p>SAP Client {{ header.client ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Plant</h6>
-                        <p>EBL Operational</p>
+                        <p>{{ header.pr_plant ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
             </ion-list>

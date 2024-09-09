@@ -7,24 +7,27 @@
                 <div class="sticky-top">
                     <ion-row>
                         <ion-col size="12">
-                            <ion-searchbar v-model="search" placeholder="Search User"
+                            <ion-searchbar animated="true" v-model="search" placeholder="Search User"
                                 @ionInput="handleSearch"></ion-searchbar>
                         </ion-col>
                     </ion-row>
                     <ion-row>
                         <ion-col size="12" class="ion-padding">
-                            <ion-select aria-label="status" label="Status select" label-placement="floating"
-                                placeholder="Status" fill="outline" v-model="selectedStatus">
-                                <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                                <ion-select-option value="true">Active</ion-select-option>
-                                <ion-select-option value="false">Non Active</ion-select-option>
-                            </ion-select>
+                            <ion-item>
+                                <ion-select aria-label="status" label="Status select" label-placement="floating"
+                                    placeholder="Status" fill="outline" v-model="selectedStatus"
+                                    @ionChange="handleStatusChange">
+                                    <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
+                                    <ion-select-option value="active">Aktif</ion-select-option>
+                                    <ion-select-option value="inactive">Non Aktif</ion-select-option>
+                                </ion-select>
+                            </ion-item>
                         </ion-col>
                     </ion-row>
                 </div>
                 <ion-row>
                     <ion-col size="12">
-                        <div v-for="(item, index) in filteredData" :key="index">
+                        <div v-for="(item, index) in vdata" :key="index">
                             <ion-card class="ion-margin-top ion-elevation-3">
                                 <ion-card-header>
                                     <ion-row class="ion-align-items-center">
@@ -106,19 +109,22 @@ const actionButton = ref('action-button');
 const detailButton = ref('detail-button');
 const mainContentId = 'userAccount-content';
 
-
 const vdata = computed(() => userAccount.userList);
 
 const fetchAllUser = async (refresh = true) => {
     loading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await userAccount.allUser(refresh, page.value, limit.value, search.value);
+        await userAccount.allUser(refresh, page.value, limit.value, search.value, selectedStatus.value);
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error mengambil data pengguna:', error);
     } finally {
         loading.value = false;
     }
+};
+
+const handleStatusChange = () => {
+    fetchAllUser(true);
 };
 
 const fetchReadUser = async (item, action = null) => {
@@ -152,8 +158,8 @@ const deleteUser = async (item) => {
 };
 
 const refreshData = async () => {
+    selectedStatus.value = '';
     await fetchAllUser(true);
-    selectedStatus.value = null;
 };
 
 const loadMore = async (event) => {
@@ -224,12 +230,6 @@ const openModal = async (action) => {
         proxy.$toast(data.message, 'success');
     }
 };
-
-const filteredData = computed(() =>
-    selectedStatus.value
-        ? vdata.value.filter(item => item.status.toString() === selectedStatus.value)
-        : vdata.value
-);
 
 onMounted(fetchAllUser);
 </script>

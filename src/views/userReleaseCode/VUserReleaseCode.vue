@@ -7,17 +7,20 @@
                 <div class="sticky-top">
                     <ion-row>
                         <ion-col size="12">
-                            <ion-searchbar v-model="search" placeholder="Search User"
+                            <ion-searchbar animated="true" v-model="search" placeholder="Search User"
                                 @ionInput="handleSearch"></ion-searchbar>
                         </ion-col>
                     </ion-row>
                     <ion-row>
                         <ion-col size="12" class="ion-padding">
-                            <ion-select aria-label="status" placeholder="Status" fill="outline">
-                                <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                                <ion-select-option value="active">Active</ion-select-option>
-                                <ion-select-option value="nonActive">Non Active</ion-select-option>
-                            </ion-select>
+                            <ion-item>
+                                <ion-select aria-label="status" label="Status select" placeholder="Status"
+                                    label-placement="floating" fill="outline">
+                                    <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
+                                    <ion-select-option value="active">Active</ion-select-option>
+                                    <ion-select-option value="nonActive">Non Active</ion-select-option>
+                                </ion-select>
+                            </ion-item>
                         </ion-col>
                     </ion-row>
                 </div>
@@ -253,7 +256,7 @@ const setOpen = (state) => {
 
 const openModal = async (action) => {
     await rcStore.readReleaseCode(type.value);
-    await userAccount.allUser(true, 1, 100);
+    await userAccount.allUser(true, 1, 100, "", 'active');
     const modal = await modalController.create({
         component: Modal,
         componentProps: { action, type: type.value },
@@ -321,13 +324,15 @@ ion-fab-button {
 }
 
 .chip__container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    /* Maksimal 5 elemen ke samping */
-    gap: 2px;
-    /* Jarak antar elemen */
-    justify-items: center;
-    /* Pusatkan elemen secara horizontal */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.chip__container>* {
+    flex: 0 1 auto;
+    max-width: calc(50% - 5px);
 }
 
 .text__header {

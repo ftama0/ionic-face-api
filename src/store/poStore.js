@@ -1,7 +1,7 @@
 // store/loginStore.js
 
 import { defineStore } from "pinia";
-import { poService } from "@/services/apiService";
+import { poService, masterData } from "@/services/apiService";
 
 const formatRupiah = (amount) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
@@ -20,6 +20,8 @@ export const purchaseOrderStore = defineStore({
         poHeader: [],
         poItems: [],
         poStepApprovers: [],
+        mdCompany: [],
+        mdPlant: [],
     }),
     persist: {
         enabled: true,
@@ -86,6 +88,24 @@ export const purchaseOrderStore = defineStore({
             try {
                 const res = await poService.approvePo(id, status_type);
                 return res;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async readCompany() {
+            try {
+                const res = await masterData.readCompany();
+                this.mdCompany = res.data;
+            } catch (error) {
+                console.error("Store error:", error);
+                throw error;
+            }
+        },
+        async readPlant() {
+            try {
+                const res = await masterData.readPlant();
+                this.mdPlant = res.data;
             } catch (error) {
                 console.error("Store error:", error);
                 throw error;

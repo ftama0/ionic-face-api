@@ -2,10 +2,10 @@
     <form-modal-component :config="modalConfig" :submitForm="SubmitForm" @closeModal="handleCloseModal">
         <template #content class="content-modal">
             <ion-list :inset="true">
-                <ion-list-header>
+                <ion-list-header v-if="props.action == 'user'">
                     <ion-label class="ion-list-header">Approval Status</ion-label>
                 </ion-list-header>
-                <ion-radio-group v-model="selectedStatus">
+                <ion-radio-group v-if="props.action == 'user'" v-model="selectedStatus">
                     <ion-item button @click="selectedStatus = 'To Approve'">
                         <ion-label>To Approve</ion-label>
                         <ion-radio slot="start" value="To Approve"></ion-radio>
@@ -84,11 +84,14 @@
 import { ref, onMounted, getCurrentInstance, watch, computed } from 'vue';
 import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
+import { purchaseOrderStore } from '@/store/poStore';
 
-const loading = ref(false);
 const props = defineProps({
     action: String,
 });
+const poStore = purchaseOrderStore();
+const loading = ref(false);
+
 const modalConfig = ref({
     actionModal: 'Filter',
     modalTitle: 'Purhcase Order',
@@ -112,17 +115,19 @@ const amountList = ref([
     { label: '> Rp 500.000.000', value: '3' },
 ]);
 
-const companyList = ref([
-    { label: 'PT Maju Bersama', value: 'pt_maju_bersama' },
-    { label: 'CV Sukses Selalu', value: 'cv_sukses_selalu' },
-    { label: 'PT Jaya Abadi', value: 'pt_jaya_abadi' }
-]);
+const companyList = computed(() => {
+    return poStore.mdCompany.map(res => ({
+        label: res.company_name,
+        value: res.company_code
+    }));
+});
 
-const plantList = ref([
-    { label: 'Pabrik Jakarta', value: 'jakarta_plant' },
-    { label: 'Pabrik Surabaya', value: 'surabaya_plant' },
-    { label: 'Pabrik Bandung', value: 'bandung_plant' }
-]);
+const plantList = computed(() => {
+    return poStore.mdPlant.map(res => ({
+        label: res.name1,
+        value: res.werks
+    }));
+});
 
 const selectedYear = ref('');
 const selectedMonthYear = ref('');
@@ -156,7 +161,6 @@ const SubmitForm = async () => {
     //     // Tampilkan pesan error
     //     return;
     // }
-
     const filterData = {
         approve_status: selectedStatus.value,
         ...(selectedPeriod.value === 'yearly' ? {

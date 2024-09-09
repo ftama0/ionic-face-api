@@ -6,7 +6,7 @@
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-searchbar v-model="search" placeholder="Search PR Number"
+                        <ion-searchbar animated="true" v-model="search" placeholder="Search PR Number"
                             @ionInput="handleSearch"></ion-searchbar>
                     </ion-col>
                     <ion-col size="8" class="ion-padding ion-align-self-center">

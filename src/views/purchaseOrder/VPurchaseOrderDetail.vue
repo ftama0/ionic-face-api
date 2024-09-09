@@ -55,31 +55,49 @@
                 <ion-item>
                     <ion-label>
                         <h6>Header Note</h6>
-                        <p>{{ header.header }}</p>
+                        <p>{{ header.header ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PO Type</h6>
-                        <p>{{ header.po_type }}</p>
+                        <p>{{ header.po_type ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Vendor</h6>
-                        <p>{{ header.vendor }}</p>
+                        <p>{{ header.po_vendor ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>Purchasing Group</h6>
-                        <p>Belum Ada</p>
+                        <p>{{ header.po_group ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
                 <ion-item>
                     <ion-label>
                         <h6>PO Creator</h6>
-                        <p>Belum Ada</p>
+                        <p>{{ header.po_creator ?? '-' }}</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Created Date</h6>
+                        <p>{{ header.po_date ?? '-' }}</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Created In</h6>
+                        <p>SAP Client {{ header.client ?? '-' }}</p>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-label>
+                        <h6>Plant</h6>
+                        <p>{{ header.po_plant ?? '-' }}</p>
                     </ion-label>
                 </ion-item>
             </ion-list>

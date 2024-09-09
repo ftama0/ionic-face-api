@@ -6,7 +6,7 @@
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-searchbar v-model="search" placeholder="Search PO Number"
+                        <ion-searchbar animated="true" v-model="search" placeholder="Search PO Number"
                             @ionInput="handleSearch"></ion-searchbar>
                     </ion-col>
                     <ion-col size="8" class="ion-padding ion-align-self-center">
@@ -140,8 +140,8 @@ const setOpen = (state) => {
 };
 
 const openModal = async (action) => {
-    await poStore.readPo(item.po_no || item.ebeln);
-    await poStore.readPo(item.po_no || item.ebeln);
+    await poStore.readCompany();
+    await poStore.readPlant();
     const modal = await modalController.create({
         component: ModalFilter,
         componentProps: { action },
@@ -156,7 +156,9 @@ const openModal = async (action) => {
 };
 
 
-onMounted(fetchAllPo);
+onMounted(async () => {
+    await fetchAllPo();
+});
 </script>
 
 <style scoped>

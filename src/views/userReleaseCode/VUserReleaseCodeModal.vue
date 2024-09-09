@@ -1,34 +1,32 @@
 <template>
     <form-modal-component :config="modalConfig" :submitForm="SubmitForm" @closeModal="handleCloseModal">
         <template #content class="content-modal">
-            <ion-row class="ion-padding">
-                <ion-col size="12" class="ion-padding-top">
+            <ion-list class="ion-padding">
+                <ion-item>
                     <ion-label><b>Name</b></ion-label>
-                </ion-col>
-                <ion-col size="12" class="ion-padding-top">
+                </ion-item>
+                <ion-item>
                     <ion-select aria-label="status" label="Select User" label-placement="floating"
                         placeholder="Select User" fill="outline" v-model="vdata.uuid">
                         <ion-select-option v-for="user in listUser" :key="user.uuid" :value="user.uuid">
                             {{ user.fullname }}
                         </ion-select-option>
                     </ion-select>
-                </ion-col>
-                <ion-col size="12" class="ion-padding-top">
+                </ion-item>
+                <ion-item>
                     <ion-label><b>Release Code</b></ion-label>
-                </ion-col>
-                <ion-col size="12" v-for="(item, index) in listReleaseCode" :key="index">
-                    <ion-checkbox :value="item.id" label-placement="end"
+                </ion-item>
+                <ion-item v-for="(item, index) in listReleaseCode" :key="index">
+                    <ion-checkbox :value="item.id" label-placement="start"
                         @ionChange="handleReleaseCodeChange(item.id, $event)" :checked="isChecked(item.id)">
                         {{ item.frgct }} ({{ item.frgco }})
                     </ion-checkbox>
-                    <br />
-                </ion-col>
-            </ion-row>
+                </ion-item>
+            </ion-list>
             <LoadingComponent :isOpen="loading" :message="'Loading...'" />
         </template>
     </form-modal-component>
 </template>
-
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, watch, computed } from 'vue';

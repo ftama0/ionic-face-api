@@ -113,11 +113,21 @@ export const poService = {
       return res.data;
     });
   },
-  async allPoApproval(page = 1, limit = 5, search = "") {
+  async allPoApproval(page = 1, limit = 5, search = "", filter = {}) {
     return retryRequest(async () => {
-      const res = await apiService.get(
-        `/api/v1/approval-po/?page=${page}&limit=${limit}&search=${search}`
-      );
+      let queryParams = `page=${page}&limit=${limit}&search=${search}&approve_status=To Approve`;
+      if (filter && typeof filter === 'object' && !Array.isArray(filter)) {
+        for (const [key, value] of Object.entries(filter)) {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams += `&${key}=${encodeURIComponent(value)}`;
+          }
+        }
+      } else {
+        console.warn('Filter bukan objek yang valid. Mengabaikan filter.');
+      }
+
+      console.log('INI URL', `/api/v1/approval-po/?${queryParams}`);
+      const res = await apiService.get(`/api/v1/approval-po/?${queryParams}`);
       return res.data;
     });
   },
@@ -137,14 +147,52 @@ export const poService = {
   },
 };
 
+// note : Master Data (client, company, vendor, plant)
+export const masterData = {
+  async readClient(search = "") {
+    return retryRequest(async () => {
+      const res = await apiService.get(`/api/v1/client/?search=${search}`);
+      return res.data;
+    });
+  },
+  async readCompany(search, client) {
+    return retryRequest(async () => {
+      let url = '/api/v1/company/';
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (client) params.append('client_id', client);
+      if (params.toString()) url += `?${params.toString()}`;
+      const res = await apiService.get(url);
+      return res.data;
+    });
+  },
+  async readVendor(search = "", client = "") {
+    return retryRequest(async () => {
+      const res = await apiService.get(`/api/v1/vendor/?search=${search}&client_id=${client}`);
+      return res.data;
+    });
+  },
+  async readPlant(search, client) {
+    return retryRequest(async () => {
+      let url = '/api/v1/plant/';
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (client) params.append('client_id', client);
+      if (params.toString()) url += `?${params.toString()}`;
+      const res = await apiService.get(url);
+      return res.data;
+    });
+  },
+};
 // note : user management
 // user account
 export const userAccountService = {
-  async allUser(page = 1, limit = 5, search = "") {
+  async allUser(page = 1, limit = 5, search, status) {
     return retryRequest(async () => {
-      const res = await apiService.get(
-        `/api/v1/users/?page=${page}&limit=${limit}&search=${search}`
-      );
+      let url = `/api/v1/users/?page=${page}&limit=${limit}`;
+      if (search) url += `&search=${search}`;
+      if (status) url += `&status=${status}`;
+      const res = await apiService.get(url);
       return res.data;
     });
   },
@@ -175,7 +223,7 @@ export const userAccountService = {
   async fetchUserEss(page = 1, perPage = 5, search = "") {
     return retryRequest(async () => {
       const res = await apiEss.get(
-        `/testing_getuser?page=${page}&perPage=${perPage}&search=${search}`
+        `/ testing_getuser ? page = ${page} & perPage=${perPage} & search=${search}`
       );
       return res.data;
     });

@@ -1,25 +1,23 @@
 <template>
     <MenuComponent :contentId="mainContentId" />
     <ion-page id="cost-center-po-content" v-bind="$attrs">
-        <HeaderComponent :title="'Cost Center Purchase Order'" />
+        <HeaderComponent :title="'Maintain Cost Center'" />
         <ion-content>
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-searchbar v-model="search" placeholder="Search" @ionInput="handleSearch"></ion-searchbar>
-                    </ion-col>
-                    <ion-col size="12" class="ion-padding">
-                        <ion-select aria-label="User Account" placeholder="User Account" fill="outline">
-                            <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                            <ion-select-option value="User Account 1">User Account 1</ion-select-option>
-                            <ion-select-option value="User Account 2">User Account 2</ion-select-option>
-                        </ion-select>
+                        <ion-searchbar animated="true" v-model="search" placeholder="Search"
+                            @ionInput="handleSearch"></ion-searchbar>
                     </ion-col>
                     <ion-col size="12">
                         <div v-for="(item, index) in data" :key="index">
-                            <ion-card>
+                            <ion-card class="ion-margin-top ion-elevation-3">
                                 <ion-card-header>
-                                    <ion-card-title>{{ item.fullname }}</ion-card-title>
+                                    <ion-row class="ion-align-items-center">
+                                        <ion-col size="12">
+                                            <ion-text class="ion-card-title">{{ item.fullname }}</ion-text>
+                                        </ion-col>
+                                    </ion-row>
                                 </ion-card-header>
                                 <ion-card-content>
                                     <ion-row>
@@ -63,6 +61,7 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
+import { debounce } from 'lodash';
 import Modal from './VMaintainCostCenterModal.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 import { costCenterStore } from '@/store/costCenterStore';
@@ -94,8 +93,8 @@ const fetchAllData = async (refresh = true) => {
     isLoading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await csStore.allDataCostCenter(page.value, limit.value, search.value, refresh); 
-        console.log(data.value);       
+        await csStore.allDataCostCenter(page.value, limit.value, search.value, refresh);
+        console.log(data.value);
     } catch (error) {
         console.error('Error fetching users:', error);
     } finally {
@@ -134,7 +133,8 @@ const deleteData = async (item) => {
 };
 
 
-const handleSearch = () => { }
+const handleSearch = debounce(() => fetchAllData(true), 300);
+
 
 const refreshData = async () => {
     await fetchAllData(true);
@@ -178,7 +178,7 @@ const openActionSheet = (item) => {
 
 const handleAction = async (action) => {
     isLoading.value = true;
-    
+
     let response;
     switch (action) {
         case 'Add':
@@ -229,14 +229,32 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-button-container {
-    position: relative;
+.ion-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 18px;
+    color: #626060;
 }
 
-ion-button {
-    padding: 0 10px 10px 10px;
-    /* position: absolute;
-    bottom: 0;
-    right: 10px; */
+.custom-item {
+    --padding-start: 2px;
+    --padding-end: 2px;
+    --padding-top: 0;
+    --padding-bottom: 0;
+}
+
+.center-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ion-fab-button {
+    --background: #FFB22C;
+    --background-activated: #FFDE4D;
+    --background-hover: #FFDE4D;
+    --border-radius: 15px;
+    --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    --color: black;
 }
 </style>
