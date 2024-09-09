@@ -45,12 +45,13 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
 import { purchaseOrderStore } from '@/store/poStore';
+import { masterDataStore } from '@/store/masterDataStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import cardUser from '@/components/purchaseOrder/CardPoListComponent.vue';
 import cardApproval from '@/components/purchaseOrder/CardPoApprovalComponent.vue';
 import { useRoute } from 'vue-router';
-import ModalFilter from './VPurchaseOrderFilter.vue';
+import ModalFilter from '@/components/FilterPrPoComponent.vue';
 import { modalController } from '@ionic/vue';
 
 const props = defineProps({
@@ -64,6 +65,7 @@ const typeMenu = ref(props.type);
 const { proxy } = getCurrentInstance()
 const router = useRouter();
 const poStore = purchaseOrderStore();
+const mdStore = masterDataStore();
 
 const loading = ref(false);
 const icons = ref(proxy.$icons);
@@ -86,7 +88,6 @@ watch(() => route.params.type, async (newType) => {
 const vdata = computed(() => poStore.poListFormatted);
 
 const fetchAllPo = async (refresh = true, filter = {}) => {
-    console.log('filter', filter)
     loading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
@@ -140,8 +141,8 @@ const setOpen = (state) => {
 };
 
 const openModal = async (action) => {
-    await poStore.readCompany();
-    await poStore.readPlant();
+    await mdStore.readCompany();
+    await mdStore.readPlant();
     const modal = await modalController.create({
         component: ModalFilter,
         componentProps: { action },

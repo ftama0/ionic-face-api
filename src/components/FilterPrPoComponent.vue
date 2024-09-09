@@ -82,14 +82,13 @@
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, watch, computed } from 'vue';
-import { userAccountStore } from '@/store/userAccountStore';
 import { modalController } from '@ionic/vue';
-import { purchaseOrderStore } from '@/store/poStore';
+import { masterDataStore } from '@/store/masterDataStore';
 
 const props = defineProps({
     action: String,
 });
-const poStore = purchaseOrderStore();
+const mdStore = masterDataStore();
 const loading = ref(false);
 
 const modalConfig = ref({
@@ -116,21 +115,19 @@ const amountList = ref([
 ]);
 
 const companyList = computed(() => {
-    return poStore.mdCompany.map(res => ({
+    return mdStore.mdCompany.map(res => ({
         label: res.company_name,
         value: res.company_code
     }));
 });
 
 const plantList = computed(() => {
-    return poStore.mdPlant.map(res => ({
+    return mdStore.mdPlant.map(res => ({
         label: res.name1,
         value: res.werks
     }));
 });
 
-const selectedYear = ref('');
-const selectedMonthYear = ref('');
 const selectedDate = ref('');
 
 // Computed property untuk menentukan presentasi datetime

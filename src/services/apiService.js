@@ -60,19 +60,39 @@ const retryRequest = async (requestFunction, maxRetries = 3) => {
 };
 
 export const prService = {
-  async allPrList(page = 1, limit = 5, search = "") {
+  async allPrList(page = 1, limit = 5, search = "", filter = {}) {
     return retryRequest(async () => {
-      const res = await apiService.get(
-        `/api/v1/pr/?page=${page}&limit=${limit}&search=${search}`
-      );
+      let queryParams = `page=${page}&limit=${limit}&search=${search}`;
+      if (filter && typeof filter === 'object' && !Array.isArray(filter)) {
+        for (const [key, value] of Object.entries(filter)) {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams += `&${key}=${encodeURIComponent(value)}`;
+          }
+        }
+      } else {
+        console.warn('Filter bukan objek yang valid. Mengabaikan filter.');
+      }
+
+      console.log('INI URL', `/api/v1/pr/?${queryParams}`);
+      const res = await apiService.get(`/api/v1/pr/?${queryParams}`);
       return res.data;
     });
   },
-  async allPrApproval(page = 1, limit = 5, search = "") {
+  async allPrApproval(page = 1, limit = 5, search = "", filter = {}) {
     return retryRequest(async () => {
-      const res = await apiService.get(
-        `/api/v1/approval-pr/?page=${page}&limit=${limit}&search=${search}`
-      );
+      let queryParams = `page=${page}&limit=${limit}&search=${search}&approve_status=To Approve`;
+      if (filter && typeof filter === 'object' && !Array.isArray(filter)) {
+        for (const [key, value] of Object.entries(filter)) {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams += `&${key}=${encodeURIComponent(value)}`;
+          }
+        }
+      } else {
+        console.warn('Filter bukan objek yang valid. Mengabaikan filter.');
+      }
+
+      console.log('INI URL', `/api/v1/approval-pr/?${queryParams}`);
+      const res = await apiService.get(`/api/v1/approval-pr/?${queryParams}`);
       return res.data;
     });
   },

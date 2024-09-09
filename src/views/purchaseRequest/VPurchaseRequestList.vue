@@ -15,7 +15,7 @@
                     <ion-col size="4" class="ion-padding ion-align-self-center">
                         <div class="filter-container">
                             <ion-text>Filter</ion-text>
-                            <ion-button color="primary" fill="solid">
+                            <ion-button color="primary" fill="solid" @click="openModal(typeMenu)">
                                 <ion-icon slot="icon-only" :icon="icons.filterOutline"></ion-icon>
                             </ion-button>
                         </div>
@@ -45,11 +45,14 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed, watch } from 'vue';
 import { purchaseRequestStore } from '@/store/prStore';
+import { masterDataStore } from '@/store/masterDataStore';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash';
 import cardUser from '@/components/purchaseRequest/CardPrListComponent.vue';
 import cardApproval from '@/components/purchaseRequest/CardPrApprovalComponent.vue';
 import { useRoute } from 'vue-router';
+import ModalFilter from '@/components/FilterPrPoComponent.vue';
+import { modalController } from '@ionic/vue';
 
 const props = defineProps({
     type: {
@@ -62,6 +65,7 @@ const typeMenu = ref(props.type);
 const { proxy } = getCurrentInstance()
 const router = useRouter();
 const prStore = purchaseRequestStore();
+const mdStore = masterDataStore();
 
 const loading = ref(false);
 const icons = ref(proxy.$icons);
@@ -83,11 +87,11 @@ watch(() => route.params.type, async (newType) => {
 
 const vdata = computed(() => prStore.prListFormatted);
 
-const fetchAllPr = async (refresh = true) => {
+const fetchAllPr = async (refresh = true, filter = {}) => {
     loading.value = refresh;
     try {
         refresh ? page.value = 1 : page.value++;
-        await prStore.allPr(refresh, typeMenu.value, page.value, limit.value, search.value);
+        await prStore.allPr(refresh, typeMenu.value, page.value, limit.value, search.value, filter);
     } catch (error) {
         console.error('Error fetching Purchase Request:', error);
     } finally {
@@ -137,24 +141,24 @@ const setOpen = (state) => {
 };
 
 const openModal = async (action) => {
+    await mdStore.readCompany();
+    await mdStore.readPlant();
     const modal = await modalController.create({
-        component: Modal,
+        component: ModalFilter,
         componentProps: { action },
     });
     modal.present();
     const { data, role } = await modal.onWillDismiss();
     if (role === 'confirm') {
-        proxy.$toast(data.message, 'success');
+        await fetchAllPr(true, data);
+        // proxy.$toast(data.message, 'success');
+        proxy.$toast('Apply Filter Successfully', 'success');
     }
 };
 
-const filteredData = computed(() =>
-    selectedStatus.value
-        ? vdata.value.filter(item => item.status.toString() === selectedStatus.value)
-        : vdata.value
-);
-
-onMounted(fetchAllPr);
+onMounted(async () => {
+    await fetchAllPr();
+});
 </script>
 
 <style scoped>
