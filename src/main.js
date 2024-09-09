@@ -28,7 +28,7 @@ import "@ionic/vue/css/display.css";
 
 /* @import '@ionic/vue/css/palettes/dark.always.css'; */
 /* @import '@ionic/vue/css/palettes/dark.class.css'; */
-import "@ionic/vue/css/palettes/dark.system.css";
+// import "@ionic/vue/css/palettes/dark.system.css"; //ini dark system 
 
 /* Theme variables */
 import "./theme/variables.css";
@@ -71,7 +71,13 @@ import persistedState from "pinia-plugin-persistedstate";
 pinia.use(persistedState);
 
 const app = createApp(App)
-  .use(IonicVue)
+  .use(IonicVue, {
+    mode: 'ios', // Gunakan mode iOS
+    platform: {
+      /** Paksa platform menjadi iOS */
+      is: (platformName) => platformName === 'ios',
+    },
+  })
   .use(router)
   .use(pinia)
   .use(ionicons)

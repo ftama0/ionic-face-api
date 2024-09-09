@@ -3,19 +3,19 @@
         <template #content class="content-modal">
             <ion-list :inset="true">
                 <ion-list-header>
-                    <ion-label class="ion-list-header">Status Persetujuan</ion-label>
+                    <ion-label class="ion-list-header">Approval Status</ion-label>
                 </ion-list-header>
                 <ion-radio-group v-model="selectedStatus">
                     <ion-item button @click="selectedStatus = 'To Approve'">
-                        <ion-label>Untuk Disetujui</ion-label>
+                        <ion-label>To Approve</ion-label>
                         <ion-radio slot="start" value="To Approve"></ion-radio>
                     </ion-item>
                     <ion-item button @click="selectedStatus = 'Approved'">
-                        <ion-label>Disetujui</ion-label>
+                        <ion-label>Approved</ion-label>
                         <ion-radio slot="start" value="Approved"></ion-radio>
                     </ion-item>
                     <ion-item button @click="selectedStatus = 'Rejected'">
-                        <ion-label>Ditolak</ion-label>
+                        <ion-label>Rejected</ion-label>
                         <ion-radio slot="start" value="Rejected"></ion-radio>
                     </ion-item>
                 </ion-radio-group>
@@ -25,15 +25,15 @@
                 </ion-list-header>
                 <ion-radio-group v-model="selectedPeriod">
                     <ion-item button @click="selectedPeriod = 'yearly'">
-                        <ion-label>Tahunan</ion-label>
+                        <ion-label>Year</ion-label>
                         <ion-radio slot="start" value="yearly"></ion-radio>
                     </ion-item>
                     <ion-item button @click="selectedPeriod = 'monthly'">
-                        <ion-label>Bulanan</ion-label>
+                        <ion-label>Month</ion-label>
                         <ion-radio slot="start" value="monthly"></ion-radio>
                     </ion-item>
                     <ion-item button @click="selectedPeriod = 'daily'">
-                        <ion-label>Harian</ion-label>
+                        <ion-label>Daily</ion-label>
                         <ion-radio slot="start" value="daily"></ion-radio>
                     </ion-item>
                 </ion-radio-group>
@@ -43,7 +43,7 @@
                 </ion-item>
 
                 <ion-list-header>
-                    <ion-label class="ion-list-header">Jumlah Permintaan</ion-label>
+                    <ion-label class="ion-list-header">Amount Request</ion-label>
                 </ion-list-header>
                 <ion-radio-group v-model="selectedAmount">
                     <ion-item v-for="amount in amountList" :key="amount.value" button
@@ -54,7 +54,7 @@
                 </ion-radio-group>
 
                 <ion-list-header>
-                    <ion-label class="ion-list-header">Perusahaan</ion-label>
+                    <ion-label class="ion-list-header">Company</ion-label>
                 </ion-list-header>
                 <ion-radio-group v-model="selectedCompany">
                     <ion-item v-for="company in companyList" :key="company.value" button
@@ -65,7 +65,7 @@
                 </ion-radio-group>
 
                 <ion-list-header>
-                    <ion-label class="ion-list-header">Pabrik</ion-label>
+                    <ion-label class="ion-list-header">Plant</ion-label>
                 </ion-list-header>
                 <ion-radio-group v-model="selectedPlant">
                     <ion-item v-for="plant in plantList" :key="plant.value" button @click="selectedPlant = plant.value">

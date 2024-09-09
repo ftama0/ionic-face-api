@@ -23,7 +23,7 @@
                     </ion-col>
                 </ion-row>
                 <ion-row>
-                    <ion-col size="12" class="ion-no-padding">
+                    <ion-col size="12" class="ion-no-padding" style="padding-bottom: 20px;">
                         <ion-text class="main-menu-title">Main Menu</ion-text>
                     </ion-col>
                     <ion-col size="6" class="ion-col ion-no-padding" v-if="user.role_id == 1 || user.role_id == 3">
@@ -224,6 +224,7 @@ ion-card {
     max-height: 200px;
     width: 100%;
     border-radius: 15px;
+    margin-top: 0px;
 }
 
 .center-content {
