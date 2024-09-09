@@ -101,16 +101,15 @@ let comment = ref('');
 
 // Data dummy untuk filter
 const selectedStatus = ref('To Approve');
-const selectedPeriod = ref('monthly');
+const selectedPeriod = ref('yearly');
 const selectedAmount = ref('');
 const selectedCompany = ref('');
 const selectedPlant = ref('');
 
 const amountList = ref([
-    { label: '< 1 Juta', value: 'less_than_1m' },
-    { label: '1 - 5 Juta', value: '1m_to_5m' },
-    { label: '5 - 10 Juta', value: '5m_to_10m' },
-    { label: '> 10 Juta', value: 'more_than_10m' }
+    { label: '0- 100.000.000', value: '1' },
+    { label: '100.000.000 - 500.000.000', value: '2' },
+    { label: '> Rp 500.000.000', value: '3' },
 ]);
 
 const companyList = ref([

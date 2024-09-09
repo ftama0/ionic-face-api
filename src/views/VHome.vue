@@ -6,7 +6,8 @@
             <ion-grid>
                 <ion-row>
                     <ion-col size="12">
-                        <ion-card ref="userCard" class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
+                        <ion-card class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;">
+                            <!-- <ion-card ref="userCard" class="ion-margin-top ion-elevation-3 " style="border-radius: 15px;"> -->
                             <ion-card-content class="ion-text-center">
                                 <ion-row class="center-content ">
                                     <ion-col size="6" class="ion-no-padding">
@@ -150,7 +151,6 @@ onMounted(async () => {
         });
 
         gesture.enable();
-
         // document.addEventListener('ionBackButton', handleHardwareBackButton);
     }
 });

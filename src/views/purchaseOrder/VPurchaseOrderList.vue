@@ -140,6 +140,8 @@ const setOpen = (state) => {
 };
 
 const openModal = async (action) => {
+    await poStore.readPo(item.po_no || item.ebeln);
+    await poStore.readPo(item.po_no || item.ebeln);
     const modal = await modalController.create({
         component: ModalFilter,
         componentProps: { action },
