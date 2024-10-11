@@ -33,7 +33,7 @@
             <ion-col size="12" class="ion-padding-horizontal">
                 <ion-label class="ion-card-label">{{ item.header }}</ion-label>
             </ion-col>
-            <ion-col size="12" class="ion-padding-horizontal ion-text-start ion-align-self-center">
+            <ion-col size="12" class="ion-padding-horizontal ion-padding-bottom ion-text-start ion-align-self-center">
                 <ion-label class="ion-card-amount">{{ item.total_amount }}</ion-label>
                 <br>
                 <ion-label>{{ item.item_count }} Item</ion-label>

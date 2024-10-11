@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'Approval System HG',
+  appId: 'io.ionic.face',
+  appName: 'Ionic Face',
   webDir: 'dist'
 ,
     // android: {

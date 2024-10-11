@@ -11,66 +11,50 @@
                                 @ionInput="handleSearch"></ion-searchbar>
                         </ion-col>
                     </ion-row>
-                    <ion-row>
-                        <ion-col size="12" class="ion-padding">
-                            <ion-item>
-                                <ion-select aria-label="status" label="Status select" placeholder="Status"
-                                    label-placement="floating" fill="outline">
-                                    <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                                    <ion-select-option value="active">Active</ion-select-option>
-                                    <ion-select-option value="nonActive">Non Active</ion-select-option>
-                                </ion-select>
-                            </ion-item>
-                        </ion-col>
-                    </ion-row>
                 </div>
                 <ion-row>
                     <ion-col size="12">
-                        <div v-for="(item, index) in filteredData" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3" style="border-radius: 15px;">
-                                <ion-card-content>
-                                    <ion-row class="ion-align-items-center">
-                                        <ion-col size="12" class="ion-text-start">
-                                            <ion-text class="text__header">{{ item.username }}</ion-text>
-                                        </ion-col>
-                                        <ion-col size="12" class="ion-text-start">
-                                            <ion-text class="text__sub">{{ item.fullname }}</ion-text>
-                                        </ion-col>
-                                        <ion-col size="12" class="ion-text-center ion-text-justify">
+                        <ion-card v-for="(item, index) in filteredData" :key="index"
+                            class="ion-padding ion-elevation-3">
+                            <ion-row class="ion-align-items-center">
+                                <ion-col size="12" class="ion-text-start">
+                                    <ion-text class="text__header">{{ item.username }}</ion-text>
+                                </ion-col>
+                                <ion-col size="12" class="ion-text-start">
+                                    <ion-text class="text__sub">{{ item.fullname }}</ion-text>
+                                </ion-col>
+                                <ion-col size="12" class="ion-text-center ion-text-justify">
+                                    <div class="chip__container">
+                                        <template v-for="(strategy, sIndex) in item.user_prpo.slice(0, 4)"
+                                            :key="sIndex">
+                                            <StrategyChip :strategy="strategy"
+                                                :triggerId="`hover-trigger-${index}-${sIndex}`" :width="widthButton" />
+                                        </template>
+                                        <ChipComponent v-if="item.user_prpo.length > 4"
+                                            :id="`click-trigger-${index}-${item.uuid}`" :width="widthButton">
+                                            ....
+                                        </ChipComponent>
+                                    </div>
+                                    <ion-popover :trigger="`click-trigger-${index}-${item.uuid}`" side="left"
+                                        trigger-action="click" size="auto">
+                                        <ion-content>
                                             <div class="chip__container">
-                                                <template v-for="(strategy, sIndex) in item.user_prpo.slice(0, 4)"
-                                                    :key="sIndex">
-                                                    <StrategyChip :strategy="strategy"
-                                                        :triggerId="`hover-trigger-${index}-${sIndex}`"
-                                                        :width="widthButton" />
-                                                </template>
-                                                <ChipComponent v-if="item.user_prpo.length > 4"
-                                                    :id="`click-trigger-${index}-${item.uuid}`" :width="widthButton">
-                                                    ....
-                                                </ChipComponent>
+                                                <StrategyChip v-for="(strategy, sIndex) in item.user_prpo" :key="sIndex"
+                                                    :strategy="strategy"
+                                                    :triggerId="`hover-trigger-${index}-${sIndex}-full`"
+                                                    :width="widthButton" />
                                             </div>
-                                            <ion-popover :trigger="`click-trigger-${index}-${item.uuid}`" side="left"
-                                                trigger-action="click" size="auto">
-                                                <ion-content>
-                                                    <div class="chip__container">
-                                                        <StrategyChip v-for="(strategy, sIndex) in item.user_prpo"
-                                                            :key="sIndex" :strategy="strategy"
-                                                            :triggerId="`hover-trigger-${index}-${sIndex}-full`"
-                                                            :width="widthButton" />
-                                                    </div>
-                                                </ion-content>
-                                            </ion-popover>
-                                        </ion-col>
-                                        <ion-col size="12" class="ion-text-end">
-                                            <ButtonComponent :size="sizeButton" :icon="icons.openOutline" :item="item"
-                                                :class="actionButton" @action-click="openActionSheet">
-                                                Action
-                                            </ButtonComponent>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-card-content>
-                            </ion-card>
-                        </div>
+                                        </ion-content>
+                                    </ion-popover>
+                                </ion-col>
+                                <ion-col size="12" class="ion-text-end">
+                                    <ButtonComponent :size="sizeButton" :icon="icons.openOutline" :item="item"
+                                        :class="actionButton" @action-click="openActionSheet">
+                                        Action
+                                    </ButtonComponent>
+                                </ion-col>
+                            </ion-row>
+                        </ion-card>
                         <ion-infinite-scroll threshold="10px" @ionInfinite="loadMore">
                             <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
                             </ion-infinite-scroll-content>
@@ -327,7 +311,7 @@ ion-fab-button {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
-    justify-content: center;
+    /* justify-content: center; */
 }
 
 .chip__container>* {

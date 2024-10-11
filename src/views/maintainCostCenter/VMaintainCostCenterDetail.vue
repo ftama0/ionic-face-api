@@ -35,13 +35,26 @@
                     </ion-label>
                 </ion-item> -->
                 <ion-item class="detail__header">Cost Center</ion-item>
-                <ion-item v-for="(user, index) in data.user_csks" :key="index">
-                    <ion-label>
-                        <p class="detail__sub">
-                            {{ user.ltext }} ( {{ user.kostl }} )
-                        </p>
-                    </ion-label>
-                </ion-item>
+                <ion-row v-for="(user, index) in data.user_csks" :key="index">
+                    <ion-col size="4" class="ion-no-padding">
+                        <ion-item>
+                            <ion-label>
+                                <p class="detail__sub">
+                                    {{ user.kostl }}
+                                </p>
+                            </ion-label>
+                        </ion-item>
+                    </ion-col>
+                    <ion-col size="8" class="ion-no-padding">
+                        <ion-item>
+                            <ion-label>
+                                <p class="detail__sub">
+                                    {{ user.ltext }} ({{ user.bukrs }})
+                                </p>
+                            </ion-label>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
             </ion-list>
         </ion-content>
 

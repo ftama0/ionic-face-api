@@ -12,6 +12,7 @@ export const useLoginStore = defineStore({
   state: () => ({
     user: {},
     token: {},
+    homeData: {},
   }),
   persist: {
     enabled: true,
@@ -43,6 +44,27 @@ export const useLoginStore = defineStore({
       // await storage.clear();
       localStorage.clear();
       this.$reset();
+    },
+    async readHome() {
+      try {
+        const res = await loginService.readHome();
+        this.homeData = res.data;
+      } catch (error) {
+        console.error("Error get data:", error);
+        throw error;
+      }
+    },
+    async postOneSignal(id) {
+      try {
+        const data = {
+          onesignal_id: id
+        };
+        const res = await loginService.oneSignal(data);
+        return res;
+      } catch (error) {
+        console.error("Post OneSignal Id error:", error);
+        throw error;
+      }
     },
   },
 });

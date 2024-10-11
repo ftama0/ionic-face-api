@@ -11,7 +11,7 @@
                             <ion-card-content class="ion-text-center">
                                 <ion-row class="center-content ">
                                     <ion-col size="6" class="ion-no-padding">
-                                        <img src="@/assets/images/logo_Hasnur.png" alt="App Icon" width="80"
+                                        <img src="@/assets/images/home_logo.png" alt="App Icon" width="100"
                                             height="auto" />
                                     </ion-col>
                                     <ion-col size="6" class="ion-no-padding">
@@ -51,7 +51,7 @@
                                 @click="$router.push({ name: 'PurchaseRequestList', params: { type: 'approval' } })">
                                 <ion-icon class="custom__icon1" :icon="icons.cartOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Request</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
+                                <ion-badge color="danger" class="badge-top-right">{{ homeData.total_pr }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
@@ -61,7 +61,7 @@
                                 @click="$router.push({ name: 'PurchaseOrderList', params: { type: 'approval' } })">
                                 <ion-icon class="custom__icon1" :icon="icons.basketOutline"></ion-icon>
                                 <span class="button-text">Approval Purchase Order</span>
-                                <ion-badge color="danger" class="badge-top-right">{{ totalPR }}</ion-badge>
+                                <ion-badge color="danger" class="badge-top-right">{{ homeData.total_po }}</ion-badge>
                             </ion-card-content>
                         </ion-card>
                     </ion-col>
@@ -86,6 +86,7 @@ import { createGesture, useIonRouter } from '@ionic/vue';
 import { useLoginStore } from '@/store/loginStore';
 import { purchaseRequestStore } from '@/store/prStore';
 import { useRouter } from 'vue-router';
+import OneSignal from 'onesignal-cordova-plugin';
 // data
 const { proxy } = getCurrentInstance()
 const isLoading = ref(false);
@@ -97,20 +98,22 @@ const mainContentId = 'home-content';
 const userCard = ref(null);
 const ionRouter = useIonRouter();
 
+// computed 
+const homeData = computed(() => loginStore.homeData);
+const totalPR = computed(() => prStore.totalPr);
+const user = computed(() => loginStore.user);
+
 // api 
-const fetchTotalPr = async () => {
+const readHome = async () => {
     try {
-        isLoading.value = true;
-        await prStore.fetchTotalPr(user.value.username);
+        await loginStore.readHome();
     } catch (error) {
     }
     finally {
         isLoading.value = false;
     }
 };
-// computed 
-const totalPR = computed(() => prStore.totalPr);
-const user = computed(() => loginStore.user);
+
 console.log(user);
 // Another Methods
 const onMove = (detail) => {
@@ -148,8 +151,35 @@ const preventSwipeBack = (event) => {
     event.preventDefault();
 };
 
+// oneSignal 
+const initializeOneSignal = async () => {
+    try {
+        // Tunggu sampai OneSignal ID didapatkan
+        let user = OneSignal.User;
+        let idOneSignal = await user.getOnesignalId();
+        let idSubscription = await user.pushSubscription._id;
+
+        console.log('---------------------------------------------------------------------->')
+        console.log('hasil id oneSignal', idOneSignal);
+        console.log('hasil id subscription', idSubscription);
+
+        // Kirim ID ke store setelah semua proses selesai
+        const res = await loginStore.postOneSignal(idSubscription);
+        if (res.status == true) {
+            proxy.$toast('Enable notifications success', 'success');
+        } else {
+            throw new Error('Failed to post OneSignal subscription ID to store');
+        }
+    } catch (error) {
+        console.error('Error in OneSignal initialization:', error);
+        proxy.$toast('Failed to enable notifications', 'danger');
+    }
+};
+
+
 onMounted(async () => {
-    await fetchTotalPr();
+    await initializeOneSignal();
+    await readHome();
     if (userCard.value) {
         const gesture = createGesture({
             el: userCard.value.$el,

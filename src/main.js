@@ -54,7 +54,7 @@ import RefresherComponent from "@/components/RefresherComponent.vue";
 import LoadingComponent from "@/components/LoadingComponent.vue";
 import FormModalComponent from "@/components/FormModalComponent.vue";
 // one signal
-
+import OneSignal from 'onesignal-cordova-plugin';
 // storage
 // import { initStorage } from "@/store/configStorage";
 // initStorage();
@@ -108,4 +108,13 @@ app.config.globalProperties.$toast = toastInstance.showToast;
 
 router.isReady().then(() => {
   app.mount("#app");
+  OneSignal.initialize("f6b94839-0dcd-4cd8-ae0b-f32fa0004bdf");
+  OneSignal.Notifications.requestPermission();
+  // OneSignal.initialize("f6b94839-0dcd-4cd8-ae0b-f32fa0004bdf");
+  // OneSignal.Notifications.requestPermission();
+  // OneSignal.getDeviceState((deviceState) => {
+  //   if (deviceState.userId) {
+  //     localStorage.setItem('oneSignalUserId', deviceState.userId);
+  //   }
+  // });
 });

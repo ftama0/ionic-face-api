@@ -8,12 +8,24 @@
             <ion-buttons slot="end">
                 <ion-button @click="$router.push({ name: 'Notification' })">
                     <ion-icon :icon="notificationsOutline"></ion-icon>
+                    <ion-badge slot="end" color="danger">{{ homeData.total_notification }}</ion-badge>
                 </ion-button>
             </ion-buttons>
         </ion-toolbar>
     </ion-header>
 </template>
 
+<script setup>
+import { getCurrentInstance, ref, computed } from 'vue';
+import { notificationsOutline } from 'ionicons/icons';
+import { useLoginStore } from '@/store/loginStore';
+const loginStore = useLoginStore();
+const homeData = computed(() => loginStore.homeData);
+const props = defineProps({
+    title: String,
+});
+
+</script>
 
 <style scoped>
 .toolbar-custom {
@@ -23,13 +35,3 @@
     background-color: var(--ion-background-color);
 }
 </style>
-
-<script setup>
-import { getCurrentInstance, ref } from 'vue';
-import { notificationsOutline } from 'ionicons/icons';
-
-const props = defineProps({
-    title: String,
-});
-
-</script>

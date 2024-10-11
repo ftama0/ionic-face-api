@@ -4,7 +4,7 @@
         <HeaderComponent :title="props.type === 'user' ? 'Purchase Request List' : 'Purchase Request Approval'" />
         <ion-content>
             <ion-grid>
-                <ion-row>
+                <ion-row class="sticky-top">
                     <ion-col size="12">
                         <ion-searchbar animated="true" v-model="search" placeholder="Search PR Number"
                             @ionInput="handleSearch"></ion-searchbar>
@@ -20,6 +20,8 @@
                             </ion-button>
                         </div>
                     </ion-col>
+                </ion-row>
+                <ion-row>
                     <ion-col size="12">
                         <cardUser v-if="typeMenu === 'user'" v-for="(item, index) in vdata" :key="index" :item="item"
                             :icons="icons" @readPr="fetchReadPr" />

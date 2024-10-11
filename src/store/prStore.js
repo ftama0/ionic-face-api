@@ -84,9 +84,13 @@ export const purchaseRequestStore = defineStore({
                 throw error;
             }
         },
-        async approvePr(id, status_type) {
+        async approvePr(id, status_type, data) {
             try {
-                const res = await prService.approvePr(id, status_type);
+                let rejectReason = {};
+                if (data) {
+                    rejectReason = { "reject_reason": data };
+                }
+                const res = await prService.approvePr(id, status_type, rejectReason);
                 return res;
             } catch (error) {
                 console.error("Store error:", error);

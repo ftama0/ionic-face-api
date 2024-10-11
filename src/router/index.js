@@ -41,9 +41,9 @@ const routes = [
     component: () => import("@/views/VtestingEss.vue"),
   },
   {
-    path: "/home",
+    path: "/testing",
     name: "Home",
-    component: () => import("@/views/VHome.vue"),
+    component: () => import("@/views/VTesting.vue"),
   },
   //note : pr
   {
@@ -133,6 +133,10 @@ router.beforeEach(async (to, from, next) => {
   const authRequired = !publicPages.includes(to.path);
 
   const isAuthenticated = await checkTokenExpiration();
+
+  if (to.name == "testing") { // Menambahkan pengecekan untuk route testing
+    next();
+  }
 
   if (authRequired && !isAuthenticated) {
     next({ name: "Login" });

@@ -124,7 +124,7 @@
                                 <h6 class="ion-title-item">{{ item.txz01 }}</h6>
                             </ion-col>
                             <ion-col size="6" class="ion-text-end">
-                                <h6><ion-text class="ion-amount-item">{{ item.rlwrt }}</ion-text>
+                                <h6><ion-text class="ion-amount-item">{{ item.preis }}</ion-text>
                                 </h6>
                             </ion-col>
                         </ion-row>
@@ -232,7 +232,7 @@ const handleAlertDismiss = (detail) => {
 const openModal = async (action) => {
     const modal = await modalController.create({
         component: ModalReject,
-        componentProps: { action },
+        componentProps: { action, title: 'Purchase Request' },
     });
     modal.present();
     const { data, role } = await modal.onWillDismiss();
@@ -250,8 +250,8 @@ const submitButton = async (action) => {
         if (action === 'approve') {
             submitData(action);
         } else if (action === 'reject') {
-            // openModal(action)
-            submitData(action);
+            openModal(action)
+            // submitData(action);
         }
     } catch (error) {
         console.error(`Error ${action}:`, error);
@@ -262,7 +262,7 @@ const submitButton = async (action) => {
 const submitData = async (action, data = null) => {
     loading.value = true;
     try {
-        const res = await prStore.approvePr(header.value.pr_no, action);
+        const res = await prStore.approvePr(header.value.pr_no, action, data);
         if (action === 'approve') {
             proxy.$toast(res.message, 'success');
         } else if (action === 'reject') {

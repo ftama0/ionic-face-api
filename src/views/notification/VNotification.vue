@@ -10,63 +10,30 @@
         </ion-header>
         <ion-content>
             <ion-list :inset="true">
-                <ion-item ref="NotifItem" :button="true" detail="false">
+                <ion-item v-for="item in vdata" :key="item.id" :button="true" detail="false"
+                    @click="readNotification(item)">
                     <div class="unread-indicator-wrapper" slot="start">
                         <div class="unread-indicator"></div>
                     </div>
                     <ion-label>
-                        <strong>Rick Astley</strong>
-                        <ion-text>Never Gonna Give You Up</ion-text><br />
+                        <strong>{{ item.title }}</strong>
+                        <br>
                         <ion-note color="medium" class="ion-text-wrap">
-                            Never gonna give you up Never gonna let you down Never gonna run...
+                            {{ item.message }}
+                            <br>
+                            <span class="notification-date">{{ item.created_at }}</span>
                         </ion-note>
                     </ion-label>
                     <div class="metadata-end-wrapper" slot="end">
-                        <ion-note color="medium">06:11</ion-note>
-                    </div>
-                </ion-item>
-                <ion-item :button="true" detail="false">
-                    <div class="unread-indicator-wrapper" slot="start">
-                        <div class="unread-indicator"></div>
-                    </div>
-                    <ion-label>
-                        <strong>Ionitron</strong>
-                        <ion-text>I have become sentient</ion-text><br />
-                        <ion-note color="medium" class="ion-text-wrap">That is all.</ion-note>
-                    </ion-label>
-                    <div class="metadata-end-wrapper" slot="end">
-                        <ion-note color="medium">03:44</ion-note>
-                    </div>
-                </ion-item>
-                <ion-item :button="true" detail="false">
-                    <div class="unread-indicator-wrapper" slot="start">
-                        <div class="unread-indicator"></div>
-                    </div>
-                    <ion-label>
-                        <strong>Steam</strong>
-                        <ion-text>Game Store Sale</ion-text><br />
-                        <ion-note color="medium" class="ion-text-wrap">
-                            That game you added to your wish list 2 years ago is now on sale!
-                        </ion-note>
-                    </ion-label>
-                    <div class="metadata-end-wrapper" slot="end">
-                        <ion-note color="medium">Yesterday</ion-note>
-                    </div>
-                </ion-item>
-                <ion-item :button="true" detail="false">
-                    <div class="unread-indicator-wrapper" slot="start">
-                        <div class="unread-indicator"></div>
-                    </div>
-                    <ion-label>
-                        <strong>Ionic</strong>
-                        <ion-text>Announcing Ionic 7.0</ion-text><br />
-                        <ion-note color="medium" class="ion-text-wrap">This version is one more than Ionic 6!</ion-note>
-                    </ion-label>
-                    <div class="metadata-end-wrapper" slot="end">
-                        <ion-note color="medium">Yesterday</ion-note>
+                        <!-- <ion-note color="medium">{{ item.created_at }}</ion-note> -->
                     </div>
                 </ion-item>
             </ion-list>
+            <ion-infinite-scroll threshold=" 10px" @ionInfinite="loadMore">
+                <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
+            <RefresherComponent @refresh="refreshData()" />
         </ion-content>
         <LoadingComponent :isOpen="loading" :message="'Loading...'" />
     </ion-page>
@@ -75,12 +42,58 @@
 <script setup>
 import { ref, onMounted, getCurrentInstance, computed } from 'vue';
 import { createGesture } from '@ionic/vue';
+import { notificationStore } from '@/store/notificationStore';
+const notification = notificationStore();
 
 // data
 const { proxy } = getCurrentInstance()
 
 const loading = ref(false);
+const icons = ref(proxy.$icons);
+const page = ref(1);
+const limit = ref(5);
 const NotifItem = ref(null);
+
+const vdata = computed(() => notification.notificationListFormatted);
+
+
+const fetchAllNotification = async (refresh = true) => {
+    loading.value = refresh;
+    try {
+        refresh ? page.value = 1 : page.value++;
+        await notification.allNotification(refresh, page.value, limit.value);
+    } catch (error) {
+        console.error('Error mengambil data:', error);
+    } finally {
+        loading.value = false;
+    }
+};
+
+const readNotification = async (item) => {
+    loading.value = true;
+    try {
+        await notification.readNotification(item.id);
+        await fetchAllNotification(true);
+        proxy.$toast('Read Successfully', 'primary');
+    } catch (error) {
+        console.error('Error read notif:', error);
+        proxy.$toast('Error read notif', 'danger');
+    } finally {
+        loading.value = false;
+    }
+};
+const refreshData = async () => {
+    await fetchAllNotification(true);
+};
+
+const loadMore = async (event) => {
+    if (vdata.value.length >= vdata.value.total) {
+        event.target.complete();
+        return;
+    }
+    await fetchAllNotification(false);
+    event.target.complete();
+};
 
 const onMove = (detail) => {
     const { deltaX } = detail;
@@ -103,6 +116,7 @@ const onEnd = (detail) => {
     }
 };
 onMounted(async () => {
+    await fetchAllNotification();
     if (NotifItem.value) {
         const gesture = createGesture({
             el: NotifItem.value.$el,
@@ -122,5 +136,14 @@ onMounted(async () => {
     height: 10px;
     background-color: blue;
     border-radius: 50%;
+}
+
+.notification-date {
+    font-size: 0.8em;
+    /* Ukuran font lebih kecil */
+    color: gray;
+    /* Warna teks abu-abu */
+    margin-top: 4px;
+    /* Jarak atas untuk pemisahan */
 }
 </style>

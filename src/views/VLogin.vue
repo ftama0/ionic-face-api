@@ -4,48 +4,51 @@
             <ion-toolbar class="ion-text-center ion-padding-top ion-margin-top white-toolbar">
                 <ion-grid>
                     <ion-row class="ion-justify-content-center">
-                        <ion-col size="12" class="ion-text-center">
-                            <img src="@/assets/images/logo_Hasnur.png" class="ion-margin-top logo-center" alt="App Icon"
-                                width="140" height="120" />
-                        </ion-col>
-                        <ion-col size="12" class="ion-margin-top">
-                            <h1 class="ion-padding-top approval-system-title"><b>Approval System</b></h1>
+                        <ion-col size="12" class="ion-text-center ion-margin-top">
+                            <img src="@/assets/images/app_logo.png" class="ion-margin-top logo-center" alt="App Icon"
+                                width="220" height="120" />
                         </ion-col>
                     </ion-row>
                 </ion-grid>
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding" scroll-y="true">
-            <form @submit.prevent="submitForm">
-                <ion-list class="login-list">
-                    <ion-item class="ion-margin-bottom login-item">
-                        <ion-input label-placement="stacked" label="Username" placeholder="Enter Username" type="text"
-                            fill="outline" v-model="vdata.username" required>
-                            <ion-icon slot="start" :icon="icons.personOutline" aria-hidden="true"></ion-icon>
-                        </ion-input>
-                    </ion-item>
-                    <ion-item class="ion-margin-bottom login-item">
-                        <ion-input label-placement="stacked" label="Password" placeholder="Enter Password"
-                            type="password" fill="outline" v-model="vdata.password" required>
-                            <ion-icon slot="start" :icon="icons.keyOutline" aria-hidden="true"></ion-icon>
-                            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-                        </ion-input>
-                    </ion-item>
-                    <ion-button expand="block" type="submit" id="login-button" size="default" shape="round"
-                        class="login-button">
-                        <span>Login</span>
-                        <ion-icon slot="end" :icon="icons.logInOutline"></ion-icon>
-                    </ion-button>
-                </ion-list>
-            </form>
+            <div class="form-container"> <!-- Tambahkan div ini -->
+                <form @submit.prevent="submitForm">
+                    <ion-list class="login-list">
+                        <ion-item class="ion-margin-bottom login-item">
+                            <ion-input label-placement="stacked" label="Username" placeholder="Enter Username"
+                                type="text" fill="outline" v-model="vdata.username" required>
+                                <ion-icon slot="start" :icon="icons.personOutline" aria-hidden="true"></ion-icon>
+                            </ion-input>
+                        </ion-item>
+                        <ion-item class="ion-margin-bottom login-item">
+                            <ion-input label-placement="stacked" label="Password" placeholder="Enter Password"
+                                type="password" fill="outline" v-model="vdata.password" required>
+                                <ion-icon slot="start" :icon="icons.keyOutline" aria-hidden="true"></ion-icon>
+                                <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+                            </ion-input>
+                        </ion-item>
+                        <ion-button expand="block" type="submit" id="login-button" size="default" shape="round"
+                            class="login-button">
+                            <span>Sign In</span>
+                            <ion-icon slot="end" :icon="icons.logInOutline"></ion-icon>
+                        </ion-button>
+                    </ion-list>
+                </form>
+            </div> <!-- Tutup div ini -->
         </ion-content>
         <ion-footer class="ion-no-border custom-footer" keyboard-attach>
             <ion-toolbar class="white-toolbar">
-                <ion-title class="ion-text-center">
-                    <h6> <b> Copyright © 2024 </b></h6>
-                    <h6> <b> PT Hasnur Informasi Teknologi</b> </h6>
-                    <h6><i><b> All rights reserved </b> </i> </h6>
-                </ion-title>
+                <ion-grid>
+                    <ion-row class="ion-justify-content-center">
+                        <ion-col size="12" class="ion-text-center">
+                            <h6> <b> Copyright © 2024 </b></h6>
+                            <ion-text> <b> PT Hasnur Informasi Teknologi</b> </ion-text>
+                            <h6><i><b> All rights reserved </b> </i> </h6>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
             </ion-toolbar>
         </ion-footer>
         <LoadingComponent :isOpen="loading" :message="'Loading...'" />
@@ -122,7 +125,7 @@ ion-footer {
 }
 
 .login-list {
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
 .login-item {
@@ -134,13 +137,11 @@ ion-footer {
 }
 
 .custom-footer {
-    height: 100px;
-    /* Sesuaikan tinggi sesuai kebutuhan */
+    height: 8rem;
 }
 
 .custom-footer ion-toolbar {
-    --min-height: 100px;
-    /* Sesuaikan tinggi sesuai kebutuhan */
+    --min-height: 6rem;
 }
 
 .white-toolbar {
@@ -152,5 +153,12 @@ ion-footer {
     font-size: 1.5rem;
     font-weight: bold;
     color: #333;
+}
+
+.form-container {
+    /* display: flex;
+    justify-content: center; */
+    align-items: center;
+    height: 50%;
 }
 </style>

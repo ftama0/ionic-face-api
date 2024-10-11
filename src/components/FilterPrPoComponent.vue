@@ -14,9 +14,9 @@
                         <ion-label>Approved</ion-label>
                         <ion-radio slot="start" value="Approved"></ion-radio>
                     </ion-item>
-                    <ion-item button @click="selectedStatus = 'Rejected'">
+                    <ion-item button @click="selectedStatus = 'Reject'">
                         <ion-label>Rejected</ion-label>
-                        <ion-radio slot="start" value="Rejected"></ion-radio>
+                        <ion-radio slot="start" value="Reject"></ion-radio>
                     </ion-item>
                 </ion-radio-group>
 
@@ -102,8 +102,8 @@ const modalConfig = ref({
 let comment = ref('');
 
 // Data dummy untuk filter
-const selectedStatus = ref('To Approve');
-const selectedPeriod = ref('yearly');
+const selectedStatus = ref('');
+const selectedPeriod = ref('');
 const selectedAmount = ref('');
 const selectedCompany = ref('');
 const selectedPlant = ref('');

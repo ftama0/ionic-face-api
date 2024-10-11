@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Approval System HG</string>
-    <string name="title_activity_main">Approval System HG</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Ionic Face</string>
+    <string name="title_activity_main">Ionic Face</string>
+    <string name="package_name">io.ionic.face</string>
+    <string name="custom_url_scheme">io.ionic.face</string>
+    <!-- oneSignal custom asccent color oneSignal  -->
+    <string name="onesignal_notification_accent_color">0070F2</string>
 </resources>

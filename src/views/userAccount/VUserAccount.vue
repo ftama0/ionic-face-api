@@ -4,61 +4,51 @@
         <HeaderComponent :title="'User Account'" />
         <ion-content>
             <ion-grid>
-                <div class="sticky-top">
-                    <ion-row>
-                        <ion-col size="12">
-                            <ion-searchbar animated="true" v-model="search" placeholder="Search User"
-                                @ionInput="handleSearch"></ion-searchbar>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="12" class="ion-padding">
-                            <ion-item>
-                                <ion-select aria-label="status" label="Status select" label-placement="floating"
-                                    placeholder="Status" fill="outline" v-model="selectedStatus"
-                                    @ionChange="handleStatusChange">
-                                    <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
-                                    <ion-select-option value="active">Aktif</ion-select-option>
-                                    <ion-select-option value="inactive">Non Aktif</ion-select-option>
-                                </ion-select>
-                            </ion-item>
-                        </ion-col>
-                    </ion-row>
-                </div>
+                <ion-row class="sticky-top">
+                    <ion-col size="12">
+                        <ion-searchbar animated="true" v-model="search" placeholder="Search User"
+                            @ionInput="handleSearch"></ion-searchbar>
+                    </ion-col>
+                    <ion-col size="12" class="ion-padding">
+                        <ion-item>
+                            <ion-select aria-label="status" label="Status select" label-placement="floating"
+                                placeholder="Status" fill="outline" v-model="selectedStatus"
+                                @ionChange="handleStatusChange">
+                                <ion-icon slot="start" :icon="icons.filterOutline" aria-hidden="true"></ion-icon>
+                                <ion-select-option value="active">Aktif</ion-select-option>
+                                <ion-select-option value="inactive">Non Aktif</ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-col>
+                </ion-row>
                 <ion-row>
                     <ion-col size="12">
-                        <div v-for="(item, index) in vdata" :key="index">
-                            <ion-card class="ion-margin-top ion-elevation-3">
-                                <ion-card-header>
-                                    <ion-row class="ion-align-items-center">
-                                        <ion-col size="6" class="ion-text-left">
-                                            <ion-text class="ion-card-title">{{ item.username }}</ion-text>
-                                        </ion-col>
-                                        <ion-col size="6" class="ion-text-right">
-                                            <ChipComponent :color="item.status == true ? 'success' : 'danger'">
-                                                {{ item.status == true ? 'Active' : 'Non Active' }}
-                                            </ChipComponent>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-card-header>
-                                <ion-card-content>
-                                    <ion-row>
-                                        <ion-col size="6" class="ion-text-left">
-                                            <ButtonComponent :icon="icons.openOutline" :item="item"
-                                                :class="actionButton" @action-click="openActionSheet">
-                                                Action
-                                            </ButtonComponent>
-                                        </ion-col>
-                                        <ion-col size="6" class="ion-text-right">
-                                            <ButtonComponent :icon="icons.readerOutline" :item="item"
-                                                :class="detailButton" @action-click="fetchReadUser">
-                                                Detail
-                                            </ButtonComponent>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-card-content>
-                            </ion-card>
-                        </div>
+                        <ion-card v-for="(item, index) in vdata" :key="index" class="ion-padding ion-elevation-3">
+                            <ion-row class="ion-align-items-center">
+                                <ion-col size="6" class="ion-text-left">
+                                    <ion-text class="ion-card-title">{{ item.username }}</ion-text>
+                                </ion-col>
+                                <ion-col size="6" class="ion-text-right">
+                                    <ChipComponent :color="item.status == true ? 'success' : 'danger'">
+                                        {{ item.status == true ? 'Active' : 'Non Active' }}
+                                    </ChipComponent>
+                                </ion-col>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col size="6" class="ion-text-left">
+                                    <ButtonComponent :icon="icons.openOutline" :item="item" :class="actionButton"
+                                        @action-click="openActionSheet">
+                                        Action
+                                    </ButtonComponent>
+                                </ion-col>
+                                <ion-col size="6" class="ion-text-right">
+                                    <ButtonComponent :icon="icons.readerOutline" :item="item" :class="detailButton"
+                                        @action-click="fetchReadUser">
+                                        Detail
+                                    </ButtonComponent>
+                                </ion-col>
+                            </ion-row>
+                        </ion-card>
                         <ion-infinite-scroll threshold="10px" @ionInfinite="loadMore">
                             <ion-infinite-scroll-content loading-text="Please wait..." loading-spinner="bubbles">
                             </ion-infinite-scroll-content>

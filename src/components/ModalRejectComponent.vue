@@ -28,10 +28,11 @@ import { modalController } from '@ionic/vue';
 const loading = ref(false);
 const props = defineProps({
     action: String,
+    title: String,
 });
 const modalConfig = ref({
     actionModal: props.action.charAt(0).toUpperCase() + props.action.slice(1).toLowerCase(),
-    modalTitle: 'Purhcase Request',
+    modalTitle: props.title,
     cancelButtonText: 'Close',
     cancelButtonColor: 'danger',
     saveButtonText: 'Submit',
@@ -42,7 +43,6 @@ let comment = ref('');
 const { proxy } = getCurrentInstance()
 
 const SubmitForm = async () => {
-    console.log('SubmitForm dipanggil');
     console.log('Nilai comment:', comment.value);
     if (!comment.value.trim()) {
         proxy.$toast('Komentar wajib diisi', 'warning');
